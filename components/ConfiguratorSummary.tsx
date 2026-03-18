@@ -1,0 +1,140 @@
+"use client";
+
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowRight, Sparkles } from "lucide-react";
+import { formatPrice } from "@/lib/utils";
+import type { Specialization } from "@/data/specializations";
+
+interface ConfiguratorSummaryProps {
+  selectedSpecs: {
+    foundation: Specialization | null;
+    direction: Specialization | null;
+    specialization: Specialization | null;
+  };
+  totalPrice: number;
+}
+
+export default function ConfiguratorSummary({
+  selectedSpecs,
+  totalPrice,
+}: ConfiguratorSummaryProps) {
+  const hasSelection =
+    selectedSpecs.foundation ||
+    selectedSpecs.direction ||
+    selectedSpecs.specialization;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="sticky bottom-8 z-10 mx-4 sm:mx-8"
+    >
+      <div className="max-w-4xl mx-auto bg-gradient-to-r from-[#1A1A1A] to-[#222222] rounded-2xl border border-[#2A2A2A] p-6 shadow-2xl backdrop-blur-sm">
+        <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+          {/* Selection Path */}
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-3">
+              <Sparkles size={20} className="text-[#B8001F]" />
+              <h3 className="text-lg font-bold text-white font-[family-name:var(--font-space-grotesk)]">
+                Parcursul tău educațional
+              </h3>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2 text-sm">
+              <AnimatePresence mode="wait">
+                {selectedSpecs.foundation && (
+                  <motion.span
+                    key="foundation"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    className="px-3 py-1.5 bg-[#B8001F]/20 border border-[#B8001F]/40 text-[#B8001F] rounded-full font-medium"
+                  >
+                    {selectedSpecs.foundation.title}
+                  </motion.span>
+                )}
+
+                {selectedSpecs.foundation && selectedSpecs.direction && (
+                  <ArrowRight size={16} className="text-[#A0A0A0]" />
+                )}
+
+                {selectedSpecs.direction && (
+                  <motion.span
+                    key="direction"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    className="px-3 py-1.5 bg-[#B8001F]/20 border border-[#B8001F]/40 text-[#B8001F] rounded-full font-medium"
+                  >
+                    {selectedSpecs.direction.title}
+                  </motion.span>
+                )}
+
+                {selectedSpecs.direction && selectedSpecs.specialization && (
+                  <ArrowRight size={16} className="text-[#A0A0A0]" />
+                )}
+
+                {selectedSpecs.specialization && (
+                  <motion.span
+                    key="specialization"
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    className="px-3 py-1.5 bg-[#B8001F]/20 border border-[#B8001F]/40 text-[#B8001F] rounded-full font-medium"
+                  >
+                    {selectedSpecs.specialization.title}
+                  </motion.span>
+                )}
+
+                {!hasSelection && (
+                  <span className="text-[#666666] italic">
+                    Selectează cel puțin un curs...
+                  </span>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
+
+          {/* Price & CTA */}
+          <div className="flex items-center gap-6 w-full lg:w-auto">
+            {/* Total Price */}
+            <div className="text-right">
+              <p className="text-[#A0A0A0] text-sm mb-1">Total investiție</p>
+              <AnimatePresence mode="wait">
+                <motion.p
+                  key={totalPrice}
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  transition={{ duration: 0.3 }}
+                  className="text-3xl font-bold text-white font-[family-name:var(--font-space-grotesk)]"
+                >
+                  {formatPrice(totalPrice)}
+                </motion.p>
+              </AnimatePresence>
+            </div>
+
+            {/* CTA Button */}
+            <motion.a
+              href="#contact"
+              whileHover={{ scale: hasSelection ? 1.05 : 1 }}
+              whileTap={{ scale: hasSelection ? 0.95 : 1 }}
+              className={`
+                inline-flex items-center justify-center px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 whitespace-nowrap
+                ${
+                  hasSelection
+                    ? "bg-[#B8001F] text-white hover:bg-[#490207] hover:shadow-lg hover:shadow-[#B8001F]/50 cursor-pointer"
+                    : "bg-[#2A2A2A] text-[#666666] cursor-not-allowed"
+                }
+              `}
+              style={{ pointerEvents: hasSelection ? "auto" : "none" }}
+            >
+              Înscrie-te acum
+              <ArrowRight size={20} className="ml-2" />
+            </motion.a>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
