@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Poppins, Space_Grotesk } from "next/font/google";
+import { Poppins, Bebas_Neue } from "next/font/google";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -9,10 +9,10 @@ const poppins = Poppins({
   display: "swap",
 });
 
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
+const bebasNeue = Bebas_Neue({
+  variable: "--font-bebas-neue",
   subsets: ["latin"],
-  weight: ["700"],
+  weight: ["400"],
   display: "swap",
 });
 
@@ -36,7 +36,7 @@ export default function RootLayout({
   return (
     <html lang="ro" className="scroll-smooth">
       <body
-        className={`${poppins.variable} ${spaceGrotesk.variable} antialiased`}
+        className={`${poppins.variable} ${bebasNeue.variable} antialiased`}
       >
         {children}
       </body>

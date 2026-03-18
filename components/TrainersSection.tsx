@@ -49,20 +49,10 @@ export default function TrainersSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="text-4xl sm:text-5xl font-bold text-white mb-4 font-[family-name:var(--font-space-grotesk)]"
+              className="text-4xl sm:text-5xl font-bold text-white font-[family-name:var(--font-space-grotesk)]"
             >
               Echipa noastră de traineri
             </motion.h2>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="text-lg text-[#A0A0A0] max-w-2xl mx-auto"
-            >
-              Profesioniști cu experiență în fitness și educație, gata să te
-              ghideze în cariera ta
-            </motion.p>
           </div>
 
           {/* Swiper Container */}

@@ -1,9 +1,8 @@
 import Navbar from "@/components/Navbar";
 import HeroSlider from "@/components/HeroSlider";
-import StatsSection from "@/components/StatsSection";
+import StatsBar from "@/components/StatsBar";
 import Configurator from "@/components/Configurator";
 import TrainersSection from "@/components/TrainersSection";
-import ComparisonSection from "@/components/ComparisonSection";
 import CTASection from "@/components/CTASection";
 import FAQSection from "@/components/FAQSection";
 import Footer from "@/components/Footer";
@@ -15,10 +14,9 @@ export default function Home() {
     <div className="min-h-screen bg-[#FAFAFA]">
       <Navbar />
       <HeroSlider />
-      <StatsSection />
+      <StatsBar />
       <Configurator />
       <TrainersSection />
-      <ComparisonSection />
       <CTASection />
       <FAQSection />
       <Footer />

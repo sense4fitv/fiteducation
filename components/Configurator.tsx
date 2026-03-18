@@ -1,7 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper/modules";
+import type { Swiper as SwiperType } from "swiper";
+import { ChevronLeft, ChevronRight, ChevronDown, ArrowRight } from "lucide-react";
 import ConfiguratorCard from "./ConfiguratorCard";
 import ConfiguratorSummary from "./ConfiguratorSummary";
 import CourseModal from "./CourseModal";
@@ -11,8 +15,14 @@ import {
   getSpecializations,
   type Specialization,
 } from "@/data/specializations";
+import { formatPrice } from "@/lib/utils";
+
+import "swiper/css";
+import "swiper/css/navigation";
 
 export default function Configurator() {
+  const swiperRef = useRef<SwiperType | null>(null);
+  const summaryRef = useRef<HTMLDivElement | null>(null);
   const [selectedFoundation, setSelectedFoundation] =
     useState<Specialization | null>(null);
   const [selectedDirection, setSelectedDirection] =
@@ -22,6 +32,7 @@ export default function Configurator() {
 
   const [modalCourse, setModalCourse] = useState<Specialization | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [showStickyBar, setShowStickyBar] = useState(false);
 
   const foundation = getFoundation();
   const directions = getDirections();
@@ -55,10 +66,34 @@ export default function Configurator() {
     setIsModalOpen(true);
   };
 
+  // Detect when summary section is visible
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        // Show sticky bar when summary is NOT visible and we have selections
+        setShowStickyBar(!entry.isIntersecting && selectedCourses.length > 0);
+      },
+      {
+        threshold: 0,
+        rootMargin: "0px 0px -100px 0px", // Trigger slightly before reaching bottom
+      }
+    );
+
+    if (summaryRef.current) {
+      observer.observe(summaryRef.current);
+    }
+
+    return () => {
+      if (summaryRef.current) {
+        observer.unobserve(summaryRef.current);
+      }
+    };
+  }, [selectedCourses.length]);
+
   return (
     <section
       id="specializari"
-      className="py-20 px-4 sm:px-8 lg:px-16 bg-[#FAFAFA]"
+      className="py-12 px-4 sm:px-8 lg:px-16 bg-[#FAFAFA]"
     >
       <div className="max-w-[1600px] mx-auto">
         {/* Header */}
@@ -67,7 +102,7 @@ export default function Configurator() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-12"
         >
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[#0A0A0A] mb-6 font-[family-name:var(--font-space-grotesk)]">
             Construiește-ți parcursul educațional
@@ -83,12 +118,12 @@ export default function Configurator() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="bg-[#0A0A0A] rounded-3xl p-8 sm:p-12 lg:p-16 shadow-2xl"
+          className="bg-[#0A0A0A] rounded-3xl p-6 sm:p-8 lg:p-10 shadow-2xl"
         >
-          <div className="space-y-16">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10">
             {/* Step 1 - Foundation */}
             <div>
-              <div className="flex items-center gap-4 mb-8">
+              <div className="flex items-center gap-3 mb-6">
                 <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
                   selectedFoundation ? "bg-[#B8001F]" : "bg-[#2A2A2A]"
                 }`}>
@@ -96,15 +131,12 @@ export default function Configurator() {
                     selectedFoundation ? "text-white" : "text-[#666666]"
                   }`}>1</span>
                 </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-white font-[family-name:var(--font-space-grotesk)]">
-                    Fundație
-                  </h3>
-                  <p className="text-[#666666] text-sm">Bazele științei mișcării și antrenamentului</p>
-                </div>
+                <h3 className="text-xl font-bold text-white font-[family-name:var(--font-space-grotesk)]">
+                  Fundație
+                </h3>
               </div>
 
-              <div className="max-w-lg">
+              <div>
                 {foundation && (
                   <ConfiguratorCard
                     specialization={foundation}
@@ -120,7 +152,7 @@ export default function Configurator() {
 
             {/* Step 2 - Direction */}
             <div>
-              <div className="flex items-center gap-4 mb-8">
+              <div className="flex items-center gap-3 mb-6">
                 <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
                   selectedDirection ? "bg-[#B8001F]" : "bg-[#2A2A2A]"
                 }`}>
@@ -128,15 +160,12 @@ export default function Configurator() {
                     selectedDirection ? "text-white" : "text-[#666666]"
                   }`}>2</span>
                 </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-white font-[family-name:var(--font-space-grotesk)]">
-                    Direcție principală
-                  </h3>
-                  <p className="text-[#666666] text-sm">Personal Training sau Group Fitness</p>
-                </div>
+                <h3 className="text-xl font-bold text-white font-[family-name:var(--font-space-grotesk)]">
+                  Direcție
+                </h3>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-4">
                 {directions.map((direction) => (
                   <ConfiguratorCard
                     key={direction.id}
@@ -153,7 +182,7 @@ export default function Configurator() {
 
             {/* Step 3 - Specialization */}
             <div>
-              <div className="flex items-center gap-4 mb-8">
+              <div className="flex items-center gap-3 mb-6">
                 <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
                   selectedSpecialization ? "bg-[#B8001F]" : "bg-[#2A2A2A]"
                 }`}>
@@ -161,33 +190,97 @@ export default function Configurator() {
                     selectedSpecialization ? "text-white" : "text-[#666666]"
                   }`}>3</span>
                 </div>
-                <div>
-                  <h3 className="text-2xl font-bold text-white font-[family-name:var(--font-space-grotesk)]">
-                    Specializare avansată
-                  </h3>
-                  <p className="text-[#666666] text-sm">Aprofundează un domeniu specific</p>
-                </div>
+                <h3 className="text-xl font-bold text-white font-[family-name:var(--font-space-grotesk)]">
+                  Specializare
+                </h3>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {specializations.map((spec) => (
-                  <ConfiguratorCard
-                    key={spec.id}
-                    specialization={spec}
-                    isSelected={selectedSpecialization?.id === spec.id}
-                    onClick={() =>
-                      handleToggle(selectedSpecialization, spec, setSelectedSpecialization)
-                    }
-                    onInfoClick={() => openModal(spec)}
-                  />
-                ))}
+              {/* Desktop - Vertical Scroll */}
+              <div className="hidden lg:block relative">
+                <div className="max-h-[592px] overflow-y-auto pr-2 space-y-4 scrollbar-thin scrollbar-thumb-[#B8001F] scrollbar-track-[#2A2A2A]">
+                  {specializations.map((spec) => (
+                    <ConfiguratorCard
+                      key={spec.id}
+                      specialization={spec}
+                      isSelected={selectedSpecialization?.id === spec.id}
+                      onClick={() =>
+                        handleToggle(selectedSpecialization, spec, setSelectedSpecialization)
+                      }
+                      onInfoClick={() => openModal(spec)}
+                    />
+                  ))}
+                </div>
+
+                {/* Scroll Indicator */}
+                {specializations.length > 2 && (
+                  <div className="absolute bottom-0 left-0 right-0 h-12 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/50 to-transparent pointer-events-none flex items-end justify-center pb-2">
+                    <motion.div
+                      animate={{ y: [0, 6, 0] }}
+                      transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                      className="flex flex-col items-center gap-0.5"
+                    >
+                      <span className="text-xs text-[#666666] font-medium">
+                        Mai multe
+                      </span>
+                      <ChevronDown size={18} className="text-[#B8001F]" />
+                    </motion.div>
+                  </div>
+                )}
+              </div>
+
+              {/* Mobile/Tablet - Horizontal Swiper */}
+              <div className="lg:hidden relative">
+                <Swiper
+                  modules={[Navigation]}
+                  spaceBetween={16}
+                  slidesPerView={1.2}
+                  breakpoints={{
+                    640: {
+                      slidesPerView: 2,
+                      spaceBetween: 16,
+                    },
+                  }}
+                  onSwiper={(swiper) => {
+                    swiperRef.current = swiper;
+                  }}
+                  className="specializations-swiper"
+                >
+                  {specializations.map((spec) => (
+                    <SwiperSlide key={spec.id}>
+                      <ConfiguratorCard
+                        specialization={spec}
+                        isSelected={selectedSpecialization?.id === spec.id}
+                        onClick={() =>
+                          handleToggle(selectedSpecialization, spec, setSelectedSpecialization)
+                        }
+                        onInfoClick={() => openModal(spec)}
+                      />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+
+                {/* Navigation Arrows - Mobile */}
+                <button
+                  onClick={() => swiperRef.current?.slidePrev()}
+                  className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 w-8 h-8 bg-[#B8001F] hover:bg-[#490207] rounded-full flex items-center justify-center text-white transition-all duration-300 hover:scale-110 shadow-lg"
+                  aria-label="Previous"
+                >
+                  <ChevronLeft size={18} />
+                </button>
+                <button
+                  onClick={() => swiperRef.current?.slideNext()}
+                  className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 w-8 h-8 bg-[#B8001F] hover:bg-[#490207] rounded-full flex items-center justify-center text-white transition-all duration-300 hover:scale-110 shadow-lg"
+                  aria-label="Next"
+                >
+                  <ChevronRight size={18} />
+                </button>
               </div>
             </div>
           </div>
         </motion.div>
 
         {/* Summary */}
-        <div className="mt-12">
+        <div ref={summaryRef} className="mt-8">
           <ConfiguratorSummary
             selectedSpecs={{
               foundation: selectedFoundation,
@@ -198,6 +291,52 @@ export default function Configurator() {
           />
         </div>
       </div>
+
+      {/* Sticky Bottom Bar */}
+      <AnimatePresence>
+        {showStickyBar && (
+          <motion.div
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 100, opacity: 0 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            className="fixed bottom-0 left-0 right-0 z-50 bg-gradient-to-r from-[#1A1A1A] to-[#222222] border-t border-[#2A2A2A] shadow-2xl"
+          >
+            <div className="max-w-[1600px] mx-auto px-4 sm:px-8 py-4">
+              <div className="flex items-center justify-between gap-4">
+                {/* Left: Title */}
+                <div className="flex-shrink-0">
+                  <h3 className="text-base sm:text-lg font-bold text-white font-[family-name:var(--font-bebas-neue)] tracking-wide">
+                    Parcursul tău educațional
+                  </h3>
+                </div>
+
+                {/* Right: Price & CTA */}
+                <div className="flex items-center gap-3 sm:gap-6">
+                  {/* Price */}
+                  <div className="text-right">
+                    <p className="text-[#A0A0A0] text-xs sm:text-sm">Total</p>
+                    <p className="text-xl sm:text-2xl font-bold text-white font-[family-name:var(--font-bebas-neue)]">
+                      {formatPrice(totalPrice)}
+                    </p>
+                  </div>
+
+                  {/* CTA Button */}
+                  <motion.a
+                    href="#contact"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 bg-[#B8001F] text-white rounded-full font-semibold text-sm sm:text-base transition-all duration-300 hover:bg-[#490207] hover:shadow-lg hover:shadow-[#B8001F]/50 whitespace-nowrap"
+                  >
+                    Înscrie-te
+                    <ArrowRight size={18} className="ml-2 hidden sm:inline" />
+                  </motion.a>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Modal */}
       <CourseModal

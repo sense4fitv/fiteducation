@@ -50,7 +50,7 @@ export default function HeroSlider() {
         >
           {courses.map((course, index) => (
             <SwiperSlide key={course.id}>
-              <div className="relative h-[500px] sm:h-[600px] lg:h-[700px]">
+              <div className="relative h-[450px] sm:h-[500px] lg:h-[550px]">
                 {/* Background Image with Overlay */}
                 <div
                   className="absolute inset-0 bg-cover bg-center"
@@ -114,7 +114,7 @@ export default function HeroSlider() {
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.7, duration: 0.5 }}
-                      href="#specializari"
+                      href={`/curs/${course.id}`}
                       className="inline-flex items-center justify-center px-8 py-4 bg-[#B8001F] text-white rounded-full font-semibold text-lg hover:bg-[#490207] transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-[#B8001F]/50"
                     >
                       Descoperă cursul

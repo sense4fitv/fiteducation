@@ -52,9 +52,10 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-space-grotesk), system-ui, sans-serif;
-  font-weight: 700;
+  font-family: var(--font-bebas-neue), system-ui, sans-serif;
+  font-weight: 400;
   line-height: 1.2;
+  letter-spacing: 0.02em;
 }
 
 /* Custom scrollbar for dark sections */
@@ -75,4 +76,38 @@ h1, h2, h3, h4, h5, h6 {
 
 .dark-section::-webkit-scrollbar-thumb:hover {
   background: var(--text-secondary-dark);
+}
+
+/* Hide scrollbar for horizontal tabs on mobile */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Custom scrollbar for specializations */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: #B8001F #2A2A2A;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: #2A2A2A;
+  border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: #B8001F;
+  border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: #490207;
 }
