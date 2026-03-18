@@ -1,4 +1,6 @@
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
   /* Page background - light */
@@ -27,20 +29,6 @@
   /* Navbar */
   --navbar-bg: rgba(255, 255, 255, 0.9);
   --navbar-text: #0A0A0A;
-}
-
-@theme inline {
-  --color-page-bg: var(--page-bg);
-  --color-section-dark: var(--section-dark);
-  --color-section-dark-alt: var(--section-dark-alt);
-  --color-card-dark: var(--card-dark);
-  --color-card-dark-hover: var(--card-dark-hover);
-  --color-card-border: var(--card-border);
-  --color-accent-primary: var(--accent-primary);
-  --color-accent-secondary: var(--accent-secondary);
-  --color-accent-hover: var(--accent-hover);
-  --font-body: var(--font-poppins);
-  --font-heading: var(--font-space-grotesk);
 }
 
 * {
