@@ -60,7 +60,7 @@ export const courses: Course[] = [
     id: 1,
     title: "Personal Trainer Certificat",
     description: "Devino antrenor personal certificat internațional",
-    duration: "16 săptămâni",
+    duration: "18 Iulie 2026",
     image: "/images/courses/personal-trainer.jpg",
     price: "3.500 RON",
     trainer: "Alexandru Popescu",
@@ -199,7 +199,7 @@ export const courses: Course[] = [
     id: 2,
     title: "Instructor Aerobic & Group Fitness",
     description: "Specializare completă în clase de grup",
-    duration: "12 săptămâni",
+    duration: "TBA",
     image: "/images/courses/aerobic.jpg",
     price: "2.800 RON",
     trainer: "Maria Ionescu",
@@ -311,123 +311,10 @@ export const courses: Course[] = [
     },
   },
   {
-    id: 3,
-    title: "Nutriție Sportivă",
-    description: "Fundamentele nutriției pentru performanță",
-    duration: "8 săptămâni",
-    image: "/images/courses/nutrition.jpg",
-    price: "2.200 RON",
-    trainer: "Elena Vasilescu",
-    minEducation: "Liceu",
-    slug: "nutritie-sportiva",
-    level: "Începător - Intermediar",
-    rating: 4.9,
-    studentsCount: 412,
-    nextStartDate: "29 Aprilie 2026",
-    spotsLeft: 6,
-    highlights: [
-      "Certificare Sports Nutrition Specialist",
-      "Planuri alimentare practice",
-      "Suplimente și timing nutrițional",
-      "Software de planificare inclus",
-    ],
-    included: [
-      "8 săptămâni de curs",
-      "Materiale digitale complete",
-      "Certificare SN Specialist",
-      "Software de planificare",
-      "Templates planuri alimentare",
-      "Acces la baza de date alimente",
-    ],
-    testimonials: [
-      {
-        name: "Carmen Dumitrescu",
-        role: "Absolventă 2025",
-        text: "Acum consult sportivi de performanță. Cursul m-a pregătit perfect!",
-        image: "/images/testimonials/carmen.jpg",
-      },
-      {
-        name: "Alex Marin",
-        role: "Absolvent 2024",
-        text: "Cea mai bună investiție în cariera mea. Sunt acum nutriționist certificat!",
-        image: "/images/testimonials/alex.jpg",
-      },
-    ],
-    faq: [
-      {
-        question: "Trebuie să am studii medicale?",
-        answer:
-          "Nu este necesar. Cursul acoperă toate fundamentele necesare pentru a deveni consultant în nutriție sportivă.",
-      },
-      {
-        question: "Pot consulta clienți după curs?",
-        answer:
-          "Da, vei primi certificare care îți permite să oferi consultanță în nutriție sportivă în România și UE.",
-      },
-    ],
-    fullDescription:
-      "Descoperă secretele nutriției sportive și învață să creezi planuri alimentare personalizate pentru diferite obiective: pierdere în greutate, creștere musculară, sau performanță sportivă.",
-    requirements: {
-      documents: [
-        "Copie diplomă de bacalaureat",
-        "Copie carte de identitate",
-        "2 fotografii tip buletin",
-      ],
-      fees: {
-        inscription: "300 RON",
-        monthly: "950 RON x 2 luni",
-        total: "2.200 RON",
-      },
-    },
-    curriculum: {
-      modules: [
-        {
-          title: "Bazele Nutriției",
-          topics: [
-            "Macronutrienți: proteine, carbohidrați, grăsimi",
-            "Micronutrienți și vitamine",
-            "Hidratare și electroliți",
-          ],
-        },
-        {
-          title: "Nutriție pentru Performanță",
-          topics: [
-            "Timing nutrițional",
-            "Strategii pre și post antrenament",
-            "Suplimente sportive",
-          ],
-        },
-        {
-          title: "Planificare Alimentară",
-          topics: [
-            "Calcularea necesarului caloric",
-            "Planuri pentru diferite obiective",
-            "Consultanță nutrițională",
-          ],
-        },
-      ],
-      schedule: "Miercuri: 18:00 - 21:00 | Sâmbătă: 10:00 - 13:00",
-    },
-    trainers: [
-      {
-        name: "Elena Vasilescu",
-        role: "Coordonator Curs",
-        bio: "Nutriționist sportiv certificat internațional cu experiență în lucrul cu sportivi de performanță.",
-        image: "/images/trainers/elena.jpg",
-      },
-    ],
-    exam: {
-      format: "Examen teoretic + Studiu de caz (creare plan alimentar)",
-      duration: "2.5 ore",
-      passingGrade: "75%",
-      certification: "Certificare Sports Nutrition Specialist",
-    },
-  },
-  {
     id: 4,
     title: "Antrenament Funcțional",
     description: "Tehnici avansate de antrenament funcțional",
-    duration: "10 săptămâni",
+    duration: "TBA",
     image: "/images/courses/functional.jpg",
     price: "2.600 RON",
     trainer: "Cristian Marinescu",

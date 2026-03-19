@@ -28,7 +28,7 @@ export default function ConfiguratorCard({
       whileHover={!isDisabled ? { y: -4 } : {}}
       transition={{ duration: 0.2, ease: "easeOut" }}
       className={`
-        relative w-full p-8 rounded-xl transition-all duration-200 text-left
+        relative w-full h-full p-8 rounded-xl transition-all duration-200 text-left flex flex-col
         ${
           isSelected
             ? "bg-[#1A1A1A] border border-[#B8001F]"
@@ -77,12 +77,12 @@ export default function ConfiguratorCard({
       </h3>
 
       {/* Description */}
-      <p className="text-[#A0A0A0] text-sm mb-6 leading-relaxed min-h-[40px]">
+      <p className="text-[#A0A0A0] text-sm mb-6 leading-relaxed min-h-[40px] flex-1">
         {specialization.description}
       </p>
 
       {/* Price */}
-      <div className="pt-4 border-t border-[#2A2A2A]">
+      <div className="pt-4 border-t border-[#2A2A2A] mt-auto">
         <span className="text-2xl font-bold text-white font-[family-name:var(--font-space-grotesk)]">
           {formatPrice(specialization.price)}
         </span>

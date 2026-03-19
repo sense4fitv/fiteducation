@@ -59,7 +59,6 @@ export default function HeroSlider() {
                       [
                         "1534438327276-14e5300c3a48?w=1600", // Personal Trainer
                         "1518611012118-696072aa579a?w=1600", // Aerobic
-                        "1490645935967-10de6ba17061?w=1600", // Nutrition
                         "1517838277536-f5f99be501cd?w=1600", // Functional
                       ][index]
                     })`,
@@ -110,15 +109,26 @@ export default function HeroSlider() {
                     </motion.p>
 
                     {/* CTA Button */}
-                    <motion.a
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.7, duration: 0.5 }}
-                      href={`/curs/${course.id}`}
-                      className="inline-flex items-center justify-center px-8 py-4 bg-[#B8001F] text-white rounded-full font-semibold text-lg hover:bg-[#490207] transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-[#B8001F]/50"
-                    >
-                      Descoperă cursul
-                    </motion.a>
+                    {course.duration === "TBA" ? (
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.7, duration: 0.5 }}
+                        className="inline-flex items-center justify-center px-8 py-4 bg-[#A0A0A0]/30 text-white rounded-full font-semibold text-lg cursor-not-allowed"
+                      >
+                        Coming Soon
+                      </motion.div>
+                    ) : (
+                      <motion.a
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.7, duration: 0.5 }}
+                        href={`/curs/${course.id}`}
+                        className="inline-flex items-center justify-center px-8 py-4 bg-[#B8001F] text-white rounded-full font-semibold text-lg hover:bg-[#490207] transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-[#B8001F]/50"
+                      >
+                        Descoperă cursul
+                      </motion.a>
+                    )}
                   </motion.div>
                 </div>
 

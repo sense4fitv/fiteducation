@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import type { Swiper as SwiperType } from "swiper";
-import { ChevronLeft, ChevronRight, ChevronDown, ArrowRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronDown, ArrowRight, X } from "lucide-react";
 import ConfiguratorCard from "./ConfiguratorCard";
 import ConfiguratorSummary from "./ConfiguratorSummary";
 import CourseModal from "./CourseModal";
@@ -33,6 +33,7 @@ export default function Configurator() {
   const [modalCourse, setModalCourse] = useState<Specialization | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showStickyBar, setShowStickyBar] = useState(false);
+  const [stickyBarDismissed, setStickyBarDismissed] = useState(false);
 
   const foundation = getFoundation();
   const directions = getDirections();
@@ -61,6 +62,18 @@ export default function Configurator() {
     }
   };
 
+  const handleDirectionToggle = (direction: Specialization) => {
+    if (selectedDirection?.id === direction.id) {
+      setSelectedDirection(null);
+    } else {
+      setSelectedDirection(direction);
+      // Auto-select foundation when a direction is selected
+      if (!selectedFoundation && foundation) {
+        setSelectedFoundation(foundation);
+      }
+    }
+  };
+
   const openModal = (course: Specialization) => {
     setModalCourse(course);
     setIsModalOpen(true);
@@ -70,8 +83,8 @@ export default function Configurator() {
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        // Show sticky bar when summary is NOT visible and we have selections
-        setShowStickyBar(!entry.isIntersecting && selectedCourses.length > 0);
+        // Show sticky bar when summary is NOT visible, we have selections, and it hasn't been dismissed
+        setShowStickyBar(!entry.isIntersecting && selectedCourses.length > 0 && !stickyBarDismissed);
       },
       {
         threshold: 0,
@@ -88,7 +101,7 @@ export default function Configurator() {
         observer.unobserve(summaryRef.current);
       }
     };
-  }, [selectedCourses.length]);
+  }, [selectedCourses.length, stickyBarDismissed]);
 
   return (
     <section
@@ -118,11 +131,51 @@ export default function Configurator() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="bg-[#0A0A0A] rounded-3xl p-6 sm:p-8 lg:p-10 shadow-2xl"
+          className="bg-[#0A0A0A] rounded-3xl p-6 sm:p-8 lg:p-10 shadow-2xl relative"
         >
+          {/* Direction Arrows - Desktop Only */}
+          <div className="hidden lg:block">
+            {/* Arrow 1 - at 25% of Foundation card height */}
+            <motion.div
+              animate={{ x: [0, 8, 0] }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut",
+                repeatDelay: 0.5
+              }}
+              className="absolute z-10 pointer-events-none"
+              style={{
+                left: 'calc(33.333% - 24px)',
+                top: 'calc(40px + 24px + 156px)', // Header (40px + 24px) + 30% of card
+              }}
+            >
+              <ChevronRight size={32} className="text-[#B8001F]" strokeWidth={3} />
+            </motion.div>
+
+            {/* Arrow 2 - at 75% of Foundation card height */}
+            <motion.div
+              animate={{ x: [0, 8, 0] }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut",
+                repeatDelay: 0.5,
+                delay: 0.3
+              }}
+              className="absolute z-10 pointer-events-none"
+              style={{
+                left: 'calc(33.333% - 24px)',
+                top: 'calc(40px + 24px + 416px)', // Header (40px + 24px) + 80% of card
+              }}
+            >
+              <ChevronRight size={32} className="text-[#B8001F]" strokeWidth={3} />
+            </motion.div>
+          </div>
+
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10">
             {/* Step 1 - Foundation */}
-            <div>
+            <div className="flex flex-col">
               <div className="flex items-center gap-3 mb-6">
                 <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
                   selectedFoundation ? "bg-[#B8001F]" : "bg-[#2A2A2A]"
@@ -136,7 +189,7 @@ export default function Configurator() {
                 </h3>
               </div>
 
-              <div>
+              <div className="flex-1 flex">
                 {foundation && (
                   <ConfiguratorCard
                     specialization={foundation}
@@ -171,9 +224,7 @@ export default function Configurator() {
                     key={direction.id}
                     specialization={direction}
                     isSelected={selectedDirection?.id === direction.id}
-                    onClick={() =>
-                      handleToggle(selectedDirection, direction, setSelectedDirection)
-                    }
+                    onClick={() => handleDirectionToggle(direction)}
                     onInfoClick={() => openModal(direction)}
                   />
                 ))}
@@ -302,8 +353,17 @@ export default function Configurator() {
             transition={{ duration: 0.3, ease: "easeOut" }}
             className="fixed bottom-0 left-0 right-0 z-50 bg-gradient-to-r from-[#1A1A1A] to-[#222222] border-t border-[#2A2A2A] shadow-2xl"
           >
-            <div className="max-w-[1600px] mx-auto px-4 sm:px-8 py-4">
-              <div className="flex items-center justify-between gap-4">
+            <div className="max-w-[1600px] mx-auto px-4 sm:px-8 py-4 relative">
+              {/* Close Button */}
+              <button
+                onClick={() => setStickyBarDismissed(true)}
+                className="absolute top-2 right-2 sm:top-3 sm:right-3 w-8 h-8 flex items-center justify-center rounded-full bg-[#2A2A2A] hover:bg-[#B8001F] text-[#A0A0A0] hover:text-white transition-all duration-200 group"
+                aria-label="Închide"
+              >
+                <X size={16} className="group-hover:rotate-90 transition-transform duration-200" />
+              </button>
+
+              <div className="flex items-center justify-between gap-4 pr-8 sm:pr-10">
                 {/* Left: Title */}
                 <div className="flex-shrink-0">
                   <h3 className="text-base sm:text-lg font-bold text-white font-[family-name:var(--font-bebas-neue)] tracking-wide">

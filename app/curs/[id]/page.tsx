@@ -456,19 +456,18 @@ export default function CoursePage({ params }: { params: { id: string } }) {
       </section>
 
       {/* What's Included */}
-      <section className="py-12 px-4 sm:px-8 lg:px-16">
+      <section className="py-12 px-4 sm:px-8 lg:px-16 bg-[#FAFAFA]">
         <div className="max-w-[1600px] mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="bg-white rounded-2xl shadow-lg p-8 sm:p-12"
           >
             <h2 className="text-3xl sm:text-4xl font-bold text-[#0A0A0A] mb-8 font-[family-name:var(--font-space-grotesk)] text-center">
               Ce primești
             </h2>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center">
               {course.included.map((item, index) => (
                 <motion.div
                   key={index}
@@ -476,79 +475,13 @@ export default function CoursePage({ params }: { params: { id: string } }) {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.05 }}
-                  className="flex items-start gap-3"
+                  className="flex items-start gap-3 w-full max-w-md"
                 >
                   <CheckCircle2
                     size={20}
                     className="text-[#B8001F] flex-shrink-0 mt-1"
                   />
                   <span className="text-[#0A0A0A]">{item}</span>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="py-12 px-4 sm:px-8 lg:px-16">
-        <div className="max-w-[1600px] mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#0A0A0A] mb-4 font-[family-name:var(--font-space-grotesk)] text-center">
-              Ce spun absolvenții
-            </h2>
-            <p className="text-lg text-[#666666] text-center mb-12">
-              Peste {course.studentsCount} absolvenți au trecut prin programul
-              nostru
-            </p>
-
-            <div className="grid lg:grid-cols-2 gap-8">
-              {course.testimonials.map((testimonial, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.2 }}
-                  className="bg-white rounded-xl p-8 shadow-lg"
-                >
-                  <div className="flex gap-1 mb-4">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        size={20}
-                        className="fill-[#FFB800] text-[#FFB800]"
-                      />
-                    ))}
-                  </div>
-                  <p className="text-[#0A0A0A] text-lg mb-6 italic">
-                    "{testimonial.text}"
-                  </p>
-                  <div className="flex items-center gap-4">
-                    <div
-                      className="w-12 h-12 rounded-full bg-cover bg-center"
-                      style={{
-                        backgroundImage: `url(https://images.unsplash.com/photo-${
-                          index % 2 === 0
-                            ? "1494790108377-be9c29b29330"
-                            : "1507003211169-0a1dd7228f2d"
-                        }?w=100)`,
-                      }}
-                    />
-                    <div>
-                      <p className="font-bold text-[#0A0A0A]">
-                        {testimonial.name}
-                      </p>
-                      <p className="text-sm text-[#666666]">
-                        {testimonial.role}
-                      </p>
-                    </div>
-                  </div>
                 </motion.div>
               ))}
             </div>

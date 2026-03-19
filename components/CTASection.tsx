@@ -11,12 +11,6 @@ export default function CTASection() {
     "Programe diversificate",
   ];
 
-  const stats = [
-    { value: "500+", label: "Absolvenți certificați" },
-    { value: "15+", label: "Traineri experți" },
-    { value: "1200+", label: "Ore de curs predate" },
-    { value: "8+", label: "Ani de experiență" },
-  ];
 
   return (
     <section
@@ -104,34 +98,6 @@ export default function CTASection() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
               </div>
             </motion.div>
-          </motion.div>
-
-          {/* Statistics */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="pt-16 border-t border-gray-200"
-          >
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-              {stats.map((stat, index) => (
-                <motion.div
-                  key={stat.label}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="text-center"
-                >
-                  <h3 className="text-4xl sm:text-5xl font-bold mb-2 font-[family-name:var(--font-space-grotesk)]">
-                    <span className="text-[#0A0A0A]">{stat.value.replace('+', '')}</span>
-                    <span className="text-[#B8001F]">+</span>
-                  </h3>
-                  <p className="text-[#666666]">{stat.label}</p>
-                </motion.div>
-              ))}
-            </div>
           </motion.div>
       </div>
     </section>
