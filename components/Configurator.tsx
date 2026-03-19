@@ -194,9 +194,13 @@ export default function Configurator() {
                   <ConfiguratorCard
                     specialization={foundation}
                     isSelected={selectedFoundation?.id === foundation.id}
-                    onClick={() =>
-                      handleToggle(selectedFoundation, foundation, setSelectedFoundation)
-                    }
+                    onClick={() => {
+                      // Don't allow deselection if a direction is selected
+                      if (selectedDirection && selectedFoundation?.id === foundation.id) {
+                        return;
+                      }
+                      handleToggle(selectedFoundation, foundation, setSelectedFoundation);
+                    }}
                     onInfoClick={() => openModal(foundation)}
                   />
                 )}
