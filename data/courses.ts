@@ -58,18 +58,18 @@ export interface Course {
 export const courses: Course[] = [
   {
     id: 1,
-    title: "Personal Trainer Certificat",
+    title: "Personal Training Certificat",
     description: "Devino antrenor personal certificat internațional",
     duration: "18 Iulie 2026",
     image: "/images/courses/personal-trainer.jpg",
-    price: "3.500 RON",
+    price: "3.900 RON",
     trainer: "Alexandru Popescu",
     minEducation: "Liceu",
-    slug: "personal-trainer-certificat",
+    slug: "personal-training-certificat",
     level: "Începător - Intermediar",
     rating: 4.9,
     studentsCount: 347,
-    nextStartDate: "15 Aprilie 2026",
+    nextStartDate: "18 Iulie 2026",
     spotsLeft: 8,
     highlights: [
       "Certificare internațională EREPS nivel 3",
@@ -132,8 +132,8 @@ export const courses: Course[] = [
       ],
       fees: {
         inscription: "500 RON",
-        monthly: "750 RON x 4 luni",
-        total: "3.500 RON",
+        monthly: "850 RON x 4 luni",
+        total: "3.900 RON",
       },
     },
     curriculum: {

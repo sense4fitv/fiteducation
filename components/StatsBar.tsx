@@ -5,27 +5,23 @@ import { motion } from "framer-motion";
 export default function StatsBar() {
   const stats = [
     {
+      value: "25",
+      label: "Ani de experiență",
+    },
+    {
       value: "500",
-      label: "Absolvenți certificați",
+      label: "Cursanți",
     },
     {
       value: "15",
-      label: "Traineri experți",
-    },
-    {
-      value: "1200",
-      label: "Ore de curs predate",
-    },
-    {
-      value: "8",
-      label: "Ani de experiență",
+      label: "Traineri Experți",
     },
   ];
 
   return (
     <section className="py-16 px-4 sm:px-8 lg:px-16">
       <div className="max-w-[1400px] mx-auto">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-12">
             {stats.map((stat, index) => (
               <motion.div
                 key={index}

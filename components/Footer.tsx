@@ -1,38 +1,29 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Instagram, Facebook, Linkedin } from "lucide-react";
+import { Instagram } from "lucide-react";
 
 export default function Footer() {
   const links = {
-    main: [
-      { label: "Acasă", href: "#" },
-      { label: "Specializări", href: "#specializari" },
-      { label: "Traineri", href: "#traineri" },
-      { label: "Contact", href: "#contact" },
-    ],
     legal: [
       { label: "Termeni & Condiții", href: "#" },
       { label: "Politica de confidențialitate", href: "#" },
     ],
     social: [
-      { icon: Instagram, href: "#", label: "Instagram" },
-      { icon: Facebook, href: "#", label: "Facebook" },
-      { icon: Linkedin, href: "#", label: "LinkedIn" },
+      { icon: Instagram, href: "https://www.instagram.com/fiteducationschool?igsh=MXBrOXgzNDJrY2E3bw==", label: "Instagram" },
     ],
   };
 
   return (
     <footer className="bg-[#0A0A0A] text-white py-16 px-4 sm:px-8 lg:px-16">
       <div className="max-w-[1600px] mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
           {/* Logo & Description */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
-            className="lg:col-span-2"
           >
             <img
               src="/LogoFiteducation.svg"
@@ -46,36 +37,12 @@ export default function Footer() {
             </p>
           </motion.div>
 
-          {/* Quick Links */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-          >
-            <h3 className="text-lg font-bold mb-4 font-[family-name:var(--font-space-grotesk)]">
-              Link-uri rapide
-            </h3>
-            <ul className="space-y-2">
-              {links.main.map((link) => (
-                <li key={link.label}>
-                  <a
-                    href={link.href}
-                    className="text-[#A0A0A0] hover:text-[#B8001F] transition-colors duration-200"
-                  >
-                    {link.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
-
           {/* Legal & Social */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
           >
             <h3 className="text-lg font-bold mb-4 font-[family-name:var(--font-space-grotesk)]">
               Legal
@@ -104,6 +71,8 @@ export default function Footer() {
                   <a
                     key={social.label}
                     href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     aria-label={social.label}
                     className="w-10 h-10 bg-[#1A1A1A] hover:bg-[#B8001F] rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110"
                   >

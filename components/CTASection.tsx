@@ -5,9 +5,11 @@ import { CheckCircle2 } from "lucide-react";
 
 export default function CTASection() {
   const features = [
-    "Facilități de ultimă generație",
+    "Experiență internațională",
+    "Beneficii parteneri internaționali",
     "Traineri cu experiență",
-    "Comunitate dedicată",
+    "Locații premium",
+    "Platformă online dedicată dezvoltării permanente",
     "Programe diversificate",
   ];
 

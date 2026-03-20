@@ -118,10 +118,10 @@ export default function Configurator() {
           className="text-center mb-12"
         >
           <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[#0A0A0A] mb-6 font-[family-name:var(--font-space-grotesk)]">
-            Construiește-ți parcursul educațional
+            Programa Modulară
           </h2>
           <p className="text-lg text-[#666666] max-w-2xl mx-auto">
-            Selectează cursurile care se potrivesc obiectivelor tale profesionale
+            Folosește configuratorul și construiește propriul parcurs educațional conform obiectivelor tale profesionale
           </p>
         </motion.div>
 

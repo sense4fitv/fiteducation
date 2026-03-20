@@ -13,23 +13,8 @@ import "swiper/css/navigation";
 import { trainers } from "@/data/trainers";
 import TrainerCard from "./TrainerCard";
 
-// Unsplash images for trainers
-const trainerImages = [
-  "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=800",
-  "https://images.unsplash.com/photo-1594381898411-846e7d193883?w=800",
-  "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=800",
-  "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=800",
-  "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=800",
-  "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=800",
-];
-
 export default function TrainersSection() {
   const swiperRef = useRef<SwiperType | null>(null);
-
-  const trainersWithImages = trainers.map((trainer, index) => ({
-    ...trainer,
-    image: trainerImages[index % trainerImages.length],
-  }));
 
   return (
     <section id="traineri" className="py-20 px-4 sm:px-8 lg:px-16">
@@ -80,7 +65,7 @@ export default function TrainersSection() {
               }}
               className="trainers-swiper"
             >
-              {trainersWithImages.map((trainer, index) => (
+              {trainers.map((trainer, index) => (
                 <SwiperSlide key={trainer.id}>
                   <TrainerCard trainer={trainer} index={index} />
                 </SwiperSlide>

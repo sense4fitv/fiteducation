@@ -1,52 +1,45 @@
 export interface Trainer {
   id: number;
   name: string;
-  specialization: string;
+  description: string;
   image: string;
-  bio?: string;
 }
 
 export const trainers: Trainer[] = [
   {
     id: 1,
-    name: "Alexandru Popescu",
-    specialization: "Strength & Conditioning",
-    image: "/images/trainers/alexandru.jpg",
-    bio: "Expert în antrenament de forță cu peste 10 ani experiență",
+    name: "Flavius Turcanu",
+    description: "Doctorand IEFS, Fondator Fiteducation & CRAB, Presenter internațional, Consultant",
+    image: "/trainers/flavius.png",
   },
   {
     id: 2,
-    name: "Maria Ionescu",
-    specialization: "Aerobic & Group Fitness",
-    image: "/images/trainers/maria.jpg",
-    bio: "Instructor certificat cu pasiune pentru clasele de grup",
+    name: "Bianca Margarit",
+    description: "Doctor, Nutriționist, Personal trainer",
+    image: "/trainers/bianca.png",
   },
   {
     id: 3,
-    name: "Andrei Dumitrescu",
-    specialization: "Personal Training",
-    image: "/images/trainers/andrei.jpg",
-    bio: "Antrenor personal cu specializare în transformări corporale",
+    name: "Attila Kovacs",
+    description: "Doctorand, specialist în respirație, coach de performanță certificat",
+    image: "/trainers/attila.png",
   },
   {
     id: 4,
-    name: "Elena Vasilescu",
-    specialization: "Nutriție Sportivă",
-    image: "/images/trainers/elena.jpg",
-    bio: "Nutriționist sportiv certificat internațional",
+    name: "Robert Florea",
+    description: "Specialist în kinetoterapie, bodybuilding, recuperare, nutriție, condiționare tactică și master trainer ISSA",
+    image: "/trainers/robert.png",
   },
   {
     id: 5,
-    name: "Cristian Marinescu",
-    specialization: "Antrenament Funcțional",
-    image: "/images/trainers/cristian.jpg",
-    bio: "Specialist în mișcare funcțională și mobilitate",
+    name: "Ana Georgescu",
+    description: "Specialist în educație, Presenter internațional, Master trainer",
+    image: "/trainers/ana.png",
   },
   {
     id: 6,
-    name: "Diana Georgescu",
-    specialization: "Recuperare & Stretching",
-    image: "/images/trainers/diana.jpg",
-    bio: "Expert în recuperare post-antrenament și flexibilitate",
+    name: "Antonio Enache",
+    description: "Fondator Sense4fit, expert în domeniul wellness, în comunicare și business",
+    image: "/trainers/antonio.png",
   },
 ];

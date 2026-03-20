@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X, Clock, User, ArrowRight } from "lucide-react";
 import { formatPrice } from "@/lib/utils";
 import type { Specialization } from "@/data/specializations";
+import Link from "next/link";
 
 interface CourseModalProps {
   isOpen: boolean;
@@ -14,27 +15,26 @@ interface CourseModalProps {
 // Mock data pentru traineri și detalii - în viitor va veni din API
 const getCourseDetails = (courseId: string) => {
   const trainers: Record<string, string> = {
-    foundation: "Prof. Alexandru Popescu",
-    "personal-training": "Prof. Andrei Dumitrescu",
+    foundation: "Flavius Turcanu, Atilla Kovacs și Bianca Margarit",
+    "personal-training": "Robert Florea, Genoveva Tiron, Flavius Turcanu, Vladimir Coca",
     "aerobic-group": "Prof. Maria Ionescu",
-    "strength-conditioning": "Prof. Alexandru Popescu",
-    nutrition: "Prof. Elena Vasilescu",
-    "functional-training": "Prof. Cristian Marinescu",
-    "recovery-stretching": "Prof. Diana Georgescu",
+    "certificare-profesionala": "Ana Georgescu, Antonio Enache, Flavius Turcanu, Mihaela Velescu",
+    vipr: "Flavius Turcanu, Alessandro Muo",
+    crab: "Alessandro Muo, Flavius Turcanu",
   };
 
   const benefits: Record<string, string[]> = {
     foundation: [
-      "Înțelegerea anatomiei și fiziologiei umane",
-      "Principii fundamentale ale antrenamentului",
-      "Știința mișcării și biomecanica",
-      "Certificare recunoscută internațional",
+      "Știința Mișcării",
+      "Recuperare",
+      "Siguranță",
+      "Industry Knowledge",
     ],
     "personal-training": [
-      "Tehnici avansate de evaluare a clienților",
-      "Program design personalizat",
-      "Coaching și motivație",
-      "Business skills pentru traineri",
+      "Hipertrofia musculară",
+      "Sport For Fitness",
+      "Functional Area",
+      "Mix & Recovery",
     ],
     "aerobic-group": [
       "Coregrafie și structură clase de grup",
@@ -42,29 +42,22 @@ const getCourseDetails = (courseId: string) => {
       "Muzică și timing",
       "Management clase diverse",
     ],
-    "strength-conditioning": [
-      "Periodizare și program design avansat",
-      "Tehnici de dezvoltare a forței",
-      "Prevenirea accidentărilor",
-      "Monitorizare performanță",
+    "certificare-profesionala": [
+      "Brand & Dezvoltare personală",
+      "Abilități de Coaching și Comunicare",
+      "Refresh / Pre examinare",
+      "Examinare Minister",
     ],
-    nutrition: [
-      "Macro și micronutrienți",
-      "Planuri nutriționale personalizate",
-      "Suplimentare sportivă",
-      "Nutriție pentru performanță",
+    vipr: [
+      "Fundamente VIPR",
+      "Sincronizarea Corpului",
+      "Agilitate și Echilibru",
+      "Prevenirea Accidentărilor",
     ],
-    "functional-training": [
-      "Pattern-uri fundamentale de mișcare",
-      "Mobilitate și stabilitate",
-      "Antrenament funcțional aplicat",
-      "Echipament specializat",
-    ],
-    "recovery-stretching": [
-      "Tehnici de recuperare activă și pasivă",
-      "Stretching și flexibilitate",
-      "Foam rolling și self-myofascial release",
-      "Prevenirea overtraining-ului",
+    crab: [
+      "Fundamentele CRAB",
+      "Structurarea Coregrafiei",
+      "Coregrafii Moderne",
     ],
   };
 
@@ -132,20 +125,20 @@ export default function CourseModal({
               {/* Content */}
               <div className="p-6 space-y-8">
                 {/* Quick Info - Clean Layout */}
-                <div className="flex items-center justify-between py-4 border-b border-[#2A2A2A]">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-0 py-4 border-b border-[#2A2A2A]">
                   <div className="flex items-center gap-3">
-                    <Clock size={18} className="text-[#666666]" />
+                    <Clock size={18} className="text-[#666666] flex-shrink-0" />
                     <div>
-                      <p className="text-xs text-[#666666] mb-0.5">Durată</p>
+                      <p className="text-xs text-[#666666] mb-0.5">Data început</p>
                       <p className="text-white font-semibold">{course.duration}</p>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-3">
-                    <User size={18} className="text-[#666666]" />
-                    <div>
+                  <div className="flex items-start gap-3">
+                    <User size={18} className="text-[#666666] flex-shrink-0 mt-0.5" />
+                    <div className="min-w-0">
                       <p className="text-xs text-[#666666] mb-0.5">Trainer</p>
-                      <p className="text-white font-semibold">{details.trainer}</p>
+                      <p className="text-white font-semibold leading-relaxed break-words">{details.trainer}</p>
                     </div>
                   </div>
                 </div>
@@ -181,16 +174,23 @@ export default function CourseModal({
                   >
                     Închide
                   </button>
-                  <button
-                    onClick={() => {
-                      // TODO: Navigate to course page
-                      console.log(`Navigate to course: ${course.id}`);
-                    }}
-                    className="flex-1 px-6 py-4 bg-[#B8001F] text-white rounded-xl font-semibold hover:bg-[#490207] transition-colors flex items-center justify-center gap-2"
-                  >
-                    Mai multe detalii
-                    <ArrowRight size={20} />
-                  </button>
+                  {course.id === "personal-training" ? (
+                    <Link
+                      href="/curs/personal-training-certificat"
+                      className="flex-1 px-6 py-4 bg-[#B8001F] text-white rounded-xl font-semibold hover:bg-[#490207] transition-colors flex items-center justify-center gap-2"
+                    >
+                      Mai multe detalii
+                      <ArrowRight size={20} />
+                    </Link>
+                  ) : (
+                    <button
+                      onClick={onClose}
+                      className="flex-1 px-6 py-4 bg-[#B8001F] text-white rounded-xl font-semibold hover:bg-[#490207] transition-colors flex items-center justify-center gap-2"
+                    >
+                      Mai multe detalii
+                      <ArrowRight size={20} />
+                    </button>
+                  )}
                 </div>
               </div>
             </motion.div>
