@@ -17,14 +17,34 @@ const bebasNeue = Bebas_Neue({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://fiteducation.ro'),
   title: "Fiteducation School - Școală de Fitness & Specializări",
   description: "Devino antrenor personal certificat. Cursuri de specializare în fitness: Personal Training, Aerobic, Nutriție Sportivă și Antrenament Funcțional.",
   keywords: "școală fitness, curs personal trainer, certificare fitness, antrenor personal, instructor aerobic, nutriție sportivă",
+  icons: {
+    icon: "/favico.jpg",
+    shortcut: "/favico.jpg",
+    apple: "/favico.jpg",
+  },
   openGraph: {
     title: "Fiteducation School - Școală de Fitness & Specializări",
     description: "Devino antrenor personal certificat. Cursuri de specializare în fitness.",
     type: "website",
     locale: "ro_RO",
+    images: [
+      {
+        url: "/ogimage.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Fiteducation School - Școală de Fitness",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Fiteducation School - Școală de Fitness & Specializări",
+    description: "Devino antrenor personal certificat. Cursuri de specializare în fitness.",
+    images: ["/ogimage.jpg"],
   },
 };
 
