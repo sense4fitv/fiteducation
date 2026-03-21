@@ -62,7 +62,7 @@ export const courses: Course[] = [
     description: "Devino antrenor personal certificat internațional",
     duration: "18 Iulie 2026",
     image: "/images/courses/personal-trainer.jpg",
-    price: "3.900 RON",
+    price: "7.900 RON",
     trainer: "Alexandru Popescu",
     minEducation: "Liceu",
     slug: "personal-training-certificat",

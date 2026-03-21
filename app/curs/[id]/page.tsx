@@ -134,17 +134,33 @@ export default function CoursePage({ params }: { params: { id: string } }) {
                 {course.description}
               </motion.p>
 
-              <motion.button
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4, duration: 0.6 }}
-                onClick={scrollToEnrollment}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="inline-flex items-center justify-center px-8 py-4 bg-[#B8001F] text-white rounded-full font-semibold text-lg hover:bg-[#490207] transition-all duration-300 hover:shadow-lg hover:shadow-[#B8001F]/50 w-fit"
-              >
-                Înscrie-te Acum
-              </motion.button>
+              {course.id === 1 ? (
+                <motion.a
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4, duration: 0.6 }}
+                  href="https://checkout.sense4fitsummit.com/pages/index_beta?spid=prod_UBjZWMpQiKFT1k"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="inline-flex items-center justify-center px-8 py-4 bg-[#B8001F] text-white rounded-full font-semibold text-lg hover:bg-[#490207] transition-all duration-300 hover:shadow-lg hover:shadow-[#B8001F]/50 w-fit"
+                >
+                  Cumpără Acum
+                </motion.a>
+              ) : (
+                <motion.button
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4, duration: 0.6 }}
+                  onClick={scrollToEnrollment}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="inline-flex items-center justify-center px-8 py-4 bg-[#B8001F] text-white rounded-full font-semibold text-lg hover:bg-[#490207] transition-all duration-300 hover:shadow-lg hover:shadow-[#B8001F]/50 w-fit"
+                >
+                  Înscrie-te Acum
+                </motion.button>
+              )}
             </div>
           </motion.div>
         </div>
@@ -1069,16 +1085,31 @@ export default function CoursePage({ params }: { params: { id: string } }) {
 
       {/* Sticky CTA Button */}
       {showStickyButton && (
-        <motion.button
-          initial={{ y: 100, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: 100, opacity: 0 }}
-          onClick={scrollToEnrollment}
-          className="fixed bottom-8 right-8 bg-[#B8001F] text-white px-8 py-4 rounded-full font-semibold shadow-2xl hover:bg-[#490207] transition-all duration-300 hover:scale-105 z-40 flex items-center gap-2"
-        >
-          <span>Înscrie-te Acum</span>
-          <ChevronRight size={20} />
-        </motion.button>
+        course.id === 1 ? (
+          <motion.a
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 100, opacity: 0 }}
+            href="https://checkout.sense4fitsummit.com/pages/index_beta?spid=prod_UBjZWMpQiKFT1k"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="fixed bottom-8 right-8 bg-[#B8001F] text-white px-8 py-4 rounded-full font-semibold shadow-2xl hover:bg-[#490207] transition-all duration-300 hover:scale-105 z-40 flex items-center gap-2"
+          >
+            <span>Cumpără Acum</span>
+            <ChevronRight size={20} />
+          </motion.a>
+        ) : (
+          <motion.button
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 100, opacity: 0 }}
+            onClick={scrollToEnrollment}
+            className="fixed bottom-8 right-8 bg-[#B8001F] text-white px-8 py-4 rounded-full font-semibold shadow-2xl hover:bg-[#490207] transition-all duration-300 hover:scale-105 z-40 flex items-center gap-2"
+          >
+            <span>Înscrie-te Acum</span>
+            <ChevronRight size={20} />
+          </motion.button>
+        )
       )}
 
       <Footer />

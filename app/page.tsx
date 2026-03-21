@@ -7,7 +7,7 @@ import CTASection from "@/components/CTASection";
 import FAQSection from "@/components/FAQSection";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
-import ExitIntentPopup from "@/components/ExitIntentPopup";
+import PromoModal from "@/components/PromoModal";
 
 export default function Home() {
   return (
@@ -23,7 +23,7 @@ export default function Home() {
 
       {/* Global Components */}
       <WhatsAppButton />
-      <ExitIntentPopup />
+      <PromoModal />
     </div>
   );
 }
