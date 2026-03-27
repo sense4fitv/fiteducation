@@ -11,6 +11,7 @@ interface ConfiguratorCardProps {
   isDisabled?: boolean;
   onClick: () => void;
   onInfoClick: () => void;
+  hideInfo?: boolean;
 }
 
 export default function ConfiguratorCard({
@@ -19,6 +20,7 @@ export default function ConfiguratorCard({
   isDisabled = false,
   onClick,
   onInfoClick,
+  hideInfo = false,
 }: ConfiguratorCardProps) {
   const Icon = specialization.icon;
 
@@ -58,16 +60,18 @@ export default function ConfiguratorCard({
           }`}>
             {specialization.duration}
           </div>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onInfoClick();
-            }}
-            className="w-8 h-8 rounded-lg bg-[#2A2A2A] hover:bg-[#3A3A3A] flex items-center justify-center transition-colors"
-            aria-label="Informații curs"
-          >
-            <Info size={16} className="text-[#A0A0A0]" />
-          </button>
+          {!hideInfo && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onInfoClick();
+              }}
+              className="w-8 h-8 rounded-lg bg-[#2A2A2A] hover:bg-[#3A3A3A] flex items-center justify-center transition-colors"
+              aria-label="Informații curs"
+            >
+              <Info size={16} className="text-[#A0A0A0]" />
+            </button>
+          )}
         </div>
       </div>
 

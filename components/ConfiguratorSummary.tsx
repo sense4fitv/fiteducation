@@ -8,7 +8,6 @@ import type { Specialization } from "@/data/specializations";
 interface ConfiguratorSummaryProps {
   selectedSpecs: {
     foundation: Specialization | null;
-    direction: Specialization | null;
     specialization: Specialization | null;
   };
   totalPrice: number;
@@ -20,7 +19,6 @@ export default function ConfiguratorSummary({
 }: ConfiguratorSummaryProps) {
   const hasSelection =
     selectedSpecs.foundation ||
-    selectedSpecs.direction ||
     selectedSpecs.specialization;
 
   return (
@@ -54,32 +52,9 @@ export default function ConfiguratorSummary({
                   </motion.span>
                 )}
 
-                {selectedSpecs.foundation && selectedSpecs.direction && (
+                {selectedSpecs.foundation && selectedSpecs.specialization && (
                   <motion.div
                     key="arrow-1"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.8 }}
-                  >
-                    <ArrowRight size={14} className="text-[#A0A0A0] sm:w-4 sm:h-4" />
-                  </motion.div>
-                )}
-
-                {selectedSpecs.direction && (
-                  <motion.span
-                    key="direction"
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.8 }}
-                    className="px-2 py-1 sm:px-3 sm:py-1.5 bg-[#B8001F]/20 border border-[#B8001F]/40 text-[#B8001F] rounded-full font-medium"
-                  >
-                    {selectedSpecs.direction.title}
-                  </motion.span>
-                )}
-
-                {selectedSpecs.direction && selectedSpecs.specialization && (
-                  <motion.div
-                    key="arrow-2"
                     initial={{ opacity: 0, scale: 0.8 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.8 }}

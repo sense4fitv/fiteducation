@@ -1,4 +1,4 @@
-import { Dumbbell, Users, Heart, Activity, Salad, Sparkles } from "lucide-react";
+import { Dumbbell, Users, Heart, Activity, Sparkles } from "lucide-react";
 
 export interface Specialization {
   id: string;
@@ -9,44 +9,34 @@ export interface Specialization {
   icon: any;
   row: 1 | 2 | 3;
   category?: "foundation" | "direction" | "specialization";
+  comingSoon?: boolean;
 }
 
 export const specializations: Specialization[] = [
-  // Rând 1 - Foundation (mereu selectat)
+  // Fundație - col 1
   {
-    id: "foundation",
-    title: "Foundation",
-    description: "Bazele științei mișcării, anatomie funcțională și principii de antrenament",
-    duration: "18 iulie",
-    price: 2000,
-    icon: Sparkles,
+    id: "personal-training",
+    title: "Personal training certificat",
+    description: "Specializare în antrenament individual și program design",
+    duration: "18 Iulie",
+    price: 7900,
+    icon: Dumbbell,
     row: 1,
     category: "foundation",
   },
-
-  // Rând 2 - Direcția principală
-  {
-    id: "personal-training",
-    title: "Personal Training",
-    description: "Specializare în antrenament individual și program design",
-    duration: "1 August",
-    price: 3800,
-    icon: Dumbbell,
-    row: 2,
-    category: "direction",
-  },
   {
     id: "aerobic-group",
-    title: "Aerobic / Group Fitness",
+    title: "Instructor Aerobic & Group Fitness",
     description: "Specializare în clase de grup, coregrafie și motivație",
-    duration: "TBA",
-    price: 3200,
+    duration: "18 Iulie",
+    price: 7900,
     icon: Users,
-    row: 2,
-    category: "direction",
+    row: 1,
+    category: "foundation",
+    comingSoon: true,
   },
 
-  // Rând 3 - Specializare finală
+  // Workshop-uri si specializari - col 2
   {
     id: "certificare-profesionala",
     title: "Certificare Profesională",
@@ -80,8 +70,8 @@ export const specializations: Specialization[] = [
 ];
 
 // Helper functions
-export const getFoundation = () =>
-  specializations.find((s) => s.category === "foundation");
+export const getFoundations = () =>
+  specializations.filter((s) => s.category === "foundation");
 
 export const getDirections = () =>
   specializations.filter((s) => s.category === "direction");

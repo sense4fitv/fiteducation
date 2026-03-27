@@ -10,8 +10,7 @@ import ConfiguratorCard from "./ConfiguratorCard";
 import ConfiguratorSummary from "./ConfiguratorSummary";
 import CourseModal from "./CourseModal";
 import {
-  getFoundation,
-  getDirections,
+  getFoundations,
   getSpecializations,
   type Specialization,
 } from "@/data/specializations";
@@ -25,8 +24,6 @@ export default function Configurator() {
   const summaryRef = useRef<HTMLDivElement | null>(null);
   const [selectedFoundation, setSelectedFoundation] =
     useState<Specialization | null>(null);
-  const [selectedDirection, setSelectedDirection] =
-    useState<Specialization | null>(null);
   const [selectedSpecialization, setSelectedSpecialization] =
     useState<Specialization | null>(null);
 
@@ -35,13 +32,11 @@ export default function Configurator() {
   const [showStickyBar, setShowStickyBar] = useState(false);
   const [stickyBarDismissed, setStickyBarDismissed] = useState(false);
 
-  const foundation = getFoundation();
-  const directions = getDirections();
+  const foundations = getFoundations();
   const specializations = getSpecializations();
 
   const selectedCourses = [
     selectedFoundation,
-    selectedDirection,
     selectedSpecialization,
   ].filter(Boolean) as Specialization[];
 
@@ -59,18 +54,6 @@ export default function Configurator() {
       setter(null);
     } else {
       setter(course);
-    }
-  };
-
-  const handleDirectionToggle = (direction: Specialization) => {
-    if (selectedDirection?.id === direction.id) {
-      setSelectedDirection(null);
-    } else {
-      setSelectedDirection(direction);
-      // Auto-select foundation when a direction is selected
-      if (!selectedFoundation && foundation) {
-        setSelectedFoundation(foundation);
-      }
     }
   };
 
@@ -133,48 +116,8 @@ export default function Configurator() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="bg-[#0A0A0A] rounded-3xl p-6 sm:p-8 lg:p-10 shadow-2xl relative"
         >
-          {/* Direction Arrows - Desktop Only */}
-          <div className="hidden lg:block">
-            {/* Arrow 1 - at 25% of Foundation card height */}
-            <motion.div
-              animate={{ x: [0, 8, 0] }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut",
-                repeatDelay: 0.5
-              }}
-              className="absolute z-10 pointer-events-none"
-              style={{
-                left: 'calc(33.333% - 24px)',
-                top: 'calc(40px + 24px + 156px)', // Header (40px + 24px) + 30% of card
-              }}
-            >
-              <ChevronRight size={32} className="text-[#B8001F]" strokeWidth={3} />
-            </motion.div>
-
-            {/* Arrow 2 - at 75% of Foundation card height */}
-            <motion.div
-              animate={{ x: [0, 8, 0] }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut",
-                repeatDelay: 0.5,
-                delay: 0.3
-              }}
-              className="absolute z-10 pointer-events-none"
-              style={{
-                left: 'calc(33.333% - 24px)',
-                top: 'calc(40px + 24px + 416px)', // Header (40px + 24px) + 80% of card
-              }}
-            >
-              <ChevronRight size={32} className="text-[#B8001F]" strokeWidth={3} />
-            </motion.div>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-10">
-            {/* Step 1 - Foundation */}
+          <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-8 lg:gap-10">
+            {/* Col 1 - Fundatie */}
             <div className="flex flex-col">
               <div className="flex items-center gap-3 mb-6">
                 <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
@@ -189,53 +132,22 @@ export default function Configurator() {
                 </h3>
               </div>
 
-              <div className="flex-1 flex">
-                {foundation && (
-                  <ConfiguratorCard
-                    specialization={foundation}
-                    isSelected={selectedFoundation?.id === foundation.id}
-                    onClick={() => {
-                      // Don't allow deselection if a direction is selected
-                      if (selectedDirection && selectedFoundation?.id === foundation.id) {
-                        return;
-                      }
-                      handleToggle(selectedFoundation, foundation, setSelectedFoundation);
-                    }}
-                    onInfoClick={() => openModal(foundation)}
-                  />
-                )}
-              </div>
-            </div>
-
-            {/* Step 2 - Direction */}
-            <div>
-              <div className="flex items-center gap-3 mb-6">
-                <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
-                  selectedDirection ? "bg-[#B8001F]" : "bg-[#2A2A2A]"
-                }`}>
-                  <span className={`font-bold text-lg ${
-                    selectedDirection ? "text-white" : "text-[#666666]"
-                  }`}>2</span>
-                </div>
-                <h3 className="text-xl font-bold text-white font-[family-name:var(--font-space-grotesk)]">
-                  Direcție
-                </h3>
-              </div>
-
-              <div className="space-y-4">
-                {directions.map((direction) => (
-                  <ConfiguratorCard
-                    key={direction.id}
-                    specialization={direction}
-                    isSelected={selectedDirection?.id === direction.id}
-                    onClick={() => handleDirectionToggle(direction)}
-                    onInfoClick={() => openModal(direction)}
-                  />
+              <div className="flex flex-col gap-4 lg:h-[592px]">
+                {foundations.map((foundation) => (
+                  <div key={foundation.id} className="flex-1">
+                    <ConfiguratorCard
+                      specialization={foundation}
+                      isSelected={selectedFoundation?.id === foundation.id}
+                      onClick={() => handleToggle(selectedFoundation, foundation, setSelectedFoundation)}
+                      onInfoClick={() => openModal(foundation)}
+                      hideInfo={foundation.comingSoon}
+                    />
+                  </div>
                 ))}
               </div>
             </div>
 
-            {/* Step 3 - Specialization */}
+            {/* Col 2 - Workshop-uri si specializari */}
             <div>
               <div className="flex items-center gap-3 mb-6">
                 <div className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
@@ -243,10 +155,10 @@ export default function Configurator() {
                 }`}>
                   <span className={`font-bold text-lg ${
                     selectedSpecialization ? "text-white" : "text-[#666666]"
-                  }`}>3</span>
+                  }`}>2</span>
                 </div>
                 <h3 className="text-xl font-bold text-white font-[family-name:var(--font-space-grotesk)]">
-                  Specializare
+                  Workshop-uri și specializări
                 </h3>
               </div>
 
@@ -339,7 +251,6 @@ export default function Configurator() {
           <ConfiguratorSummary
             selectedSpecs={{
               foundation: selectedFoundation,
-              direction: selectedDirection,
               specialization: selectedSpecialization,
             }}
             totalPrice={totalPrice}
