@@ -3,6 +3,15 @@ import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 import { Plus, Pencil } from "lucide-react";
 import DeleteTrainerButton from "./DeleteTrainerButton";
+import { Button } from "@/components/ui/button";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 export default async function TrainersPage() {
   const supabase = await createClient();
@@ -32,54 +41,38 @@ export default async function TrainersPage() {
             Manage your trainer profiles
           </p>
         </div>
-        <Link
-          href="/admin/trainers/new"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-[#B8001F] text-white text-sm font-medium rounded-lg hover:bg-[#9a0019] transition-colors"
-        >
+        <Button render={<Link href="/admin/trainers/new" />}>
           <Plus size={16} />
           Add Trainer
-        </Link>
+        </Button>
       </div>
 
       {/* Empty state */}
       {(!trainers || trainers.length === 0) ? (
         <div className="bg-white rounded-lg border border-gray-200 p-12 text-center">
           <p className="text-gray-500 text-sm">No trainers yet.</p>
-          <Link
-            href="/admin/trainers/new"
-            className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-[#B8001F] text-white text-sm font-medium rounded-lg hover:bg-[#9a0019] transition-colors"
-          >
+          <Button className="mt-4" render={<Link href="/admin/trainers/new" />}>
             <Plus size={16} />
             Add your first trainer
-          </Link>
+          </Button>
         </div>
       ) : (
         <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Image
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
-                  Description
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">
-                  Sort Order
-                </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Image</TableHead>
+                <TableHead>Name</TableHead>
+                <TableHead className="hidden md:table-cell">Description</TableHead>
+                <TableHead className="hidden sm:table-cell">Sort Order</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {trainers.map((trainer) => (
-                <tr key={trainer.id} className="hover:bg-gray-50 transition-colors">
+                <TableRow key={trainer.id}>
                   {/* Image */}
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <TableCell>
                     {trainer.image_url ? (
                       <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-gray-100 shrink-0">
                         <Image
@@ -95,50 +88,51 @@ export default async function TrainersPage() {
                         No img
                       </div>
                     )}
-                  </td>
+                  </TableCell>
 
                   {/* Name */}
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="text-sm font-medium text-gray-900">
+                  <TableCell>
+                    <span className="font-medium text-gray-900">
                       {trainer.name}
                     </span>
-                  </td>
+                  </TableCell>
 
                   {/* Description */}
-                  <td className="px-6 py-4 hidden md:table-cell max-w-xs">
-                    <span className="text-sm text-gray-500 line-clamp-2">
+                  <TableCell className="hidden md:table-cell max-w-xs">
+                    <span className="text-gray-500 line-clamp-2">
                       {trainer.description
                         ? trainer.description.length > 100
-                          ? trainer.description.slice(0, 100) + "…"
+                          ? trainer.description.slice(0, 100) + "..."
                           : trainer.description
-                        : <span className="italic text-gray-400">—</span>}
+                        : <span className="italic text-gray-400">&mdash;</span>}
                     </span>
-                  </td>
+                  </TableCell>
 
                   {/* Sort Order */}
-                  <td className="px-6 py-4 whitespace-nowrap hidden sm:table-cell">
-                    <span className="text-sm text-gray-500">
-                      {trainer.sort_order != null ? trainer.sort_order : "—"}
+                  <TableCell className="hidden sm:table-cell">
+                    <span className="text-gray-500">
+                      {trainer.sort_order != null ? trainer.sort_order : "\u2014"}
                     </span>
-                  </td>
+                  </TableCell>
 
                   {/* Actions */}
-                  <td className="px-6 py-4 whitespace-nowrap text-right">
+                  <TableCell className="text-right">
                     <div className="inline-flex items-center gap-2">
-                      <Link
-                        href={`/admin/trainers/${trainer.id}`}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-gray-300 text-gray-700 text-xs font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        render={<Link href={`/admin/trainers/${trainer.id}`} />}
                       >
                         <Pencil size={13} />
                         Edit
-                      </Link>
+                      </Button>
                       <DeleteTrainerButton trainerId={trainer.id} trainerName={trainer.name} />
                     </div>
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
       )}
     </div>

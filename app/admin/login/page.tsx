@@ -3,6 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -50,39 +53,39 @@ export default function AdminLoginPage() {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label
+              <Label
                 htmlFor="email"
-                className="block text-sm font-medium text-text-secondary-dark mb-1.5"
+                className="text-text-secondary-dark mb-1.5"
               >
                 Email address
-              </label>
-              <input
+              </Label>
+              <Input
                 id="email"
                 type="email"
                 autoComplete="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-section-dark border border-card-border rounded-lg px-4 py-2.5 text-white text-sm placeholder-text-secondary-dark focus:outline-none focus:border-accent-primary transition-colors"
+                className="bg-section-dark border-card-border text-white placeholder-text-secondary-dark focus:border-accent-primary"
                 placeholder="admin@fiteducation.ro"
               />
             </div>
 
             <div>
-              <label
+              <Label
                 htmlFor="password"
-                className="block text-sm font-medium text-text-secondary-dark mb-1.5"
+                className="text-text-secondary-dark mb-1.5"
               >
                 Password
-              </label>
-              <input
+              </Label>
+              <Input
                 id="password"
                 type="password"
                 autoComplete="current-password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-section-dark border border-card-border rounded-lg px-4 py-2.5 text-white text-sm placeholder-text-secondary-dark focus:outline-none focus:border-accent-primary transition-colors"
+                className="bg-section-dark border-card-border text-white placeholder-text-secondary-dark focus:border-accent-primary"
                 placeholder="••••••••"
               />
             </div>
@@ -93,13 +96,13 @@ export default function AdminLoginPage() {
               </div>
             )}
 
-            <button
+            <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-accent-primary hover:bg-accent-hover disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold text-sm rounded-lg px-4 py-3 transition-colors font-poppins"
+              className="w-full bg-accent-primary hover:bg-accent-hover text-white font-semibold text-sm py-3 font-poppins"
             >
               {loading ? "Signing in..." : "Sign in"}
-            </button>
+            </Button>
           </form>
         </div>
       </div>

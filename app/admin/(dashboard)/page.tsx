@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { Package, Users, GraduationCap, BookOpen } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface StatCardProps {
   title: string;
@@ -10,20 +11,28 @@ interface StatCardProps {
 
 function StatCard({ title, value, icon, description }: StatCardProps) {
   return (
-    <div className="bg-white rounded-xl border border-gray-200 p-6 flex items-start gap-4">
-      <div className="p-3 bg-accent-primary/10 rounded-lg text-accent-primary shrink-0">
-        {icon}
-      </div>
-      <div>
-        <p className="text-sm font-medium text-text-secondary-light">{title}</p>
-        <p className="text-3xl font-bold text-text-primary-light font-poppins mt-0.5">
+    <Card>
+      <CardHeader>
+        <div className="flex items-start gap-4">
+          <div className="p-3 bg-accent-primary/10 rounded-lg text-accent-primary shrink-0">
+            {icon}
+          </div>
+          <div>
+            <CardTitle className="text-sm font-medium text-text-secondary-light">
+              {title}
+            </CardTitle>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <p className="text-3xl font-bold text-text-primary-light font-poppins">
           {value}
         </p>
         {description && (
           <p className="text-xs text-text-secondary-light mt-1">{description}</p>
         )}
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 }
 

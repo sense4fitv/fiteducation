@@ -10,6 +10,8 @@ import {
   LogOut,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 
 const navItems = [
   { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
@@ -31,12 +33,14 @@ export default function AdminSidebar() {
   return (
     <aside className="w-64 min-h-screen bg-[#0A0A0A] border-r border-card-border flex flex-col shrink-0">
       {/* Brand */}
-      <div className="px-6 py-6 border-b border-card-border">
+      <div className="px-6 py-6">
         <h1 className="text-lg font-bold text-white font-poppins tracking-tight">
           Fit<span className="text-accent-primary">Education</span>
         </h1>
         <p className="text-xs text-text-secondary-dark mt-0.5">Admin Panel</p>
       </div>
+
+      <Separator className="bg-card-border" />
 
       {/* Navigation */}
       <nav className="flex-1 px-3 py-4 space-y-1">
@@ -44,31 +48,35 @@ export default function AdminSidebar() {
           const isActive =
             href === "/admin" ? pathname === "/admin" : pathname.startsWith(href);
           return (
-            <Link
+            <Button
               key={href}
-              href={href}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+              variant={isActive ? "default" : "ghost"}
+              className={`w-full justify-start gap-3 px-3 py-2.5 text-sm font-medium ${
                 isActive
-                  ? "bg-accent-primary text-white"
+                  ? "bg-accent-primary text-white hover:bg-accent-primary/90"
                   : "text-text-secondary-dark hover:text-white hover:bg-card-dark"
               }`}
+              render={<Link href={href} />}
             >
               <Icon size={18} />
               {label}
-            </Link>
+            </Button>
           );
         })}
       </nav>
 
+      <Separator className="bg-card-border" />
+
       {/* Logout */}
-      <div className="px-3 py-4 border-t border-card-border">
-        <button
+      <div className="px-3 py-4">
+        <Button
+          variant="ghost"
           onClick={handleLogout}
-          className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm font-medium text-text-secondary-dark hover:text-white hover:bg-card-dark transition-colors"
+          className="w-full justify-start gap-3 px-3 py-2.5 text-sm font-medium text-text-secondary-dark hover:text-white hover:bg-card-dark"
         >
           <LogOut size={18} />
           Sign out
-        </button>
+        </Button>
       </div>
     </aside>
   );

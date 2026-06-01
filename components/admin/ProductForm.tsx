@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ChevronDown, ChevronUp } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import type { Tables } from "@/lib/supabase/types";
 
@@ -17,6 +16,19 @@ import FeesEditor from "@/components/admin/fields/FeesEditor";
 import ExamInfoEditor from "@/components/admin/fields/ExamInfoEditor";
 import CertificationsEditor from "@/components/admin/fields/CertificationsEditor";
 import ProductTrainerPicker from "@/components/admin/ProductTrainerPicker";
+
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { cn } from "@/lib/utils";
 
 type Product = Tables<"products"> & {
   product_trainers?: { trainer_id: string; sort_order: number | null }[];
@@ -35,28 +47,12 @@ function slugify(title: string): string {
     .replace(/(^-|-$)/g, "");
 }
 
-const SECTION_LABELS = [
-  "Basic Info",
-  "Pricing & Schedule",
-  "Content",
-  "Enrollment",
-  "Social Proof",
-  "Trainers",
-  "Meta",
-];
+const selectCls =
+  "w-full px-3 py-2 border border-input rounded-lg bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent";
 
 export default function ProductForm({ product }: ProductFormProps) {
   const router = useRouter();
   const isEdit = Boolean(product);
-
-  // Accordion state — section 0 (Basic Info) open by default
-  const [openSections, setOpenSections] = useState<Record<number, boolean>>({
-    0: true,
-  });
-
-  function toggleSection(idx: number) {
-    setOpenSections((prev) => ({ ...prev, [idx]: !prev[idx] }));
-  }
 
   // ── Form state ──────────────────────────────────────────────
   const [title, setTitle] = useState(product?.title ?? "");
@@ -288,345 +284,347 @@ export default function ProductForm({ product }: ProductFormProps) {
     }
   }
 
-  // ── Shared input classes ────────────────────────────────────
-  const inputCls =
-    "w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B8001F] focus:border-transparent text-sm";
-  const labelCls = "block text-sm font-medium text-gray-700 mb-1";
-
-  // ── Section renderer ────────────────────────────────────────
-  function Section({
-    index,
-    children,
-  }: {
-    index: number;
-    children: React.ReactNode;
-  }) {
-    const isOpen = openSections[index] ?? false;
-    return (
-      <div className="border-b border-gray-200 last:border-b-0">
-        <button
-          type="button"
-          onClick={() => toggleSection(index)}
-          className="w-full flex items-center justify-between py-4 px-6 hover:bg-gray-50 transition-colors text-left"
-        >
-          <span className="text-sm font-semibold text-gray-900">
-            {SECTION_LABELS[index]}
-          </span>
-          {isOpen ? (
-            <ChevronUp size={16} className="text-gray-500" />
-          ) : (
-            <ChevronDown size={16} className="text-gray-500" />
-          )}
-        </button>
-        {isOpen && <div className="px-6 pb-6 space-y-5">{children}</div>}
-      </div>
-    );
-  }
-
   return (
     <form onSubmit={handleSubmit}>
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200">
-        {/* ── Section 0: Basic Info ────────────────────────── */}
-        <Section index={0}>
-          <div>
-            <label className={labelCls}>
-              Title <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              required
-              value={title}
-              onChange={(e) => handleTitleChange(e.target.value)}
-              className={inputCls}
-              placeholder="Product title"
-            />
-          </div>
-          <div>
-            <label className={labelCls}>
-              Slug <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              required
-              value={slug}
-              onChange={(e) => setSlug(e.target.value)}
-              className={inputCls}
-              placeholder="product-slug"
-            />
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div>
-              <label className={labelCls}>Type</label>
-              <select
-                value={type}
-                onChange={(e) => setType(e.target.value)}
-                className={inputCls}
-              >
-                <option value="course">Course</option>
-                <option value="workshop">Workshop</option>
-              </select>
-            </div>
-            <div>
-              <label className={labelCls}>Status</label>
-              <select
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-                className={inputCls}
-              >
-                <option value="draft">Draft</option>
-                <option value="published">Published</option>
-                <option value="archived">Archived</option>
-              </select>
-            </div>
-            <div>
-              <label className={labelCls}>Category</label>
-              <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                className={inputCls}
-              >
-                <option value="">— None —</option>
-                <option value="foundation">Foundation</option>
-                <option value="direction">Direction</option>
-                <option value="specialization">Specialization</option>
-              </select>
-            </div>
-          </div>
-          <div>
-            <label className={labelCls}>Description</label>
-            <textarea
-              rows={3}
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className={`${inputCls} resize-y`}
-              placeholder="Short description"
-            />
-          </div>
-          <div>
-            <ImageUpload
-              bucket="product-images"
-              value={imageUrl}
-              onChange={(url) => setImageUrl(url)}
-              label="Product Image"
-            />
-          </div>
-        </Section>
+      <Card className="p-0">
+        <Accordion multiple defaultValue={["basic-info"]}>
+          {/* ── Section 0: Basic Info ────────────────────────── */}
+          <AccordionItem value="basic-info">
+            <AccordionTrigger className="px-6 py-4 text-sm font-semibold">
+              Basic Info
+            </AccordionTrigger>
+            <AccordionContent className="px-6 pb-6 space-y-5">
+              <div>
+                <Label>
+                  Title <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  type="text"
+                  required
+                  value={title}
+                  onChange={(e) => handleTitleChange(e.target.value)}
+                  placeholder="Product title"
+                  className="mt-1"
+                />
+              </div>
+              <div>
+                <Label>
+                  Slug <span className="text-red-500">*</span>
+                </Label>
+                <Input
+                  type="text"
+                  required
+                  value={slug}
+                  onChange={(e) => setSlug(e.target.value)}
+                  placeholder="product-slug"
+                  className="mt-1"
+                />
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <Label>Type</Label>
+                  <select
+                    value={type}
+                    onChange={(e) => setType(e.target.value)}
+                    className={cn(selectCls, "mt-1")}
+                  >
+                    <option value="course">Course</option>
+                    <option value="workshop">Workshop</option>
+                  </select>
+                </div>
+                <div>
+                  <Label>Status</Label>
+                  <select
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value)}
+                    className={cn(selectCls, "mt-1")}
+                  >
+                    <option value="draft">Draft</option>
+                    <option value="published">Published</option>
+                    <option value="archived">Archived</option>
+                  </select>
+                </div>
+                <div>
+                  <Label>Category</Label>
+                  <select
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                    className={cn(selectCls, "mt-1")}
+                  >
+                    <option value="">— None —</option>
+                    <option value="foundation">Foundation</option>
+                    <option value="direction">Direction</option>
+                    <option value="specialization">Specialization</option>
+                  </select>
+                </div>
+              </div>
+              <div>
+                <Label>Description</Label>
+                <Textarea
+                  rows={3}
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Short description"
+                  className="mt-1 resize-y"
+                />
+              </div>
+              <div>
+                <ImageUpload
+                  bucket="product-images"
+                  value={imageUrl}
+                  onChange={(url) => setImageUrl(url)}
+                  label="Product Image"
+                />
+              </div>
+            </AccordionContent>
+          </AccordionItem>
 
-        {/* ── Section 1: Pricing & Schedule ────────────────── */}
-        <Section index={1}>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className={labelCls}>
-                Price <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="number"
-                step="0.01"
-                required
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-                className={inputCls}
-                placeholder="0.00"
-              />
-            </div>
-            <div>
-              <label className={labelCls}>Promo Price</label>
-              <input
-                type="number"
-                step="0.01"
-                value={promoPrice}
-                onChange={(e) => setPromoPrice(e.target.value)}
-                className={inputCls}
-                placeholder="0.00"
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className={labelCls}>Promo Start</label>
-              <input
-                type="datetime-local"
-                value={promoStart}
-                onChange={(e) => setPromoStart(e.target.value)}
-                className={inputCls}
-              />
-            </div>
-            <div>
-              <label className={labelCls}>Promo End</label>
-              <input
-                type="datetime-local"
-                value={promoEnd}
-                onChange={(e) => setPromoEnd(e.target.value)}
-                className={inputCls}
-              />
-            </div>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div>
-              <label className={labelCls}>Start Date</label>
-              <input
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-                className={inputCls}
-              />
-            </div>
-            <div>
-              <label className={labelCls}>Duration</label>
-              <input
-                type="text"
-                value={duration}
-                onChange={(e) => setDuration(e.target.value)}
-                className={inputCls}
-                placeholder="e.g. 3 months"
-              />
-            </div>
-            <div>
-              <label className={labelCls}>Schedule</label>
-              <input
-                type="text"
-                value={schedule}
-                onChange={(e) => setSchedule(e.target.value)}
-                className={inputCls}
-                placeholder="e.g. Mon & Wed, 18:00-20:00"
-              />
-            </div>
-            <div>
-              <label className={labelCls}>Location</label>
-              <input
-                type="text"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                className={inputCls}
-                placeholder="e.g. Online"
-              />
-            </div>
-          </div>
-          <div>
-            <label className={labelCls}>Total Spots</label>
-            <input
-              type="number"
-              value={spotsTotal}
-              onChange={(e) => setSpotsTotal(e.target.value)}
-              className={inputCls}
-              placeholder="e.g. 30"
-            />
-          </div>
-        </Section>
+          {/* ── Section 1: Pricing & Schedule ────────────────── */}
+          <AccordionItem value="pricing-schedule">
+            <AccordionTrigger className="px-6 py-4 text-sm font-semibold">
+              Pricing &amp; Schedule
+            </AccordionTrigger>
+            <AccordionContent className="px-6 pb-6 space-y-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <Label>
+                    Price <span className="text-red-500">*</span>
+                  </Label>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    required
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    placeholder="0.00"
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label>Promo Price</Label>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    value={promoPrice}
+                    onChange={(e) => setPromoPrice(e.target.value)}
+                    placeholder="0.00"
+                    className="mt-1"
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <Label>Promo Start</Label>
+                  <Input
+                    type="datetime-local"
+                    value={promoStart}
+                    onChange={(e) => setPromoStart(e.target.value)}
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label>Promo End</Label>
+                  <Input
+                    type="datetime-local"
+                    value={promoEnd}
+                    onChange={(e) => setPromoEnd(e.target.value)}
+                    className="mt-1"
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div>
+                  <Label>Start Date</Label>
+                  <Input
+                    type="date"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label>Duration</Label>
+                  <Input
+                    type="text"
+                    value={duration}
+                    onChange={(e) => setDuration(e.target.value)}
+                    placeholder="e.g. 3 months"
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label>Schedule</Label>
+                  <Input
+                    type="text"
+                    value={schedule}
+                    onChange={(e) => setSchedule(e.target.value)}
+                    placeholder="e.g. Mon & Wed, 18:00-20:00"
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label>Location</Label>
+                  <Input
+                    type="text"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
+                    placeholder="e.g. Online"
+                    className="mt-1"
+                  />
+                </div>
+              </div>
+              <div>
+                <Label>Total Spots</Label>
+                <Input
+                  type="number"
+                  value={spotsTotal}
+                  onChange={(e) => setSpotsTotal(e.target.value)}
+                  placeholder="e.g. 30"
+                  className="mt-1"
+                />
+              </div>
+            </AccordionContent>
+          </AccordionItem>
 
-        {/* ── Section 2: Content ───────────────────────────── */}
-        <Section index={2}>
-          <div>
-            <label className={labelCls}>Full Description</label>
-            <textarea
-              rows={8}
-              value={fullDescription}
-              onChange={(e) => setFullDescription(e.target.value)}
-              className={`${inputCls} resize-y`}
-              placeholder="Detailed product description"
-            />
-          </div>
-          <ListEditor
-            label="Highlights"
-            value={highlights}
-            onChange={setHighlights}
-            placeholder="Add a highlight"
-          />
-          <ListEditor
-            label="Included"
-            value={included}
-            onChange={setIncluded}
-            placeholder="What's included"
-          />
-          <CompetenciesEditor
-            value={competencies}
-            onChange={setCompetencies}
-          />
-          <CurriculumEditor value={curriculum} onChange={setCurriculum} />
-        </Section>
-
-        {/* ── Section 3: Enrollment ────────────────────────── */}
-        <Section index={3}>
-          <ListEditor
-            label="Requirements / Documents"
-            value={requirementsDocs}
-            onChange={setRequirementsDocs}
-            placeholder="Add a requirement"
-          />
-          <FeesEditor value={feesStructure} onChange={setFeesStructure} />
-          <ExamInfoEditor value={examInfo} onChange={setExamInfo} />
-          <CertificationsEditor
-            value={certifications}
-            onChange={setCertifications}
-          />
-        </Section>
-
-        {/* ── Section 4: Social Proof ──────────────────────── */}
-        <Section index={4}>
-          <TestimonialsEditor
-            value={testimonials}
-            onChange={setTestimonials}
-          />
-          <FAQEditor value={faq} onChange={setFaq} />
-        </Section>
-
-        {/* ── Section 5: Trainers ──────────────────────────── */}
-        <Section index={5}>
-          <ProductTrainerPicker value={trainers} onChange={setTrainers} />
-        </Section>
-
-        {/* ── Section 6: Meta ──────────────────────────────── */}
-        <Section index={6}>
-          <ListEditor
-            label="Tags"
-            value={tags}
-            onChange={setTags}
-            placeholder="Add a tag"
-          />
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div>
-              <label className={labelCls}>Level</label>
-              <input
-                type="text"
-                value={level}
-                onChange={(e) => setLevel(e.target.value)}
-                className={inputCls}
-                placeholder="e.g. Beginner"
+          {/* ── Section 2: Content ───────────────────────────── */}
+          <AccordionItem value="content">
+            <AccordionTrigger className="px-6 py-4 text-sm font-semibold">
+              Content
+            </AccordionTrigger>
+            <AccordionContent className="px-6 pb-6 space-y-5">
+              <div>
+                <Label>Full Description</Label>
+                <Textarea
+                  rows={8}
+                  value={fullDescription}
+                  onChange={(e) => setFullDescription(e.target.value)}
+                  placeholder="Detailed product description"
+                  className="mt-1 resize-y"
+                />
+              </div>
+              <ListEditor
+                label="Highlights"
+                value={highlights}
+                onChange={setHighlights}
+                placeholder="Add a highlight"
               />
-            </div>
-            <div>
-              <label className={labelCls}>Language</label>
-              <input
-                type="text"
-                value={language}
-                onChange={(e) => setLanguage(e.target.value)}
-                className={inputCls}
-                placeholder="Romana"
+              <ListEditor
+                label="Included"
+                value={included}
+                onChange={setIncluded}
+                placeholder="What's included"
               />
-            </div>
-            <div>
-              <label className={labelCls}>Min. Education</label>
-              <input
-                type="text"
-                value={minEducation}
-                onChange={(e) => setMinEducation(e.target.value)}
-                className={inputCls}
-                placeholder="e.g. High School"
+              <CompetenciesEditor
+                value={competencies}
+                onChange={setCompetencies}
               />
-            </div>
-          </div>
-          <div>
-            <label className={labelCls}>External Checkout URL</label>
-            <input
-              type="text"
-              value={externalCheckoutUrl}
-              onChange={(e) => setExternalCheckoutUrl(e.target.value)}
-              className={inputCls}
-              placeholder="https://..."
-            />
-          </div>
-        </Section>
-      </div>
+              <CurriculumEditor value={curriculum} onChange={setCurriculum} />
+            </AccordionContent>
+          </AccordionItem>
+
+          {/* ── Section 3: Enrollment ────────────────────────── */}
+          <AccordionItem value="enrollment">
+            <AccordionTrigger className="px-6 py-4 text-sm font-semibold">
+              Enrollment
+            </AccordionTrigger>
+            <AccordionContent className="px-6 pb-6 space-y-5">
+              <ListEditor
+                label="Requirements / Documents"
+                value={requirementsDocs}
+                onChange={setRequirementsDocs}
+                placeholder="Add a requirement"
+              />
+              <FeesEditor value={feesStructure} onChange={setFeesStructure} />
+              <ExamInfoEditor value={examInfo} onChange={setExamInfo} />
+              <CertificationsEditor
+                value={certifications}
+                onChange={setCertifications}
+              />
+            </AccordionContent>
+          </AccordionItem>
+
+          {/* ── Section 4: Social Proof ──────────────────────── */}
+          <AccordionItem value="social-proof">
+            <AccordionTrigger className="px-6 py-4 text-sm font-semibold">
+              Social Proof
+            </AccordionTrigger>
+            <AccordionContent className="px-6 pb-6 space-y-5">
+              <TestimonialsEditor
+                value={testimonials}
+                onChange={setTestimonials}
+              />
+              <FAQEditor value={faq} onChange={setFaq} />
+            </AccordionContent>
+          </AccordionItem>
+
+          {/* ── Section 5: Trainers ──────────────────────────── */}
+          <AccordionItem value="trainers">
+            <AccordionTrigger className="px-6 py-4 text-sm font-semibold">
+              Trainers
+            </AccordionTrigger>
+            <AccordionContent className="px-6 pb-6 space-y-5">
+              <ProductTrainerPicker value={trainers} onChange={setTrainers} />
+            </AccordionContent>
+          </AccordionItem>
+
+          {/* ── Section 6: Meta ──────────────────────────────── */}
+          <AccordionItem value="meta">
+            <AccordionTrigger className="px-6 py-4 text-sm font-semibold">
+              Meta
+            </AccordionTrigger>
+            <AccordionContent className="px-6 pb-6 space-y-5">
+              <ListEditor
+                label="Tags"
+                value={tags}
+                onChange={setTags}
+                placeholder="Add a tag"
+              />
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                  <Label>Level</Label>
+                  <Input
+                    type="text"
+                    value={level}
+                    onChange={(e) => setLevel(e.target.value)}
+                    placeholder="e.g. Beginner"
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label>Language</Label>
+                  <Input
+                    type="text"
+                    value={language}
+                    onChange={(e) => setLanguage(e.target.value)}
+                    placeholder="Romana"
+                    className="mt-1"
+                  />
+                </div>
+                <div>
+                  <Label>Min. Education</Label>
+                  <Input
+                    type="text"
+                    value={minEducation}
+                    onChange={(e) => setMinEducation(e.target.value)}
+                    placeholder="e.g. High School"
+                    className="mt-1"
+                  />
+                </div>
+              </div>
+              <div>
+                <Label>External Checkout URL</Label>
+                <Input
+                  type="text"
+                  value={externalCheckoutUrl}
+                  onChange={(e) => setExternalCheckoutUrl(e.target.value)}
+                  placeholder="https://..."
+                  className="mt-1"
+                />
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </Card>
 
       {/* Error */}
       {error && (
@@ -637,19 +635,12 @@ export default function ProductForm({ product }: ProductFormProps) {
 
       {/* ── Sticky footer ──────────────────────────────────── */}
       <div className="sticky bottom-0 bg-[#F4F4F5] pt-4 pb-2 mt-6 flex flex-col-reverse sm:flex-row gap-3">
-        <Link
-          href="/admin/products"
-          className="inline-flex items-center justify-center px-5 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
-        >
+        <Button variant="outline" render={<Link href="/admin/products" />}>
           Cancel
-        </Link>
-        <button
-          type="submit"
-          disabled={loading}
-          className="flex-1 sm:flex-none inline-flex items-center justify-center px-6 py-2 bg-[#B8001F] text-white text-sm font-medium rounded-lg hover:bg-[#9a0019] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
-        >
+        </Button>
+        <Button type="submit" disabled={loading}>
           {loading ? "Saving..." : isEdit ? "Save Changes" : "Add Product"}
-        </button>
+        </Button>
       </div>
     </form>
   );

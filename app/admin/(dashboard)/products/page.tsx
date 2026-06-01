@@ -2,6 +2,16 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { Plus, Pencil } from "lucide-react";
 import DeleteProductButton from "./DeleteProductButton";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 function formatPrice(price: number): string {
   return new Intl.NumberFormat("ro-RO", {
@@ -13,37 +23,24 @@ function formatPrice(price: number): string {
 }
 
 function StatusBadge({ status }: { status: string }) {
-  const colors: Record<string, string> = {
-    published: "bg-green-100 text-green-700",
-    draft: "bg-yellow-100 text-yellow-700",
-    archived: "bg-gray-100 text-gray-600",
-  };
+  const variant = status === "published"
+    ? "default"
+    : status === "draft"
+      ? "secondary"
+      : "outline";
 
   return (
-    <span
-      className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium capitalize ${
-        colors[status] ?? "bg-gray-100 text-gray-600"
-      }`}
-    >
+    <Badge variant={variant} className="capitalize">
       {status}
-    </span>
+    </Badge>
   );
 }
 
 function TypeBadge({ type }: { type: string }) {
-  const colors: Record<string, string> = {
-    course: "bg-blue-100 text-blue-700",
-    workshop: "bg-purple-100 text-purple-700",
-  };
-
   return (
-    <span
-      className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium capitalize ${
-        colors[type] ?? "bg-gray-100 text-gray-600"
-      }`}
-    >
+    <Badge variant="secondary" className="capitalize">
       {type}
-    </span>
+    </Badge>
   );
 }
 
@@ -77,98 +74,78 @@ export default async function ProductsPage() {
             Manage your courses and workshops
           </p>
         </div>
-        <Link
-          href="/admin/products/new"
-          className="inline-flex items-center gap-2 px-4 py-2 bg-[#B8001F] text-white text-sm font-medium rounded-lg hover:bg-[#9a0019] transition-colors"
-        >
+        <Button render={<Link href="/admin/products/new" />}>
           <Plus size={16} />
           Add Product
-        </Link>
+        </Button>
       </div>
 
       {/* Empty state */}
       {!products || products.length === 0 ? (
         <div className="bg-white rounded-lg border border-gray-200 p-12 text-center">
           <p className="text-gray-500 text-sm">No products yet.</p>
-          <Link
-            href="/admin/products/new"
-            className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-[#B8001F] text-white text-sm font-medium rounded-lg hover:bg-[#9a0019] transition-colors"
-          >
+          <Button className="mt-4" render={<Link href="/admin/products/new" />}>
             <Plus size={16} />
             Add your first product
-          </Link>
+          </Button>
         </div>
       ) : (
         <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Type
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Title
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
-                  Price
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">
-                  Start Date
-                </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Status</TableHead>
+                <TableHead>Type</TableHead>
+                <TableHead>Title</TableHead>
+                <TableHead className="hidden md:table-cell">Price</TableHead>
+                <TableHead className="hidden lg:table-cell">Start Date</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {products.map((product) => (
-                <tr
-                  key={product.id}
-                  className="hover:bg-gray-50 transition-colors"
-                >
-                  <td className="px-6 py-4 whitespace-nowrap">
+                <TableRow key={product.id}>
+                  <TableCell>
                     <StatusBadge status={product.status} />
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  </TableCell>
+                  <TableCell>
                     <TypeBadge type={product.type} />
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="text-sm font-medium text-gray-900">
+                  </TableCell>
+                  <TableCell>
+                    <span className="font-medium text-gray-900">
                       {product.title}
                     </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap hidden md:table-cell">
-                    <span className="text-sm text-gray-700">
+                  </TableCell>
+                  <TableCell className="hidden md:table-cell">
+                    <span className="text-gray-700">
                       {formatPrice(product.price)}
                     </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap hidden lg:table-cell">
-                    <span className="text-sm text-gray-500">
-                      {product.start_date ?? "—"}
+                  </TableCell>
+                  <TableCell className="hidden lg:table-cell">
+                    <span className="text-gray-500">
+                      {product.start_date ?? "\u2014"}
                     </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right">
+                  </TableCell>
+                  <TableCell className="text-right">
                     <div className="inline-flex items-center gap-2">
-                      <Link
-                        href={`/admin/products/${product.id}`}
-                        className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-gray-300 text-gray-700 text-xs font-medium rounded-lg hover:bg-gray-50 transition-colors"
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        render={<Link href={`/admin/products/${product.id}`} />}
                       >
                         <Pencil size={13} />
                         Edit
-                      </Link>
+                      </Button>
                       <DeleteProductButton
                         productId={product.id}
                         productTitle={product.title}
                       />
                     </div>
-                  </td>
-                </tr>
+                  </TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
       )}
     </div>

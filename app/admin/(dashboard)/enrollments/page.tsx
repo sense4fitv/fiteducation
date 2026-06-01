@@ -1,5 +1,14 @@
 import { createClient } from "@/lib/supabase/server";
 import { GraduationCap } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 export default async function EnrollmentsPage() {
   const supabase = await createClient();
@@ -27,62 +36,52 @@ export default async function EnrollmentsPage() {
         </div>
       ) : (
         <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-          <table className="w-full">
-            <thead>
-              <tr className="bg-gray-50 border-b border-gray-200">
-                <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Student
-                </th>
-                <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Product
-                </th>
-                <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Amount
-                </th>
-                <th className="text-left px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Date
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Student</TableHead>
+                <TableHead>Product</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Amount</TableHead>
+                <TableHead>Date</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {enrollments.map((enrollment) => (
-                <tr key={enrollment.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 text-sm text-gray-900">
+                <TableRow key={enrollment.id}>
+                  <TableCell className="text-gray-900">
                     {enrollment.user_id?.slice(0, 8)}...
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-900">
-                    {(enrollment.products as { title: string } | null)?.title ?? "—"}
-                  </td>
-                  <td className="px-6 py-4">
-                    <span
-                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                  </TableCell>
+                  <TableCell className="text-gray-900">
+                    {(enrollment.products as { title: string } | null)?.title ?? "\u2014"}
+                  </TableCell>
+                  <TableCell>
+                    <Badge
+                      variant={
                         enrollment.status === "paid_stripe" || enrollment.status === "paid_manual"
-                          ? "bg-green-100 text-green-800"
+                          ? "default"
                           : enrollment.status === "cancelled"
-                            ? "bg-red-100 text-red-800"
-                            : "bg-yellow-100 text-yellow-800"
-                      }`}
+                            ? "destructive"
+                            : "secondary"
+                      }
                     >
                       {enrollment.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-900">
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="text-gray-900">
                     {enrollment.amount_paid
                       ? `${enrollment.amount_paid} RON`
-                      : "—"}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-500">
+                      : "\u2014"}
+                  </TableCell>
+                  <TableCell className="text-gray-500">
                     {enrollment.created_at
                       ? new Date(enrollment.created_at).toLocaleDateString("ro-RO")
-                      : "—"}
-                  </td>
-                </tr>
+                      : "\u2014"}
+                  </TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
       )}
     </div>

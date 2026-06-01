@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 interface Trainer {
   id: string;
@@ -115,14 +117,14 @@ export default function ProductTrainerPicker({
 
             {isSelected && (
               <div className="flex items-center gap-2">
-                <label className="text-xs text-gray-500">Order:</label>
-                <input
+                <Label className="text-xs text-gray-500">Order:</Label>
+                <Input
                   type="number"
                   value={assignment?.sort_order ?? 0}
                   onChange={(e) =>
                     updateSortOrder(trainer.id, parseInt(e.target.value, 10) || 0)
                   }
-                  className="w-16 px-2 py-1 text-xs border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-[#B8001F]"
+                  className="w-16 h-7 px-2 py-1 text-xs"
                 />
               </div>
             )}

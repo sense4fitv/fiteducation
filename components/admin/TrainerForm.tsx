@@ -5,6 +5,11 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/client";
 import ImageUpload from "@/components/admin/ImageUpload";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface TrainerFormProps {
   trainer?: {
@@ -70,104 +75,87 @@ export default function TrainerForm({ trainer }: TrainerFormProps) {
   }
 
   return (
-    <div className="bg-white rounded-lg p-8 shadow-sm border border-gray-200 max-w-2xl">
-      <h2 className="text-xl font-bold text-gray-900 font-poppins mb-6">
-        {isEdit ? "Edit Trainer" : "Add Trainer"}
-      </h2>
-
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Name */}
-        <div>
-          <label
-            htmlFor="name"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Name <span className="text-red-500">*</span>
-          </label>
-          <input
-            id="name"
-            type="text"
-            required
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B8001F] focus:border-transparent"
-            placeholder="Trainer name"
-          />
-        </div>
-
-        {/* Description */}
-        <div>
-          <label
-            htmlFor="description"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Description
-          </label>
-          <textarea
-            id="description"
-            rows={4}
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B8001F] focus:border-transparent resize-y"
-            placeholder="Short bio or description"
-          />
-        </div>
-
-        {/* Image */}
-        <div>
-          <ImageUpload
-            bucket="trainer-images"
-            value={imageUrl}
-            onChange={(url) => setImageUrl(url)}
-            label="Trainer Photo"
-          />
-        </div>
-
-        {/* Sort Order */}
-        <div>
-          <label
-            htmlFor="sort_order"
-            className="block text-sm font-medium text-gray-700 mb-1"
-          >
-            Sort Order
-          </label>
-          <input
-            id="sort_order"
-            type="number"
-            value={sortOrder}
-            onChange={(e) => setSortOrder(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B8001F] focus:border-transparent"
-            placeholder="e.g. 1"
-          />
-          <p className="text-xs text-gray-500 mt-1">
-            Lower numbers appear first.
-          </p>
-        </div>
-
-        {/* Error */}
-        {error && (
-          <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
-            {error}
+    <Card className="max-w-2xl">
+      <CardHeader>
+        <CardTitle className="text-xl font-bold font-poppins">
+          {isEdit ? "Edit Trainer" : "Add Trainer"}
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Name */}
+          <div>
+            <Label htmlFor="name">
+              Name <span className="text-red-500">*</span>
+            </Label>
+            <Input
+              id="name"
+              type="text"
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Trainer name"
+              className="mt-1"
+            />
           </div>
-        )}
 
-        {/* Actions */}
-        <div className="flex flex-col-reverse sm:flex-row gap-3 pt-2">
-          <Link
-            href="/admin/trainers"
-            className="inline-flex items-center justify-center px-5 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-lg hover:bg-gray-50 transition-colors"
-          >
-            Cancel
-          </Link>
-          <button
-            type="submit"
-            disabled={loading}
-            className="flex-1 sm:flex-none inline-flex items-center justify-center px-6 py-2 bg-[#B8001F] text-white text-sm font-medium rounded-lg hover:bg-[#9a0019] transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
-          >
-            {loading ? "Saving…" : isEdit ? "Save Changes" : "Add Trainer"}
-          </button>
-        </div>
-      </form>
-    </div>
+          {/* Description */}
+          <div>
+            <Label htmlFor="description">Description</Label>
+            <Textarea
+              id="description"
+              rows={4}
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Short bio or description"
+              className="mt-1 resize-y"
+            />
+          </div>
+
+          {/* Image */}
+          <div>
+            <ImageUpload
+              bucket="trainer-images"
+              value={imageUrl}
+              onChange={(url) => setImageUrl(url)}
+              label="Trainer Photo"
+            />
+          </div>
+
+          {/* Sort Order */}
+          <div>
+            <Label htmlFor="sort_order">Sort Order</Label>
+            <Input
+              id="sort_order"
+              type="number"
+              value={sortOrder}
+              onChange={(e) => setSortOrder(e.target.value)}
+              placeholder="e.g. 1"
+              className="mt-1"
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Lower numbers appear first.
+            </p>
+          </div>
+
+          {/* Error */}
+          {error && (
+            <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+              {error}
+            </div>
+          )}
+
+          {/* Actions */}
+          <div className="flex flex-col-reverse sm:flex-row gap-3 pt-2">
+            <Button variant="outline" render={<Link href="/admin/trainers" />}>
+              Cancel
+            </Button>
+            <Button type="submit" disabled={loading}>
+              {loading ? "Saving..." : isEdit ? "Save Changes" : "Add Trainer"}
+            </Button>
+          </div>
+        </form>
+      </CardContent>
+    </Card>
   );
 }

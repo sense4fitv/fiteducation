@@ -4,6 +4,17 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Trash2 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 interface DeleteTrainerButtonProps {
   trainerId: string;
@@ -16,16 +27,9 @@ export default function DeleteTrainerButton({
 }: DeleteTrainerButtonProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
 
   async function handleDelete() {
-    if (
-      !window.confirm(
-        `Are you sure you want to delete "${trainerName}"? This action cannot be undone.`
-      )
-    ) {
-      return;
-    }
-
     setLoading(true);
 
     const supabase = createClient();
@@ -40,17 +44,40 @@ export default function DeleteTrainerButton({
       return;
     }
 
+    setOpen(false);
     router.refresh();
   }
 
   return (
-    <button
-      onClick={handleDelete}
-      disabled={loading}
-      className="inline-flex items-center gap-1.5 px-3 py-1.5 border border-red-200 text-red-600 text-xs font-medium rounded-lg hover:bg-red-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-    >
-      <Trash2 size={13} />
-      {loading ? "Deleting…" : "Delete"}
-    </button>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger
+        render={
+          <Button variant="ghost" size="sm">
+            <Trash2 size={13} className="text-destructive" />
+            <span className="text-destructive">Delete</span>
+          </Button>
+        }
+      />
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Delete Trainer</DialogTitle>
+          <DialogDescription>
+            Are you sure you want to delete &quot;{trainerName}&quot;? This action cannot be undone.
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter>
+          <DialogClose render={<Button variant="outline" />}>
+            Cancel
+          </DialogClose>
+          <Button
+            variant="destructive"
+            onClick={handleDelete}
+            disabled={loading}
+          >
+            {loading ? "Deleting..." : "Delete"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
