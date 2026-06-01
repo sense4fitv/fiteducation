@@ -21,7 +21,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import {
   Accordion,
   AccordionContent,
@@ -48,7 +47,52 @@ function slugify(title: string): string {
 }
 
 const selectCls =
-  "w-full px-3 py-2 border border-input rounded-lg bg-background text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent";
+  "w-full h-9 px-3 py-1 border border-input rounded-md bg-transparent text-sm shadow-xs focus:outline-none focus:ring-1 focus:ring-ring";
+
+const SECTIONS = [
+  {
+    value: "basic-info",
+    title: "Basic Info",
+    description:
+      "Core identity of the product — title, URL slug, type (course or workshop), visibility status, and the card image shown in listings.",
+  },
+  {
+    value: "pricing-schedule",
+    title: "Pricing & Schedule",
+    description:
+      "Standard price, optional time-limited promo price window, start date, duration, class schedule, location, and available spots.",
+  },
+  {
+    value: "content",
+    title: "Content",
+    description:
+      "The detail page content: long description, key highlights, what's included, competencies students will gain, and the full curriculum (modules + topics).",
+  },
+  {
+    value: "enrollment",
+    title: "Enrollment & Certification",
+    description:
+      "Documents required for enrollment, fee breakdown (inscription + monthly + total), final exam details, and certificates awarded on completion.",
+  },
+  {
+    value: "social-proof",
+    title: "Social Proof",
+    description:
+      "Student testimonials and frequently asked questions displayed on the product page.",
+  },
+  {
+    value: "trainers",
+    title: "Trainers",
+    description:
+      "Select which trainers teach this product and set their display order.",
+  },
+  {
+    value: "meta",
+    title: "Meta & Settings",
+    description:
+      "Informational tags (audience labels), difficulty level, language, minimum education requirement, and optional external checkout link (e.g. Stripe).",
+  },
+];
 
 export default function ProductForm({ product }: ProductFormProps) {
   const router = useRouter();
@@ -161,7 +205,7 @@ export default function ProductForm({ product }: ProductFormProps) {
     (product?.tags as string[]) ?? []
   );
   const [level, setLevel] = useState(product?.level ?? "");
-  const [language, setLanguage] = useState(product?.language ?? "Romana");
+  const [language, setLanguage] = useState(product?.language ?? "Română");
   const [minEducation, setMinEducation] = useState(
     product?.min_education ?? ""
   );
@@ -285,87 +329,79 @@ export default function ProductForm({ product }: ProductFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Card className="p-0">
+    <form onSubmit={handleSubmit} className="font-[family-name:var(--font-inter)]">
+      <div className="bg-white rounded-lg border border-gray-200">
         <Accordion multiple defaultValue={["basic-info"]}>
           {/* ── Section 0: Basic Info ────────────────────────── */}
           <AccordionItem value="basic-info">
-            <AccordionTrigger className="px-6 py-4 text-sm font-semibold">
-              Basic Info
-            </AccordionTrigger>
-            <AccordionContent className="px-6 pb-6 space-y-5">
-              <div>
-                <Label>
-                  Title <span className="text-red-500">*</span>
-                </Label>
-                <Input
-                  type="text"
-                  required
-                  value={title}
-                  onChange={(e) => handleTitleChange(e.target.value)}
-                  placeholder="Product title"
-                  className="mt-1"
-                />
+            <AccordionTrigger className="px-6 py-4">
+              <div className="text-left">
+                <div className="text-sm font-medium">{SECTIONS[0].title}</div>
+                <div className="text-xs text-gray-400 font-normal mt-0.5">{SECTIONS[0].description}</div>
               </div>
-              <div>
-                <Label>
-                  Slug <span className="text-red-500">*</span>
-                </Label>
-                <Input
-                  type="text"
-                  required
-                  value={slug}
-                  onChange={(e) => setSlug(e.target.value)}
-                  placeholder="product-slug"
-                  className="mt-1"
-                />
+            </AccordionTrigger>
+            <AccordionContent className="px-6 pb-6 space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <Label className="text-xs">Title <span className="text-red-500">*</span></Label>
+                  <Input
+                    type="text"
+                    required
+                    value={title}
+                    onChange={(e) => handleTitleChange(e.target.value)}
+                    placeholder="Product title"
+                    className="mt-1.5"
+                  />
+                </div>
+                <div>
+                  <Label className="text-xs">Slug <span className="text-red-500">*</span></Label>
+                  <Input
+                    type="text"
+                    required
+                    value={slug}
+                    onChange={(e) => setSlug(e.target.value)}
+                    placeholder="product-slug"
+                    className="mt-1.5"
+                  />
+                  <p className="text-[11px] text-gray-400 mt-1">URL-friendly identifier. Auto-generated from title on new products.</p>
+                </div>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <Label>Type</Label>
-                  <select
-                    value={type}
-                    onChange={(e) => setType(e.target.value)}
-                    className={cn(selectCls, "mt-1")}
-                  >
+                  <Label className="text-xs">Type</Label>
+                  <select value={type} onChange={(e) => setType(e.target.value)} className={cn(selectCls, "mt-1.5")}>
                     <option value="course">Course</option>
                     <option value="workshop">Workshop</option>
                   </select>
                 </div>
                 <div>
-                  <Label>Status</Label>
-                  <select
-                    value={status}
-                    onChange={(e) => setStatus(e.target.value)}
-                    className={cn(selectCls, "mt-1")}
-                  >
+                  <Label className="text-xs">Status</Label>
+                  <select value={status} onChange={(e) => setStatus(e.target.value)} className={cn(selectCls, "mt-1.5")}>
                     <option value="draft">Draft</option>
                     <option value="published">Published</option>
                     <option value="archived">Archived</option>
                   </select>
+                  <p className="text-[11px] text-gray-400 mt-1">Only &quot;Published&quot; products are visible on the website.</p>
                 </div>
                 <div>
-                  <Label>Category</Label>
-                  <select
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
-                    className={cn(selectCls, "mt-1")}
-                  >
+                  <Label className="text-xs">Category</Label>
+                  <select value={category} onChange={(e) => setCategory(e.target.value)} className={cn(selectCls, "mt-1.5")}>
                     <option value="">— None —</option>
                     <option value="foundation">Foundation</option>
                     <option value="direction">Direction</option>
                     <option value="specialization">Specialization</option>
                   </select>
+                  <p className="text-[11px] text-gray-400 mt-1">Used by the Configurator on the homepage to group products.</p>
                 </div>
               </div>
               <div>
-                <Label>Description</Label>
+                <Label className="text-xs">Short Description</Label>
                 <Textarea
-                  rows={3}
+                  rows={2}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Short description"
-                  className="mt-1 resize-y"
+                  placeholder="One-liner shown on product cards in listings"
+                  className="mt-1.5 resize-y"
                 />
               </div>
               <div>
@@ -381,250 +417,162 @@ export default function ProductForm({ product }: ProductFormProps) {
 
           {/* ── Section 1: Pricing & Schedule ────────────────── */}
           <AccordionItem value="pricing-schedule">
-            <AccordionTrigger className="px-6 py-4 text-sm font-semibold">
-              Pricing &amp; Schedule
+            <AccordionTrigger className="px-6 py-4">
+              <div className="text-left">
+                <div className="text-sm font-medium">{SECTIONS[1].title}</div>
+                <div className="text-xs text-gray-400 font-normal mt-0.5">{SECTIONS[1].description}</div>
+              </div>
             </AccordionTrigger>
-            <AccordionContent className="px-6 pb-6 space-y-5">
+            <AccordionContent className="px-6 pb-6 space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <Label>
-                    Price <span className="text-red-500">*</span>
-                  </Label>
-                  <Input
-                    type="number"
-                    step="0.01"
-                    required
-                    value={price}
-                    onChange={(e) => setPrice(e.target.value)}
-                    placeholder="0.00"
-                    className="mt-1"
-                  />
+                  <Label className="text-xs">Standard Price (RON) <span className="text-red-500">*</span></Label>
+                  <Input type="number" step="0.01" required value={price} onChange={(e) => setPrice(e.target.value)} placeholder="7900" className="mt-1.5" />
                 </div>
                 <div>
-                  <Label>Promo Price</Label>
-                  <Input
-                    type="number"
-                    step="0.01"
-                    value={promoPrice}
-                    onChange={(e) => setPromoPrice(e.target.value)}
-                    placeholder="0.00"
-                    className="mt-1"
-                  />
+                  <Label className="text-xs">Promo Price (RON)</Label>
+                  <Input type="number" step="0.01" value={promoPrice} onChange={(e) => setPromoPrice(e.target.value)} placeholder="Leave empty if no promo" className="mt-1.5" />
                 </div>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <Label>Promo Start</Label>
-                  <Input
-                    type="datetime-local"
-                    value={promoStart}
-                    onChange={(e) => setPromoStart(e.target.value)}
-                    className="mt-1"
-                  />
+                  <Label className="text-xs">Promo Window Start</Label>
+                  <Input type="datetime-local" value={promoStart} onChange={(e) => setPromoStart(e.target.value)} className="mt-1.5" />
                 </div>
                 <div>
-                  <Label>Promo End</Label>
-                  <Input
-                    type="datetime-local"
-                    value={promoEnd}
-                    onChange={(e) => setPromoEnd(e.target.value)}
-                    className="mt-1"
-                  />
+                  <Label className="text-xs">Promo Window End</Label>
+                  <Input type="datetime-local" value={promoEnd} onChange={(e) => setPromoEnd(e.target.value)} className="mt-1.5" />
+                  <p className="text-[11px] text-gray-400 mt-1">Promo price is shown only between start and end dates.</p>
                 </div>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div>
-                  <Label>Start Date</Label>
-                  <Input
-                    type="date"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
-                    className="mt-1"
-                  />
+                  <Label className="text-xs">Start Date</Label>
+                  <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="mt-1.5" />
                 </div>
                 <div>
-                  <Label>Duration</Label>
-                  <Input
-                    type="text"
-                    value={duration}
-                    onChange={(e) => setDuration(e.target.value)}
-                    placeholder="e.g. 3 months"
-                    className="mt-1"
-                  />
+                  <Label className="text-xs">Duration</Label>
+                  <Input type="text" value={duration} onChange={(e) => setDuration(e.target.value)} placeholder="e.g. 1080 ore" className="mt-1.5" />
                 </div>
                 <div>
-                  <Label>Schedule</Label>
-                  <Input
-                    type="text"
-                    value={schedule}
-                    onChange={(e) => setSchedule(e.target.value)}
-                    placeholder="e.g. Mon & Wed, 18:00-20:00"
-                    className="mt-1"
-                  />
+                  <Label className="text-xs">Schedule</Label>
+                  <Input type="text" value={schedule} onChange={(e) => setSchedule(e.target.value)} placeholder="e.g. L-V 18-21, S 10-14" className="mt-1.5" />
                 </div>
                 <div>
-                  <Label>Location</Label>
-                  <Input
-                    type="text"
-                    value={location}
-                    onChange={(e) => setLocation(e.target.value)}
-                    placeholder="e.g. Online"
-                    className="mt-1"
-                  />
+                  <Label className="text-xs">Location</Label>
+                  <Input type="text" value={location} onChange={(e) => setLocation(e.target.value)} placeholder="e.g. București" className="mt-1.5" />
                 </div>
               </div>
-              <div>
-                <Label>Total Spots</Label>
-                <Input
-                  type="number"
-                  value={spotsTotal}
-                  onChange={(e) => setSpotsTotal(e.target.value)}
-                  placeholder="e.g. 30"
-                  className="mt-1"
-                />
+              <div className="max-w-xs">
+                <Label className="text-xs">Total Spots</Label>
+                <Input type="number" value={spotsTotal} onChange={(e) => setSpotsTotal(e.target.value)} placeholder="e.g. 30" className="mt-1.5" />
+                <p className="text-[11px] text-gray-400 mt-1">Maximum participants. Leave empty for unlimited.</p>
               </div>
             </AccordionContent>
           </AccordionItem>
 
           {/* ── Section 2: Content ───────────────────────────── */}
           <AccordionItem value="content">
-            <AccordionTrigger className="px-6 py-4 text-sm font-semibold">
-              Content
+            <AccordionTrigger className="px-6 py-4">
+              <div className="text-left">
+                <div className="text-sm font-medium">{SECTIONS[2].title}</div>
+                <div className="text-xs text-gray-400 font-normal mt-0.5">{SECTIONS[2].description}</div>
+              </div>
             </AccordionTrigger>
             <AccordionContent className="px-6 pb-6 space-y-5">
               <div>
-                <Label>Full Description</Label>
+                <Label className="text-xs">Full Description</Label>
                 <Textarea
-                  rows={8}
+                  rows={6}
                   value={fullDescription}
                   onChange={(e) => setFullDescription(e.target.value)}
-                  placeholder="Detailed product description"
-                  className="mt-1 resize-y"
+                  placeholder="Detailed description shown on the product detail page"
+                  className="mt-1.5 resize-y"
                 />
               </div>
-              <ListEditor
-                label="Highlights"
-                value={highlights}
-                onChange={setHighlights}
-                placeholder="Add a highlight"
-              />
-              <ListEditor
-                label="Included"
-                value={included}
-                onChange={setIncluded}
-                placeholder="What's included"
-              />
-              <CompetenciesEditor
-                value={competencies}
-                onChange={setCompetencies}
-              />
+              <ListEditor label="Highlights" value={highlights} onChange={setHighlights} placeholder="e.g. Certificare internațională EREPS" />
+              <ListEditor label="What's Included" value={included} onChange={setIncluded} placeholder="e.g. 16 săptămâni de curs intensiv" />
+              <CompetenciesEditor value={competencies} onChange={setCompetencies} />
               <CurriculumEditor value={curriculum} onChange={setCurriculum} />
             </AccordionContent>
           </AccordionItem>
 
-          {/* ── Section 3: Enrollment ────────────────────────── */}
+          {/* ── Section 3: Enrollment & Certification ─────────── */}
           <AccordionItem value="enrollment">
-            <AccordionTrigger className="px-6 py-4 text-sm font-semibold">
-              Enrollment
+            <AccordionTrigger className="px-6 py-4">
+              <div className="text-left">
+                <div className="text-sm font-medium">{SECTIONS[3].title}</div>
+                <div className="text-xs text-gray-400 font-normal mt-0.5">{SECTIONS[3].description}</div>
+              </div>
             </AccordionTrigger>
             <AccordionContent className="px-6 pb-6 space-y-5">
-              <ListEditor
-                label="Requirements / Documents"
-                value={requirementsDocs}
-                onChange={setRequirementsDocs}
-                placeholder="Add a requirement"
-              />
+              <ListEditor label="Required Documents" value={requirementsDocs} onChange={setRequirementsDocs} placeholder="e.g. Copie carte de identitate" />
               <FeesEditor value={feesStructure} onChange={setFeesStructure} />
               <ExamInfoEditor value={examInfo} onChange={setExamInfo} />
-              <CertificationsEditor
-                value={certifications}
-                onChange={setCertifications}
-              />
+              <CertificationsEditor value={certifications} onChange={setCertifications} />
             </AccordionContent>
           </AccordionItem>
 
           {/* ── Section 4: Social Proof ──────────────────────── */}
           <AccordionItem value="social-proof">
-            <AccordionTrigger className="px-6 py-4 text-sm font-semibold">
-              Social Proof
+            <AccordionTrigger className="px-6 py-4">
+              <div className="text-left">
+                <div className="text-sm font-medium">{SECTIONS[4].title}</div>
+                <div className="text-xs text-gray-400 font-normal mt-0.5">{SECTIONS[4].description}</div>
+              </div>
             </AccordionTrigger>
             <AccordionContent className="px-6 pb-6 space-y-5">
-              <TestimonialsEditor
-                value={testimonials}
-                onChange={setTestimonials}
-              />
+              <TestimonialsEditor value={testimonials} onChange={setTestimonials} />
               <FAQEditor value={faq} onChange={setFaq} />
             </AccordionContent>
           </AccordionItem>
 
           {/* ── Section 5: Trainers ──────────────────────────── */}
           <AccordionItem value="trainers">
-            <AccordionTrigger className="px-6 py-4 text-sm font-semibold">
-              Trainers
+            <AccordionTrigger className="px-6 py-4">
+              <div className="text-left">
+                <div className="text-sm font-medium">{SECTIONS[5].title}</div>
+                <div className="text-xs text-gray-400 font-normal mt-0.5">{SECTIONS[5].description}</div>
+              </div>
             </AccordionTrigger>
             <AccordionContent className="px-6 pb-6 space-y-5">
               <ProductTrainerPicker value={trainers} onChange={setTrainers} />
             </AccordionContent>
           </AccordionItem>
 
-          {/* ── Section 6: Meta ──────────────────────────────── */}
+          {/* ── Section 6: Meta & Settings ────────────────────── */}
           <AccordionItem value="meta">
-            <AccordionTrigger className="px-6 py-4 text-sm font-semibold">
-              Meta
+            <AccordionTrigger className="px-6 py-4">
+              <div className="text-left">
+                <div className="text-sm font-medium">{SECTIONS[6].title}</div>
+                <div className="text-xs text-gray-400 font-normal mt-0.5">{SECTIONS[6].description}</div>
+              </div>
             </AccordionTrigger>
-            <AccordionContent className="px-6 pb-6 space-y-5">
-              <ListEditor
-                label="Tags"
-                value={tags}
-                onChange={setTags}
-                placeholder="Add a tag"
-              />
+            <AccordionContent className="px-6 pb-6 space-y-4">
+              <ListEditor label="Tags" value={tags} onChange={setTags} placeholder="e.g. începători, instructori" />
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <Label>Level</Label>
-                  <Input
-                    type="text"
-                    value={level}
-                    onChange={(e) => setLevel(e.target.value)}
-                    placeholder="e.g. Beginner"
-                    className="mt-1"
-                  />
+                  <Label className="text-xs">Level</Label>
+                  <Input type="text" value={level} onChange={(e) => setLevel(e.target.value)} placeholder="e.g. Începător - Intermediar" className="mt-1.5" />
                 </div>
                 <div>
-                  <Label>Language</Label>
-                  <Input
-                    type="text"
-                    value={language}
-                    onChange={(e) => setLanguage(e.target.value)}
-                    placeholder="Romana"
-                    className="mt-1"
-                  />
+                  <Label className="text-xs">Language</Label>
+                  <Input type="text" value={language} onChange={(e) => setLanguage(e.target.value)} placeholder="Română" className="mt-1.5" />
                 </div>
                 <div>
-                  <Label>Min. Education</Label>
-                  <Input
-                    type="text"
-                    value={minEducation}
-                    onChange={(e) => setMinEducation(e.target.value)}
-                    placeholder="e.g. High School"
-                    className="mt-1"
-                  />
+                  <Label className="text-xs">Min. Education</Label>
+                  <Input type="text" value={minEducation} onChange={(e) => setMinEducation(e.target.value)} placeholder="e.g. Liceu" className="mt-1.5" />
                 </div>
               </div>
               <div>
-                <Label>External Checkout URL</Label>
-                <Input
-                  type="text"
-                  value={externalCheckoutUrl}
-                  onChange={(e) => setExternalCheckoutUrl(e.target.value)}
-                  placeholder="https://..."
-                  className="mt-1"
-                />
+                <Label className="text-xs">External Checkout URL</Label>
+                <Input type="text" value={externalCheckoutUrl} onChange={(e) => setExternalCheckoutUrl(e.target.value)} placeholder="https://checkout.stripe.com/..." className="mt-1.5" />
+                <p className="text-[11px] text-gray-400 mt-1">If set, the &quot;Buy Now&quot; button links here instead of the internal enrollment flow.</p>
               </div>
             </AccordionContent>
           </AccordionItem>
         </Accordion>
-      </Card>
+      </div>
 
       {/* Error */}
       {error && (
