@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { Code2, ChevronDown, ChevronUp } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
 
 interface JsonFallbackProps {
   value: unknown;
@@ -47,19 +49,21 @@ export default function JsonFallback({
 
   return (
     <div className="space-y-2">
-      <button
+      <Button
         type="button"
+        variant="outline"
+        size="sm"
         onClick={handleToggle}
-        className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 transition-colors"
+        className="text-gray-500"
       >
         <Code2 size={15} />
         {label}
         {isOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-      </button>
+      </Button>
 
       {isOpen && (
         <div className="space-y-1">
-          <textarea
+          <Textarea
             value={raw}
             onChange={(e) => {
               setRaw(e.target.value);
@@ -68,10 +72,8 @@ export default function JsonFallback({
             onBlur={handleBlur}
             rows={12}
             spellCheck={false}
-            className={`w-full px-3 py-2 border rounded-lg text-xs font-mono focus:outline-none focus:ring-2 focus:border-transparent resize-y bg-white ${
-              error
-                ? "border-red-500 focus:ring-red-400"
-                : "border-gray-300 focus:ring-[#B8001F]"
+            className={`text-xs font-mono resize-y bg-white ${
+              error ? "border-red-500 focus-visible:ring-red-400" : ""
             }`}
           />
           {error && (

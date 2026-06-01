@@ -2,6 +2,10 @@
 
 import { Plus, Trash2 } from "lucide-react";
 import ListEditor from "./ListEditor";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 
 interface CompetencyItem {
   title: string;
@@ -13,10 +17,6 @@ interface CompetenciesEditorProps {
   value: CompetencyItem[];
   onChange: (value: CompetencyItem[]) => void;
 }
-
-const inputClass =
-  "w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#B8001F] focus:border-transparent";
-const labelClass = "text-sm font-medium text-gray-700 mb-1 block";
 
 export default function CompetenciesEditor({
   value,
@@ -54,34 +54,34 @@ export default function CompetenciesEditor({
             <span className="text-sm font-medium text-gray-500">
               Competency #{index + 1}
             </span>
-            <button
+            <Button
               type="button"
+              variant="ghost"
+              size="icon"
               onClick={() => handleRemove(index)}
-              className="p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors"
               aria-label="Remove competency"
             >
               <Trash2 size={15} />
-            </button>
+            </Button>
           </div>
+          <Separator />
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label className={labelClass}>Title</label>
-              <input
+            <div className="space-y-1">
+              <Label className="text-gray-700">Title</Label>
+              <Input
                 type="text"
                 value={competency.title}
                 onChange={(e) => handleChange(index, "title", e.target.value)}
                 placeholder="e.g. Nutrition"
-                className={inputClass}
               />
             </div>
-            <div>
-              <label className={labelClass}>Icon (Lucide name)</label>
-              <input
+            <div className="space-y-1">
+              <Label className="text-gray-700">Icon (Lucide name)</Label>
+              <Input
                 type="text"
                 value={competency.icon}
                 onChange={(e) => handleChange(index, "icon", e.target.value)}
                 placeholder="e.g. Apple, Dumbbell, Heart"
-                className={inputClass}
               />
             </div>
           </div>
@@ -95,14 +95,15 @@ export default function CompetenciesEditor({
           </div>
         </div>
       ))}
-      <button
+      <Button
         type="button"
+        variant="outline"
+        size="sm"
         onClick={handleAdd}
-        className="text-sm text-[#B8001F] hover:text-[#490207] flex items-center gap-1 transition-colors"
       >
         <Plus size={15} />
         Add Competency
-      </button>
+      </Button>
     </div>
   );
 }

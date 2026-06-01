@@ -1,6 +1,11 @@
 "use client";
 
 import { Plus, Trash2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 
 interface FAQItem {
   question: string;
@@ -36,45 +41,47 @@ export default function FAQEditor({ value, onChange }: FAQEditorProps) {
         <div key={index} className="border border-gray-200 rounded-lg p-4 bg-gray-50 space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-gray-500">FAQ #{index + 1}</span>
-            <button
+            <Button
               type="button"
+              variant="ghost"
+              size="icon"
               onClick={() => handleRemove(index)}
-              className="p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors"
               aria-label="Remove FAQ"
             >
               <Trash2 size={15} />
-            </button>
+            </Button>
           </div>
+          <Separator />
           <div className="space-y-1">
-            <label className="text-sm font-medium text-gray-700 mb-1 block">Question</label>
-            <input
+            <Label className="text-gray-700">Question</Label>
+            <Input
               type="text"
               value={item.question}
               onChange={(e) => handleChange(index, "question", e.target.value)}
               placeholder="Enter question..."
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#B8001F] focus:border-transparent"
             />
           </div>
           <div className="space-y-1">
-            <label className="text-sm font-medium text-gray-700 mb-1 block">Answer</label>
-            <textarea
+            <Label className="text-gray-700">Answer</Label>
+            <Textarea
               value={item.answer}
               onChange={(e) => handleChange(index, "answer", e.target.value)}
               placeholder="Enter answer..."
               rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#B8001F] focus:border-transparent resize-y"
+              className="resize-y"
             />
           </div>
         </div>
       ))}
-      <button
+      <Button
         type="button"
+        variant="outline"
+        size="sm"
         onClick={handleAdd}
-        className="text-sm text-[#B8001F] hover:text-[#490207] flex items-center gap-1 transition-colors"
       >
         <Plus size={15} />
         Add FAQ
-      </button>
+      </Button>
     </div>
   );
 }

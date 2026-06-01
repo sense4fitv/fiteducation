@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { Plus, Trash2, ChevronDown, ChevronRight } from "lucide-react";
 import ListEditor from "./ListEditor";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 interface CurriculumModule {
   title: string;
@@ -13,9 +15,6 @@ interface CurriculumEditorProps {
   value: CurriculumModule[];
   onChange: (value: CurriculumModule[]) => void;
 }
-
-const inputClass =
-  "w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#B8001F] focus:border-transparent";
 
 export default function CurriculumEditor({
   value,
@@ -81,10 +80,12 @@ export default function CurriculumEditor({
           >
             {/* Module header */}
             <div className="flex items-center gap-2 px-4 py-3">
-              <button
+              <Button
                 type="button"
+                variant="ghost"
+                size="icon"
                 onClick={() => toggleExpand(index)}
-                className="p-0.5 text-gray-500 hover:text-gray-700 transition-colors flex-shrink-0"
+                className="flex-shrink-0 h-7 w-7"
                 aria-label={isExpanded ? "Collapse module" : "Expand module"}
               >
                 {isExpanded ? (
@@ -92,23 +93,25 @@ export default function CurriculumEditor({
                 ) : (
                   <ChevronRight size={16} />
                 )}
-              </button>
-              <input
+              </Button>
+              <Input
                 type="text"
                 value={mod.title}
                 onChange={(e) => handleTitleChange(index, e.target.value)}
                 placeholder={`Module ${index + 1} title...`}
-                className={`${inputClass} flex-1`}
+                className="flex-1"
                 onClick={(e) => e.stopPropagation()}
               />
-              <button
+              <Button
                 type="button"
+                variant="ghost"
+                size="icon"
                 onClick={() => handleRemove(index)}
-                className="p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors flex-shrink-0"
+                className="flex-shrink-0"
                 aria-label="Remove module"
               >
                 <Trash2 size={15} />
-              </button>
+              </Button>
             </div>
 
             {/* Topics (collapsible) */}
@@ -125,14 +128,15 @@ export default function CurriculumEditor({
           </div>
         );
       })}
-      <button
+      <Button
         type="button"
+        variant="outline"
+        size="sm"
         onClick={handleAdd}
-        className="text-sm text-[#B8001F] hover:text-[#490207] flex items-center gap-1 transition-colors"
       >
         <Plus size={15} />
         Add Module
-      </button>
+      </Button>
     </div>
   );
 }

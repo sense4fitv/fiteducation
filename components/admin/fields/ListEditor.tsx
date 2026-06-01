@@ -1,6 +1,9 @@
 "use client";
 
 import { Plus, X, ChevronUp, ChevronDown } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 
 interface ListEditorProps {
   label: string;
@@ -47,57 +50,64 @@ export default function ListEditor({
   return (
     <div className="space-y-2">
       {label && (
-        <label className="text-sm font-medium text-gray-700">{label}</label>
+        <Label className="text-gray-700">{label}</Label>
       )}
       <div className="space-y-2">
         {items.map((item, index) => (
           <div key={index} className="flex items-center gap-2">
             <div className="flex flex-col gap-0.5">
-              <button
+              <Button
                 type="button"
+                variant="ghost"
+                size="icon"
                 onClick={() => handleMoveUp(index)}
                 disabled={index === 0}
-                className="p-0.5 rounded text-gray-400 hover:text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed"
                 aria-label="Move up"
+                className="h-5 w-5"
               >
                 <ChevronUp size={14} />
-              </button>
-              <button
+              </Button>
+              <Button
                 type="button"
+                variant="ghost"
+                size="icon"
                 onClick={() => handleMoveDown(index)}
                 disabled={index === items.length - 1}
-                className="p-0.5 rounded text-gray-400 hover:text-gray-600 disabled:opacity-30 disabled:cursor-not-allowed"
                 aria-label="Move down"
+                className="h-5 w-5"
               >
                 <ChevronDown size={14} />
-              </button>
+              </Button>
             </div>
-            <input
+            <Input
               type="text"
               value={item}
               onChange={(e) => handleChange(index, e.target.value)}
               placeholder={placeholder}
-              className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#B8001F] focus:border-transparent"
+              className="flex-1"
             />
-            <button
+            <Button
               type="button"
+              variant="ghost"
+              size="icon"
               onClick={() => handleRemove(index)}
-              className="p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors"
               aria-label="Remove item"
             >
               <X size={16} />
-            </button>
+            </Button>
           </div>
         ))}
       </div>
-      <button
+      <Button
         type="button"
+        variant="outline"
+        size="sm"
         onClick={handleAdd}
-        className="text-sm text-[#B8001F] hover:text-[#490207] flex items-center gap-1 mt-1 transition-colors"
+        className="mt-1"
       >
         <Plus size={15} />
         Add item
-      </button>
+      </Button>
     </div>
   );
 }

@@ -1,6 +1,11 @@
 "use client";
 
 import { Plus, Trash2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 
 interface CertificationItem {
   label: string;
@@ -12,10 +17,6 @@ interface CertificationsEditorProps {
   value: CertificationItem[];
   onChange: (value: CertificationItem[]) => void;
 }
-
-const inputClass =
-  "w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#B8001F] focus:border-transparent";
-const labelClass = "text-sm font-medium text-gray-700 mb-1 block";
 
 export default function CertificationsEditor({
   value,
@@ -53,57 +54,58 @@ export default function CertificationsEditor({
             <span className="text-sm font-medium text-gray-500">
               Certification #{index + 1}
             </span>
-            <button
+            <Button
               type="button"
+              variant="ghost"
+              size="icon"
               onClick={() => handleRemove(index)}
-              className="p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors"
               aria-label="Remove certification"
             >
               <Trash2 size={15} />
-            </button>
+            </Button>
           </div>
+          <Separator />
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div>
-              <label className={labelClass}>Label</label>
-              <input
+            <div className="space-y-1">
+              <Label className="text-gray-700">Label</Label>
+              <Input
                 type="text"
                 value={item.label}
                 onChange={(e) => handleChange(index, "label", e.target.value)}
                 placeholder="e.g. Level 1"
-                className={inputClass}
               />
             </div>
-            <div>
-              <label className={labelClass}>Title</label>
-              <input
+            <div className="space-y-1">
+              <Label className="text-gray-700">Title</Label>
+              <Input
                 type="text"
                 value={item.title}
                 onChange={(e) => handleChange(index, "title", e.target.value)}
                 placeholder="e.g. Personal Trainer"
-                className={inputClass}
               />
             </div>
           </div>
-          <div>
-            <label className={labelClass}>Description</label>
-            <textarea
+          <div className="space-y-1">
+            <Label className="text-gray-700">Description</Label>
+            <Textarea
               value={item.description}
               onChange={(e) => handleChange(index, "description", e.target.value)}
               placeholder="Describe this certification..."
               rows={3}
-              className={`${inputClass} resize-y`}
+              className="resize-y"
             />
           </div>
         </div>
       ))}
-      <button
+      <Button
         type="button"
+        variant="outline"
+        size="sm"
         onClick={handleAdd}
-        className="text-sm text-[#B8001F] hover:text-[#490207] flex items-center gap-1 transition-colors"
       >
         <Plus size={15} />
         Add Certification
-      </button>
+      </Button>
     </div>
   );
 }

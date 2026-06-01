@@ -4,6 +4,8 @@ import { useRef, useState } from "react";
 import Image from "next/image";
 import { Upload } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
 
 interface ImageUploadProps {
   bucket: string;
@@ -58,7 +60,7 @@ export default function ImageUpload({
   return (
     <div className="space-y-2">
       {label && (
-        <label className="text-sm font-medium text-gray-700">{label}</label>
+        <Label className="text-gray-700">{label}</Label>
       )}
 
       <div
@@ -93,15 +95,17 @@ export default function ImageUpload({
 
             {/* Overlay on hover */}
             <div className="absolute inset-0 rounded-lg bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-              <button
+              <Button
                 type="button"
+                variant="outline"
+                size="sm"
                 onClick={() => inputRef.current?.click()}
                 disabled={loading}
-                className="flex items-center gap-2 px-3 py-1.5 bg-white text-gray-800 text-sm font-medium rounded-md hover:bg-gray-100 transition-colors disabled:opacity-50"
+                className="bg-white text-gray-800 hover:bg-gray-100"
               >
                 <Upload size={14} />
                 Change Image
-              </button>
+              </Button>
             </div>
           </div>
         ) : (
@@ -137,14 +141,15 @@ export default function ImageUpload({
                 <p className="text-sm text-gray-500 text-center">
                   No image selected
                 </p>
-                <button
+                <Button
                   type="button"
+                  variant="outline"
+                  size="sm"
                   onClick={() => inputRef.current?.click()}
-                  className="flex items-center gap-2 px-3 py-1.5 border border-gray-300 text-gray-700 text-sm font-medium rounded-md hover:bg-white hover:border-gray-400 transition-colors"
                 >
                   <Upload size={14} />
                   Upload Image
-                </button>
+                </Button>
               </>
             )}
           </>
@@ -181,14 +186,15 @@ export default function ImageUpload({
 
       {/* Change Image button below the preview (always visible, not just on hover) */}
       {hasImage && !loading && (
-        <button
+        <Button
           type="button"
+          variant="outline"
+          size="sm"
           onClick={() => inputRef.current?.click()}
-          className="flex items-center gap-2 px-3 py-1.5 border border-gray-300 text-gray-700 text-sm font-medium rounded-md hover:bg-gray-50 hover:border-gray-400 transition-colors"
         >
           <Upload size={14} />
           Change Image
-        </button>
+        </Button>
       )}
 
       {error && (
