@@ -23,7 +23,7 @@ export default async function EditTrainerPage({ params }: EditTrainerPageProps) 
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900 font-poppins">
+        <h1 className="text-2xl font-semibold text-gray-900">
           Edit Trainer
         </h1>
         <p className="text-sm text-gray-500 mt-1">

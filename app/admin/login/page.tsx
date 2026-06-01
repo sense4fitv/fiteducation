@@ -35,11 +35,11 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-section-dark flex items-center justify-center px-4">
+    <div className="min-h-screen bg-section-dark flex items-center justify-center px-4 font-[family-name:var(--font-inter)]">
       <div className="w-full max-w-md">
         {/* Logo / Brand */}
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-white font-poppins tracking-tight">
+          <h1 className="text-2xl font-semibold text-white tracking-tight">
             Fit<span className="text-accent-primary">Education</span>
           </h1>
           <p className="text-text-secondary-dark text-sm mt-2">Admin Panel</p>
@@ -47,7 +47,7 @@ export default function AdminLoginPage() {
 
         {/* Card */}
         <div className="bg-card-dark border border-card-border rounded-xl p-8">
-          <h2 className="text-xl font-semibold text-white font-poppins mb-6">
+          <h2 className="text-xl font-semibold text-white mb-6">
             Sign in
           </h2>
 
@@ -99,7 +99,7 @@ export default function AdminLoginPage() {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-accent-primary hover:bg-accent-hover text-white font-semibold text-sm py-3 font-poppins"
+              className="w-full bg-accent-primary hover:bg-accent-hover text-white font-semibold text-sm py-3"
             >
               {loading ? "Signing in..." : "Sign in"}
             </Button>

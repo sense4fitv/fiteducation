@@ -34,7 +34,7 @@ export default function AdminSidebar() {
     <aside className="w-64 min-h-screen bg-[#0A0A0A] border-r border-card-border flex flex-col shrink-0">
       {/* Brand */}
       <div className="px-6 py-6">
-        <h1 className="text-lg font-bold text-white font-poppins tracking-tight">
+        <h1 className="text-lg font-semibold text-white tracking-tight">
           Fit<span className="text-accent-primary">Education</span>
         </h1>
         <p className="text-xs text-text-secondary-dark mt-0.5">Admin Panel</p>

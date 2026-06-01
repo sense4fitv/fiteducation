@@ -1,9 +1,15 @@
 import type { Metadata } from "next";
-import { Poppins, Bebas_Neue, Geist } from "next/font/google";
+import { Poppins, Bebas_Neue, Geist, Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+  display: "swap",
+});
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -59,7 +65,7 @@ export default function RootLayout({
   return (
     <html lang="ro" className={cn("scroll-smooth", "font-sans", geist.variable)}>
       <body
-        className={`${poppins.variable} ${bebasNeue.variable} antialiased`}
+        className={`${poppins.variable} ${bebasNeue.variable} ${inter.variable} antialiased`}
       >
         {children}
       </body>

@@ -77,7 +77,7 @@ export default function TrainerForm({ trainer }: TrainerFormProps) {
   return (
     <Card className="max-w-2xl">
       <CardHeader>
-        <CardTitle className="text-xl font-bold font-poppins">
+        <CardTitle className="text-xl font-semibold">
           {isEdit ? "Edit Trainer" : "Add Trainer"}
         </CardTitle>
       </CardHeader>

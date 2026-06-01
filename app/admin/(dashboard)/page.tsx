@@ -1,40 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
 import { Package, Users, GraduationCap, BookOpen } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
-interface StatCardProps {
-  title: string;
-  value: number;
-  icon: React.ReactNode;
-  description?: string;
-}
-
-function StatCard({ title, value, icon, description }: StatCardProps) {
-  return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-start gap-4">
-          <div className="p-3 bg-accent-primary/10 rounded-lg text-accent-primary shrink-0">
-            {icon}
-          </div>
-          <div>
-            <CardTitle className="text-sm font-medium text-text-secondary-light">
-              {title}
-            </CardTitle>
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <p className="text-3xl font-bold text-text-primary-light font-poppins">
-          {value}
-        </p>
-        {description && (
-          <p className="text-xs text-text-secondary-light mt-1">{description}</p>
-        )}
-      </CardContent>
-    </Card>
-  );
-}
 
 export default async function AdminDashboardPage() {
   const supabase = await createClient();
@@ -54,41 +19,38 @@ export default async function AdminDashboardPage() {
     supabase.from("enrollments").select("*", { count: "exact", head: true }),
   ]);
 
+  const stats = [
+    { label: "Total Products", value: totalProducts ?? 0, icon: Package, sub: "courses & workshops" },
+    { label: "Published", value: publishedProducts ?? 0, icon: BookOpen, sub: "visible to visitors" },
+    { label: "Trainers", value: totalTrainers ?? 0, icon: Users, sub: "active profiles" },
+    { label: "Enrollments", value: totalEnrollments ?? 0, icon: GraduationCap, sub: "total sign-ups" },
+  ];
+
   return (
     <div>
-      {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-text-primary-light font-poppins">
-          Dashboard
-        </h1>
-        <p className="text-text-secondary-light text-sm mt-1">
-          Overview of your platform
-        </p>
+        <h1 className="text-2xl font-semibold text-gray-900">Dashboard</h1>
+        <p className="text-sm text-gray-500 mt-1">Platform overview</p>
       </div>
 
-      {/* Stat cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
-        <StatCard
-          title="Total Products"
-          value={totalProducts ?? 0}
-          icon={<Package size={20} />}
-        />
-        <StatCard
-          title="Published Products"
-          value={publishedProducts ?? 0}
-          icon={<BookOpen size={20} />}
-          description="Visible to visitors"
-        />
-        <StatCard
-          title="Trainers"
-          value={totalTrainers ?? 0}
-          icon={<Users size={20} />}
-        />
-        <StatCard
-          title="Enrollments"
-          value={totalEnrollments ?? 0}
-          icon={<GraduationCap size={20} />}
-        />
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+        {stats.map((stat) => (
+          <div
+            key={stat.label}
+            className="bg-white rounded-lg border border-gray-200 p-5 flex items-start gap-4"
+          >
+            <div className="p-2.5 rounded-md bg-gray-100 text-gray-600">
+              <stat.icon size={18} strokeWidth={1.8} />
+            </div>
+            <div>
+              <p className="text-sm text-gray-500">{stat.label}</p>
+              <p className="text-2xl font-semibold text-gray-900 mt-0.5 tracking-tight">
+                {stat.value}
+              </p>
+              <p className="text-xs text-gray-400 mt-0.5">{stat.sub}</p>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
