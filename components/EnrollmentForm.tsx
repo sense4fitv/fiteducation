@@ -40,10 +40,10 @@ export default function EnrollmentForm({
 
   if (success) {
     return (
-      <div className="flex flex-col items-center gap-3 rounded-2xl border border-[#2A2A2A] bg-[#0A0A0A] p-8 text-center text-white">
-        <CheckCircle2 className="size-12 text-[#B8001F]" />
-        <h3 className="text-xl font-bold">Mulțumim!</h3>
-        <p className="text-sm text-[#A0A0A0]">
+      <div className="flex flex-col items-center gap-3 rounded-2xl border border-[#EAEAEA] bg-white p-10 text-center">
+        <CheckCircle2 className="size-10 text-[#B8001F]" />
+        <h3 className="text-lg font-semibold text-[#0A0A0A]">Mulțumim!</h3>
+        <p className="text-sm text-[#666]">
           Te vom contacta în maxim 24 de ore.
         </p>
       </div>
@@ -53,15 +53,10 @@ export default function EnrollmentForm({
   return (
     <form
       action={handleSubmit}
-      className="space-y-4 rounded-2xl border border-[#2A2A2A] bg-[#0A0A0A] p-6 sm:p-8"
+      className="space-y-5 rounded-2xl border border-[#EAEAEA] bg-white p-6 sm:p-8"
     >
       <div className="grid gap-4 sm:grid-cols-2">
-        <Field
-          id="ef-name"
-          name="full_name"
-          label="Nume complet"
-          required
-        />
+        <Field id="ef-name" name="full_name" label="Nume complet" required />
         <Field
           id="ef-email"
           name="email"
@@ -81,7 +76,7 @@ export default function EnrollmentForm({
           <div className="space-y-1.5">
             <label
               htmlFor="ef-session"
-              className="block text-xs font-medium text-[#A0A0A0]"
+              className="block text-xs font-medium text-[#666]"
             >
               Sesiune
             </label>
@@ -89,7 +84,7 @@ export default function EnrollmentForm({
               id="ef-session"
               name="session_id"
               defaultValue=""
-              className="h-10 w-full rounded-lg border border-[#2A2A2A] bg-[#1A1A1A] px-3 text-sm text-white outline-none focus:border-[#B8001F]"
+              className="h-10 w-full rounded-lg border border-[#E0E0E0] bg-white px-3 text-sm text-[#0A0A0A] outline-none focus:border-[#B8001F]"
             >
               <option value="">Indiferent / urmează a fi anunțată</option>
               {sessions.map((s) => (
@@ -105,7 +100,7 @@ export default function EnrollmentForm({
       <div className="space-y-1.5">
         <label
           htmlFor="ef-msg"
-          className="block text-xs font-medium text-[#A0A0A0]"
+          className="block text-xs font-medium text-[#666]"
         >
           Mesaj (opțional)
         </label>
@@ -113,14 +108,14 @@ export default function EnrollmentForm({
           id="ef-msg"
           name="message"
           rows={3}
-          className="w-full rounded-lg border border-[#2A2A2A] bg-[#1A1A1A] px-3 py-2 text-sm text-white outline-none focus:border-[#B8001F]"
+          className="w-full rounded-lg border border-[#E0E0E0] bg-white px-3 py-2 text-sm text-[#0A0A0A] outline-none focus:border-[#B8001F]"
         />
       </div>
 
       <div className="space-y-1.5">
         <label
           htmlFor="ef-plan"
-          className="block text-xs font-medium text-[#A0A0A0]"
+          className="block text-xs font-medium text-[#666]"
         >
           Plan de plată
         </label>
@@ -128,7 +123,7 @@ export default function EnrollmentForm({
           id="ef-plan"
           name="payment_plan"
           defaultValue=""
-          className="h-10 w-full rounded-lg border border-[#2A2A2A] bg-[#1A1A1A] px-3 text-sm text-white outline-none focus:border-[#B8001F]"
+          className="h-10 w-full rounded-lg border border-[#E0E0E0] bg-white px-3 text-sm text-[#0A0A0A] outline-none focus:border-[#B8001F]"
         >
           <option value="">Voi decide ulterior</option>
           <option value="integral">Plată integrală</option>
@@ -138,11 +133,11 @@ export default function EnrollmentForm({
         </select>
       </div>
 
-      <label className="flex items-start gap-3 text-xs text-[#A0A0A0]">
+      <label className="flex items-start gap-3 text-xs text-[#666]">
         <input
           type="checkbox"
           name="gdpr"
-          className="mt-0.5 size-4 rounded border-[#2A2A2A] bg-[#1A1A1A]"
+          className="mt-0.5 size-4 rounded border-[#CCC]"
           required
         />
         <span>
@@ -152,7 +147,7 @@ export default function EnrollmentForm({
       </label>
 
       {error ? (
-        <p className="rounded-lg border border-[#B8001F]/40 bg-[#B8001F]/10 px-3 py-2 text-sm text-[#ff6b7a]">
+        <p className="rounded-lg border border-[#B8001F]/30 bg-[#B8001F]/5 px-3 py-2 text-sm text-[#B8001F]">
           {error}
         </p>
       ) : null}
@@ -160,7 +155,7 @@ export default function EnrollmentForm({
       <button
         type="submit"
         disabled={isPending}
-        className="w-full rounded-full bg-[#B8001F] px-6 py-4 font-semibold text-white transition-all hover:bg-[#490207] hover:shadow-lg hover:shadow-[#B8001F]/40 disabled:opacity-60"
+        className="w-full rounded-full bg-[#B8001F] px-6 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-[#490207] disabled:opacity-60"
       >
         {isPending ? "Se trimite…" : "Trimite înscrierea"}
       </button>
@@ -185,7 +180,7 @@ function Field({
     <div className="space-y-1.5">
       <label
         htmlFor={id}
-        className="block text-xs font-medium text-[#A0A0A0]"
+        className="block text-xs font-medium text-[#666]"
       >
         {label}
         {required ? " *" : ""}
@@ -195,7 +190,7 @@ function Field({
         name={name}
         type={type}
         required={required}
-        className="h-10 w-full rounded-lg border border-[#2A2A2A] bg-[#1A1A1A] px-3 text-sm text-white outline-none focus:border-[#B8001F]"
+        className="h-10 w-full rounded-lg border border-[#E0E0E0] bg-white px-3 text-sm text-[#0A0A0A] outline-none focus:border-[#B8001F]"
       />
     </div>
   );
