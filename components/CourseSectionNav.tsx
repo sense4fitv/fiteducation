@@ -29,25 +29,31 @@ export default function CourseSectionNav({
   }, [sections]);
 
   return (
-    <div className="sticky top-0 z-30 border-y border-[#EAEAEA] bg-white/90 backdrop-blur">
-      <nav className="mx-auto flex max-w-[1200px] gap-1 overflow-x-auto px-4 sm:px-8 lg:px-16">
-        {sections.map((s) => (
-          <a
-            key={s.id}
-            href={`#${s.id}`}
-            className={`relative whitespace-nowrap px-3 py-3 text-sm font-medium transition-colors ${
-              active === s.id
-                ? "text-[#0A0A0A]"
-                : "text-[#888] hover:text-[#0A0A0A]"
-            }`}
-          >
-            {s.label}
-            {active === s.id ? (
-              <span className="absolute inset-x-3 -bottom-px h-0.5 rounded-full bg-[#B8001F]" />
-            ) : null}
-          </a>
-        ))}
-      </nav>
+    <div className="sticky top-0 z-30 bg-[#FAFAFA]/85 backdrop-blur">
+      <div className="mx-auto max-w-[1200px] px-4 sm:px-8 lg:px-16">
+        <nav
+          className="trainers-scroll flex justify-start sm:justify-center gap-1 overflow-x-auto py-3"
+          style={{ scrollbarWidth: "none" }}
+        >
+          {sections.map((s) => {
+            const isActive = active === s.id;
+            return (
+              <a
+                key={s.id}
+                href={`#${s.id}`}
+                className={`whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+                  isActive
+                    ? "bg-[#0A0A0A] text-white"
+                    : "text-[#666] hover:bg-[#EFEFEF] hover:text-[#0A0A0A]"
+                }`}
+              >
+                {s.label}
+              </a>
+            );
+          })}
+        </nav>
+      </div>
+      <div className="h-px bg-[#EAEAEA]" />
     </div>
   );
 }
