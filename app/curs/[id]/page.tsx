@@ -91,7 +91,7 @@ export default function CoursePage({ params }: { params: { id: string } }) {
       <Navbar />
 
       {/* Breadcrumbs */}
-      <section className="pt-24 pb-4 px-4 sm:px-8 lg:px-16">
+      <section className="pt-4 pb-4 px-4 sm:px-8 lg:px-16">
         <div className="max-w-[1200px] mx-auto">
           <div className="flex items-center gap-2 text-sm text-[#666666]">
             <a href="/" className="hover:text-[#B8001F] transition-colors">

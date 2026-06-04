@@ -16,7 +16,7 @@ export default function Navbar() {
 
   return (
     <nav
-      className="absolute top-0 left-0 right-0 z-50 px-4 sm:px-8 lg:px-16"
+      className="relative z-50 px-4 sm:px-8 lg:px-16"
     >
       <div className="max-w-[1600px] mx-auto">
         <div className="flex items-center justify-between h-20">
@@ -35,7 +35,7 @@ export default function Navbar() {
               <a
                 key={item.label}
                 href={item.href}
-                className="text-white/80 hover:text-white transition-colors duration-200 font-medium"
+                className="text-[#0A0A0A] hover:text-[#B8001F] transition-colors duration-200 font-medium"
               >
                 {item.label}
               </a>
@@ -55,7 +55,7 @@ export default function Navbar() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-2 text-white hover:bg-white/10 rounded-lg transition-colors"
+            className="md:hidden p-2 text-[#0A0A0A] hover:bg-gray-100 rounded-lg transition-colors"
             aria-label="Toggle menu"
           >
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}

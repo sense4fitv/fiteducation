@@ -18,7 +18,7 @@ export default function HeroSlider() {
   const [activeIndex, setActiveIndex] = useState(0);
 
   return (
-    <section className="pt-32 pb-12 px-4 sm:px-8 lg:px-16">
+    <section className="pt-4 pb-12 px-4 sm:px-8 lg:px-16">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
