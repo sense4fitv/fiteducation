@@ -1,25 +1,34 @@
 "use client";
 
-import { useRef } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Navigation } from "swiper/modules";
-import type { Swiper as SwiperType } from "swiper";
+import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-
-import "swiper/css";
-import "swiper/css/navigation";
-
 import { trainers } from "@/data/trainers";
-import TrainerCard from "./TrainerCard";
+import TrainerPanel from "./TrainerPanel";
+import TrainerMobileCard from "./TrainerMobileCard";
 
 export default function TrainersSection() {
-  const swiperRef = useRef<SwiperType | null>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeDot, setActiveDot] = useState(0);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      const scrollLeft = container.scrollLeft;
+      const cardWidth = 260 + 12; // min-w + gap
+      const index = Math.round(scrollLeft / cardWidth);
+      setActiveDot(Math.min(index, trainers.length - 1));
+    };
+
+    container.addEventListener("scroll", handleScroll, { passive: true });
+    return () => container.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <section id="traineri" className="py-20 px-4 sm:px-8 lg:px-16">
       <div className="max-w-[1600px] mx-auto">
-        {/* Dark Container */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -29,73 +38,71 @@ export default function TrainersSection() {
         >
           {/* Header */}
           <div className="text-center mb-12">
+            <motion.p
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="text-[#B8001F] text-xs uppercase tracking-[3px] font-semibold mb-3"
+            >
+              Echipa noastră
+            </motion.p>
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
               className="text-4xl sm:text-5xl font-bold text-white font-[family-name:var(--font-space-grotesk)]"
             >
-              Echipa noastră de traineri
+              Traineri de elită
             </motion.h2>
           </div>
 
-          {/* Swiper Container */}
-          <div className="relative">
-            <Swiper
-              modules={[Navigation]}
-              spaceBetween={24}
-              slidesPerView={1.2}
-              breakpoints={{
-                640: {
-                  slidesPerView: 2,
-                  spaceBetween: 24,
-                },
-                1024: {
-                  slidesPerView: 3,
-                  spaceBetween: 32,
-                },
-                1280: {
-                  slidesPerView: 4,
-                  spaceBetween: 32,
-                },
-              }}
-              onSwiper={(swiper) => {
-                swiperRef.current = swiper;
-              }}
-              className="trainers-swiper"
-            >
-              {trainers.map((trainer, index) => (
-                <SwiperSlide key={trainer.id}>
-                  <TrainerCard trainer={trainer} index={index} />
-                </SwiperSlide>
-              ))}
-            </Swiper>
-
-            {/* Navigation Buttons - Desktop Only */}
-            <div className="hidden lg:block">
-              <button
-                onClick={() => swiperRef.current?.slidePrev()}
-                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-6 z-10 w-12 h-12 bg-[#B8001F] hover:bg-[#490207] rounded-full flex items-center justify-center text-white transition-all duration-300 hover:scale-110 shadow-lg"
-                aria-label="Previous"
-              >
-                <ChevronLeft size={24} />
-              </button>
-              <button
-                onClick={() => swiperRef.current?.slideNext()}
-                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-6 z-10 w-12 h-12 bg-[#B8001F] hover:bg-[#490207] rounded-full flex items-center justify-center text-white transition-all duration-300 hover:scale-110 shadow-lg"
-                aria-label="Next"
-              >
-                <ChevronRight size={24} />
-              </button>
-            </div>
+          {/* Desktop: Expanding Panels */}
+          <div className="hidden lg:flex gap-1.5">
+            {trainers.map((trainer, index) => (
+              <TrainerPanel
+                key={trainer.id}
+                trainer={trainer}
+                isActive={activeIndex === index}
+                onActivate={() => setActiveIndex(index)}
+              />
+            ))}
           </div>
 
-          {/* Mobile Scroll Hint */}
-          <div className="lg:hidden text-center mt-8">
-            <p className="text-[#666666] text-sm italic">
-              Swipe pentru a vedea mai mulți traineri →
-            </p>
+          {/* Mobile: Horizontal Scroll */}
+          <div className="lg:hidden">
+            <div
+              ref={scrollRef}
+              className="flex gap-3 overflow-x-auto pb-4"
+              style={{
+                scrollSnapType: "x mandatory",
+                WebkitOverflowScrolling: "touch",
+                scrollbarWidth: "none",
+              }}
+            >
+              {trainers.map((trainer, index) => (
+                <TrainerMobileCard
+                  key={trainer.id}
+                  trainer={trainer}
+                  index={index}
+                />
+              ))}
+            </div>
+
+            {/* Scroll Indicator Dots */}
+            <div className="flex justify-center gap-1.5 mt-4">
+              {trainers.map((_, index) => (
+                <div
+                  key={index}
+                  className={`h-[3px] rounded-full transition-all duration-300 ${
+                    activeDot === index
+                      ? "w-5 bg-[#B8001F]"
+                      : "w-2 bg-[#333]"
+                  }`}
+                />
+              ))}
+            </div>
           </div>
         </motion.div>
       </div>
