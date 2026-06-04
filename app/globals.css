@@ -196,6 +196,31 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
+/* Admin surface — dot-grid texture + Chrome autofill normalization.
+   Scoped via the `.admin-surface` class on the admin layout/login root. */
+.admin-surface {
+  background-color: var(--background);
+  background-image:
+    radial-gradient(
+      circle at 1px 1px,
+      color-mix(in oklch, var(--foreground) 6%, transparent) 1px,
+      transparent 0
+    );
+  background-size: 22px 22px;
+}
+
+.admin-surface input:-webkit-autofill,
+.admin-surface input:-webkit-autofill:hover,
+.admin-surface input:-webkit-autofill:focus,
+.admin-surface input:-webkit-autofill:active {
+  -webkit-text-fill-color: var(--foreground);
+  caret-color: var(--foreground);
+  -webkit-box-shadow: 0 0 0 1000px var(--input) inset;
+  box-shadow: 0 0 0 1000px var(--input) inset;
+  border-color: var(--border);
+  transition: background-color 9999s ease-in-out 0s;
+}
+
 /* Hide scrollbar for trainers mobile scroll */
 .trainers-scroll {
   -ms-overflow-style: none;

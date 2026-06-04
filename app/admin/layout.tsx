@@ -29,7 +29,7 @@ export default async function AdminLayout({
   }
 
   return (
-    <div className="dark min-h-screen bg-background text-foreground">
+    <div className="dark admin-surface min-h-screen text-foreground">
       <AdminShell email={user.email ?? ""}>{children}</AdminShell>
       <Toaster richColors theme="dark" position="top-center" />
     </div>
