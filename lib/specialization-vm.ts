@@ -1,6 +1,3 @@
-import type { LucideIcon } from "lucide-react";
-
-import { pickCourseIcon } from "@/lib/course-icons";
 import { formatDate } from "@/lib/format";
 import type { Enums } from "@/lib/supabase/types";
 import type { PublicCourseSummary } from "@/lib/supabase/queries/public";
@@ -8,6 +5,10 @@ import type { PublicCourseSummary } from "@/lib/supabase/queries/public";
 // View-model the configurator + hero cards consume. Decoupled from the DB row
 // so we can swap the upstream source later (e.g. group multiple courses into a
 // pack) without touching the UI.
+//
+// NOTE: keep this fully serializable — instances cross the RSC → client
+// boundary. Don't add Lucide icon component refs; the client resolves the
+// icon from the slug (id) via pickCourseIcon.
 export type SpecializationVM = {
   id: string; // slug
   title: string;
@@ -15,7 +16,6 @@ export type SpecializationVM = {
   duration: string; // "18 Iulie 2026", "26 sept – 27 sept 2026", "TBA"
   price: number;
   currency: Enums<"currency_code">;
-  icon: LucideIcon;
   category: "foundation" | "specialization";
   comingSoon: boolean;
 };
@@ -34,7 +34,6 @@ export function toSpecializationVM(course: PublicCourseSummary): SpecializationV
     duration: formatDuration(course),
     price: course.price_amount,
     currency: course.currency,
-    icon: pickCourseIcon(course.slug),
     category: course.type === "curs_acreditat" ? "foundation" : "specialization",
     comingSoon: !course.launch_date && !course.first_session_start,
   };

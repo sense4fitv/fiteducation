@@ -4,6 +4,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Clock, X } from "lucide-react";
 
+import { pickCourseIcon } from "@/lib/course-icons";
 import { formatPrice } from "@/lib/format";
 import type { SpecializationVM } from "@/lib/specialization-vm";
 
@@ -19,7 +20,7 @@ export default function CourseModal({
   course,
 }: CourseModalProps) {
   if (!course) return null;
-  const Icon = course.icon;
+  const Icon = pickCourseIcon(course.id);
 
   return (
     <AnimatePresence>

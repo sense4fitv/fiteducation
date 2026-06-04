@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Check, Info } from "lucide-react";
 
+import { pickCourseIcon } from "@/lib/course-icons";
 import { formatPrice } from "@/lib/format";
 import type { SpecializationVM } from "@/lib/specialization-vm";
 
@@ -23,7 +24,7 @@ export default function ConfiguratorCard({
   onInfoClick,
   hideInfo = false,
 }: ConfiguratorCardProps) {
-  const Icon = specialization.icon;
+  const Icon = pickCourseIcon(specialization.id);
 
   return (
     <motion.div
