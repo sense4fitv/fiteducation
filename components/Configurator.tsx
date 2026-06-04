@@ -100,7 +100,7 @@ export default function Configurator() {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[#0A0A0A] mb-6 font-[family-name:var(--font-space-grotesk)]">
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[#0A0A0A] mb-6 font-[family-name:var(--font-unbounded)]">
             Programa Modulară
           </h2>
           <p className="text-lg text-[#666666] max-w-2xl mx-auto">
@@ -127,7 +127,7 @@ export default function Configurator() {
                     selectedFoundation ? "text-white" : "text-[#666666]"
                   }`}>1</span>
                 </div>
-                <h3 className="text-xl font-bold text-white font-[family-name:var(--font-space-grotesk)]">
+                <h3 className="text-xl font-bold text-white font-[family-name:var(--font-unbounded)]">
                   Fundație
                 </h3>
               </div>
@@ -157,7 +157,7 @@ export default function Configurator() {
                     selectedSpecialization ? "text-white" : "text-[#666666]"
                   }`}>2</span>
                 </div>
-                <h3 className="text-xl font-bold text-white font-[family-name:var(--font-space-grotesk)]">
+                <h3 className="text-xl font-bold text-white font-[family-name:var(--font-unbounded)]">
                   Workshop-uri și specializări
                 </h3>
               </div>
@@ -281,7 +281,7 @@ export default function Configurator() {
               <div className="flex items-center justify-between gap-4 pr-8 sm:pr-10">
                 {/* Left: Title */}
                 <div className="flex-shrink-0">
-                  <h3 className="text-base sm:text-lg font-bold text-white font-[family-name:var(--font-bebas-neue)] tracking-wide">
+                  <h3 className="text-base sm:text-lg font-bold text-white font-[family-name:var(--font-unbounded)] tracking-wide">
                     Parcursul tău educațional
                   </h3>
                 </div>
@@ -291,7 +291,7 @@ export default function Configurator() {
                   {/* Price */}
                   <div className="text-right">
                     <p className="text-[#A0A0A0] text-xs sm:text-sm">Total</p>
-                    <p className="text-xl sm:text-2xl font-bold text-white font-[family-name:var(--font-bebas-neue)]">
+                    <p className="text-xl sm:text-2xl font-bold text-white font-[family-name:var(--font-unbounded)]">
                       {formatPrice(totalPrice)}
                     </p>
                   </div>

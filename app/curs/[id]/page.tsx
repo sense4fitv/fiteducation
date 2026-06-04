@@ -120,7 +120,7 @@ export default function CoursePage({ params }: { params: { id: string } }) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, duration: 0.6 }}
-                className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4 font-[family-name:var(--font-space-grotesk)] leading-tight max-w-3xl"
+                className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4 font-[family-name:var(--font-unbounded)] leading-tight max-w-3xl"
               >
                 {course.title}
               </motion.h1>
@@ -229,7 +229,7 @@ export default function CoursePage({ params }: { params: { id: string } }) {
               {/* Tab 0: Despre curs */}
               {activeTab === 0 && (
                 <div>
-                  <h2 className="text-3xl sm:text-4xl font-bold text-[#0A0A0A] mb-8 font-[family-name:var(--font-space-grotesk)]">
+                  <h2 className="text-3xl sm:text-4xl font-bold text-[#0A0A0A] mb-8 font-[family-name:var(--font-unbounded)]">
                     Despre Curs
                   </h2>
 
@@ -274,7 +274,7 @@ export default function CoursePage({ params }: { params: { id: string } }) {
                           <Target size={24} className="text-white" />
                         </div>
                         <div>
-                          <h3 className="text-2xl font-bold mb-2 font-[family-name:var(--font-space-grotesk)]">
+                          <h3 className="text-2xl font-bold mb-2 font-[family-name:var(--font-unbounded)]">
                             Instructor Fitness Certification
                           </h3>
                           <p className="text-[#A0A0A0] text-sm">
@@ -295,7 +295,7 @@ export default function CoursePage({ params }: { params: { id: string } }) {
 
                   {/* Recognition Section */}
                   <div>
-                    <h3 className="text-2xl font-bold text-[#0A0A0A] mb-6 font-[family-name:var(--font-space-grotesk)] flex items-center gap-3">
+                    <h3 className="text-2xl font-bold text-[#0A0A0A] mb-6 font-[family-name:var(--font-unbounded)] flex items-center gap-3">
                       <Award size={28} className="text-[#B8001F]" />
                       Recunoaștere și Certificări
                     </h3>
@@ -373,7 +373,7 @@ export default function CoursePage({ params }: { params: { id: string } }) {
               {/* Tab 1: Programa */}
               {activeTab === 1 && (
                 <div>
-                  <h2 className="text-3xl sm:text-4xl font-bold text-[#0A0A0A] mb-6 font-[family-name:var(--font-space-grotesk)]">
+                  <h2 className="text-3xl sm:text-4xl font-bold text-[#0A0A0A] mb-6 font-[family-name:var(--font-unbounded)]">
                     Competențe și Abilități
                   </h2>
 
@@ -384,7 +384,7 @@ export default function CoursePage({ params }: { params: { id: string } }) {
                         <Target size={24} className="text-white" />
                       </div>
                       <div>
-                        <h3 className="text-xl sm:text-2xl font-bold mb-3 font-[family-name:var(--font-space-grotesk)]">
+                        <h3 className="text-xl sm:text-2xl font-bold mb-3 font-[family-name:var(--font-unbounded)]">
                           Ce vei putea face după absolvire
                         </h3>
                         <p className="text-white/90 leading-relaxed">
@@ -725,7 +725,7 @@ export default function CoursePage({ params }: { params: { id: string } }) {
               {/* Tab 2: Formatori */}
               {activeTab === 2 && (
                 <div>
-                  <h2 className="text-3xl sm:text-4xl font-bold text-[#0A0A0A] mb-6 font-[family-name:var(--font-space-grotesk)]">
+                  <h2 className="text-3xl sm:text-4xl font-bold text-[#0A0A0A] mb-6 font-[family-name:var(--font-unbounded)]">
                     Formatorii Cursului
                   </h2>
                   <p className="text-lg text-[#666666] mb-10">
@@ -754,7 +754,7 @@ export default function CoursePage({ params }: { params: { id: string } }) {
 
                           {/* Trainer Info */}
                           <div className="flex-1 text-center sm:text-left">
-                            <h3 className="text-xl sm:text-2xl font-bold text-[#0A0A0A] mb-2 font-[family-name:var(--font-space-grotesk)]">
+                            <h3 className="text-xl sm:text-2xl font-bold text-[#0A0A0A] mb-2 font-[family-name:var(--font-unbounded)]">
                               {trainer.name}
                             </h3>
                             <p className="text-[#666666] leading-relaxed">
@@ -773,7 +773,7 @@ export default function CoursePage({ params }: { params: { id: string } }) {
                         <Award size={24} className="text-white" />
                       </div>
                       <div>
-                        <h3 className="text-2xl font-bold mb-3 font-[family-name:var(--font-space-grotesk)]">
+                        <h3 className="text-2xl font-bold mb-3 font-[family-name:var(--font-unbounded)]">
                           Echipă de Experți
                         </h3>
                         <p className="text-white/90 leading-relaxed">
@@ -788,7 +788,7 @@ export default function CoursePage({ params }: { params: { id: string } }) {
               {/* Tab 3: Inscriere si certificare */}
               {activeTab === 3 && (
                 <div>
-                  <h2 className="text-3xl sm:text-4xl font-bold text-[#0A0A0A] mb-8 font-[family-name:var(--font-space-grotesk)]">
+                  <h2 className="text-3xl sm:text-4xl font-bold text-[#0A0A0A] mb-8 font-[family-name:var(--font-unbounded)]">
                     Înscriere și Certificare
                   </h2>
 
@@ -936,7 +936,7 @@ export default function CoursePage({ params }: { params: { id: string } }) {
                           <Award size={28} className="text-white" />
                         </div>
                         <div>
-                          <h4 className="text-2xl font-bold mb-3 font-[family-name:var(--font-space-grotesk)]">
+                          <h4 className="text-2xl font-bold mb-3 font-[family-name:var(--font-unbounded)]">
                             Certificare Recunoscută Internațional
                           </h4>
                           <p className="text-white/95 leading-relaxed text-lg">
@@ -964,7 +964,7 @@ export default function CoursePage({ params }: { params: { id: string } }) {
             className="grid lg:grid-cols-2 rounded-3xl overflow-hidden shadow-lg"
           >
             <div className="bg-[#0A0A0A] p-8 sm:p-12 flex flex-col justify-center">
-              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4 font-[family-name:var(--font-space-grotesk)]">
+              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4 font-[family-name:var(--font-unbounded)]">
                 Solicită Înscriere
               </h2>
               <p className="text-[#A0A0A0] text-lg mb-6">

@@ -25,7 +25,7 @@ export default function ComparisonSection() {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <h2 className="text-4xl sm:text-5xl font-bold text-[#0A0A0A] mb-4 font-[family-name:var(--font-space-grotesk)]">
+          <h2 className="text-4xl sm:text-5xl font-bold text-[#0A0A0A] mb-4 font-[family-name:var(--font-unbounded)]">
             De ce Fiteducation?
           </h2>
           <p className="text-lg text-[#666666]">

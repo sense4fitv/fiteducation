@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Poppins, Bebas_Neue, Geist, Inter } from "next/font/google";
+import { Unbounded, Geist, Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
@@ -11,17 +11,10 @@ const inter = Inter({
   display: "swap",
 });
 
-const poppins = Poppins({
-  variable: "--font-poppins",
+const unbounded = Unbounded({
+  variable: "--font-unbounded",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  display: "swap",
-});
-
-const bebasNeue = Bebas_Neue({
-  variable: "--font-bebas-neue",
-  subsets: ["latin"],
-  weight: ["400"],
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
   display: "swap",
 });
 
@@ -65,7 +58,7 @@ export default function RootLayout({
   return (
     <html lang="ro" className={cn("scroll-smooth", "font-sans", geist.variable)}>
       <body
-        className={`${poppins.variable} ${bebasNeue.variable} ${inter.variable} antialiased`}
+        className={`${unbounded.variable} ${inter.variable} antialiased`}
       >
         {children}
       </body>

@@ -31,10 +31,10 @@ export default function StatsBar() {
                 className="text-center"
               >
                 <div className="mb-3">
-                  <span className="text-5xl sm:text-6xl lg:text-7xl font-bold text-[#0A0A0A] font-[family-name:var(--font-space-grotesk)]">
+                  <span className="text-5xl sm:text-6xl lg:text-7xl font-bold text-[#0A0A0A] font-[family-name:var(--font-unbounded)]">
                     {stat.value}
                   </span>
-                  <span className="text-5xl sm:text-6xl lg:text-7xl font-bold text-[#B8001F] font-[family-name:var(--font-space-grotesk)]">
+                  <span className="text-5xl sm:text-6xl lg:text-7xl font-bold text-[#B8001F] font-[family-name:var(--font-unbounded)]">
                     +
                   </span>
                 </div>

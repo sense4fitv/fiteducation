@@ -72,7 +72,7 @@ export default function ExitIntentPopup() {
                 <div className="w-16 h-16 bg-[#B8001F]/20 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Download size={32} className="text-[#B8001F]" />
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-2 font-[family-name:var(--font-space-grotesk)]">
+                <h3 className="text-2xl font-bold text-white mb-2 font-[family-name:var(--font-unbounded)]">
                   Descarcă broșura gratuită
                 </h3>
                 <p className="text-[#A0A0A0]">

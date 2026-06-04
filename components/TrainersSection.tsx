@@ -52,7 +52,7 @@ export default function TrainersSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="text-4xl sm:text-5xl font-bold text-white font-[family-name:var(--font-space-grotesk)]"
+              className="text-4xl sm:text-5xl font-bold text-white font-[family-name:var(--font-unbounded)]"
             >
               Traineri de elită
             </motion.h2>

@@ -1,0 +1,119 @@
+<h2>Trainers Section — Layout Approaches</h2>
+<p class="subtitle">Replacing the generic dark carousel with something more distinctive and trainer-focused</p>
+
+<div class="cards">
+  <!-- Option A -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding: 24px; background: #0A0A0A;">
+      <!-- Featured + Grid mockup -->
+      <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 12px; height: 220px;">
+        <!-- Featured trainer (large) -->
+        <div style="background: linear-gradient(135deg, #1a1a1a, #2a2a2a); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; justify-content: flex-end; position: relative; overflow: hidden;">
+          <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(to top, rgba(184,0,31,0.4), transparent); border-radius: 12px;"></div>
+          <div style="position: relative; z-index: 1;">
+            <div style="width: 60px; height: 60px; border-radius: 50%; background: #444; margin-bottom: 8px;"></div>
+            <div style="color: white; font-weight: 700; font-size: 14px;">Flavius Turcanu</div>
+            <div style="color: #aaa; font-size: 11px; margin-top: 4px;">Fondator Fiteducation & CRAB</div>
+            <div style="color: #aaa; font-size: 10px;">Doctorand IEFS, Presenter international</div>
+          </div>
+        </div>
+        <!-- Grid of smaller trainers -->
+        <div style="display: grid; grid-template-rows: 1fr 1fr; gap: 12px;">
+          <div style="background: #1a1a1a; border-radius: 12px; padding: 12px; display: flex; align-items: center; gap: 10px;">
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: #333; flex-shrink: 0;"></div>
+            <div>
+              <div style="color: white; font-size: 12px; font-weight: 600;">Bianca Margarit</div>
+              <div style="color: #888; font-size: 10px;">Doctor, Nutritionist</div>
+            </div>
+          </div>
+          <div style="background: #1a1a1a; border-radius: 12px; padding: 12px; display: flex; align-items: center; gap: 10px;">
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: #333; flex-shrink: 0;"></div>
+            <div>
+              <div style="color: white; font-size: 12px; font-weight: 600;">Attila Kovacs</div>
+              <div style="color: #888; font-size: 10px;">Coach de performanta</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Featured + Grid</h3>
+      <p>One trainer gets hero treatment (large card with full bio), others in a compact grid beside. Clicking any trainer swaps them into the featured spot. Creates visual hierarchy and lets each trainer shine.</p>
+    </div>
+  </div>
+
+  <!-- Option B -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding: 24px; background: #0A0A0A;">
+      <!-- Full-width stacked mockup -->
+      <div style="display: flex; flex-direction: column; gap: 10px; height: 220px; overflow: hidden;">
+        <!-- Trainer row 1 - expanded -->
+        <div style="background: #1a1a1a; border-radius: 12px; padding: 14px 18px; display: flex; align-items: center; gap: 16px; border-left: 3px solid #B8001F;">
+          <div style="width: 50px; height: 50px; border-radius: 50%; background: #333; flex-shrink: 0;"></div>
+          <div style="flex: 1;">
+            <div style="color: white; font-weight: 700; font-size: 13px;">Flavius Turcanu</div>
+            <div style="color: #aaa; font-size: 11px; margin-top: 2px;">Doctorand IEFS, Fondator Fiteducation & CRAB, Presenter international</div>
+          </div>
+          <div style="color: #B8001F; font-size: 18px;">&#8250;</div>
+        </div>
+        <!-- Trainer row 2 -->
+        <div style="background: #1a1a1a; border-radius: 12px; padding: 14px 18px; display: flex; align-items: center; gap: 16px; opacity: 0.7;">
+          <div style="width: 50px; height: 50px; border-radius: 50%; background: #333; flex-shrink: 0;"></div>
+          <div style="flex: 1;">
+            <div style="color: white; font-weight: 700; font-size: 13px;">Bianca Margarit</div>
+            <div style="color: #888; font-size: 11px;">Doctor, Nutritionist, Personal trainer</div>
+          </div>
+          <div style="color: #555; font-size: 18px;">&#8250;</div>
+        </div>
+        <!-- Trainer row 3 -->
+        <div style="background: #1a1a1a; border-radius: 12px; padding: 14px 18px; display: flex; align-items: center; gap: 16px; opacity: 0.7;">
+          <div style="width: 50px; height: 50px; border-radius: 50%; background: #333; flex-shrink: 0;"></div>
+          <div style="flex: 1;">
+            <div style="color: white; font-weight: 700; font-size: 13px;">Attila Kovacs</div>
+            <div style="color: #888; font-size: 11px;">Specialist in respiratie, coach certificat</div>
+          </div>
+          <div style="color: #555; font-size: 18px;">&#8250;</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Accordion / Expandable List</h3>
+      <p>Full-width rows, one expanded at a time showing the trainer's photo large + full credentials. Hovering/clicking expands a row. Clean, modern, no carousel. Good for 6 trainers — all visible at once.</p>
+    </div>
+  </div>
+
+  <!-- Option C -->
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding: 24px; background: #0A0A0A;">
+      <!-- Large portrait cards mockup -->
+      <div style="display: flex; gap: 10px; height: 220px; overflow: hidden;">
+        <div style="flex: 2; background: linear-gradient(to top, #0a0a0a, #222); border-radius: 12px; position: relative; overflow: hidden;">
+          <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 14px; background: linear-gradient(to top, #0a0a0a, transparent);">
+            <div style="color: white; font-weight: 700; font-size: 13px;">Flavius Turcanu</div>
+            <div style="color: #B8001F; font-size: 10px; font-weight: 600; margin-top: 2px; text-transform: uppercase; letter-spacing: 1px;">Fondator</div>
+            <div style="color: #aaa; font-size: 10px; margin-top: 4px; line-height: 1.4;">Doctorand IEFS, Presenter international, Consultant</div>
+          </div>
+        </div>
+        <div style="flex: 1; background: linear-gradient(to top, #0a0a0a, #1a1a1a); border-radius: 12px; position: relative; overflow: hidden; opacity: 0.6;">
+          <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 10px;">
+            <div style="color: white; font-weight: 600; font-size: 11px;">Bianca</div>
+          </div>
+        </div>
+        <div style="flex: 1; background: linear-gradient(to top, #0a0a0a, #1a1a1a); border-radius: 12px; position: relative; overflow: hidden; opacity: 0.6;">
+          <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 10px;">
+            <div style="color: white; font-weight: 600; font-size: 11px;">Attila</div>
+          </div>
+        </div>
+        <div style="flex: 1; background: linear-gradient(to top, #0a0a0a, #1a1a1a); border-radius: 12px; position: relative; overflow: hidden; opacity: 0.4;">
+          <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 10px;">
+            <div style="color: white; font-weight: 600; font-size: 11px;">Robert</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Expanding Panels</h3>
+      <p>Tall vertical panels side by side. Hovering one expands it wide to reveal the full portrait + bio, while others compress. Cinematic feel, great for showcasing trainer photos. Very distinctive — not a typical card grid.</p>
+    </div>
+  </div>
+</div>

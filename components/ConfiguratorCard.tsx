@@ -76,7 +76,7 @@ export default function ConfiguratorCard({
       </div>
 
       {/* Title */}
-      <h3 className="text-xl font-bold text-white mb-2 font-[family-name:var(--font-space-grotesk)]">
+      <h3 className="text-xl font-bold text-white mb-2 font-[family-name:var(--font-unbounded)]">
         {specialization.title}
       </h3>
 
@@ -87,7 +87,7 @@ export default function ConfiguratorCard({
 
       {/* Price */}
       <div className="pt-4 border-t border-[#2A2A2A] mt-auto">
-        <span className="text-2xl font-bold text-white font-[family-name:var(--font-space-grotesk)]">
+        <span className="text-2xl font-bold text-white font-[family-name:var(--font-unbounded)]">
           {formatPrice(specialization.price)}
         </span>
       </div>

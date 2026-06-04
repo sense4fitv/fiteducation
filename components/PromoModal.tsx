@@ -96,7 +96,7 @@ export default function PromoModal() {
                 <div className="flex items-center justify-center gap-4">
                   <div className="text-center">
                     <div className="bg-white/20 backdrop-blur-sm rounded-lg px-4 py-2 min-w-[70px]">
-                      <p className="text-3xl font-bold text-white font-[family-name:var(--font-bebas-neue)]">
+                      <p className="text-3xl font-bold text-white font-[family-name:var(--font-unbounded)]">
                         {String(timeLeft.hours).padStart(2, "0")}
                       </p>
                       <p className="text-xs text-white/80">ORE</p>
@@ -105,7 +105,7 @@ export default function PromoModal() {
                   <span className="text-3xl text-white font-bold">:</span>
                   <div className="text-center">
                     <div className="bg-white/20 backdrop-blur-sm rounded-lg px-4 py-2 min-w-[70px]">
-                      <p className="text-3xl font-bold text-white font-[family-name:var(--font-bebas-neue)]">
+                      <p className="text-3xl font-bold text-white font-[family-name:var(--font-unbounded)]">
                         {String(timeLeft.minutes).padStart(2, "0")}
                       </p>
                       <p className="text-xs text-white/80">MIN</p>
@@ -114,7 +114,7 @@ export default function PromoModal() {
                   <span className="text-3xl text-white font-bold">:</span>
                   <div className="text-center">
                     <div className="bg-white/20 backdrop-blur-sm rounded-lg px-4 py-2 min-w-[70px]">
-                      <p className="text-3xl font-bold text-white font-[family-name:var(--font-bebas-neue)]">
+                      <p className="text-3xl font-bold text-white font-[family-name:var(--font-unbounded)]">
                         {String(timeLeft.seconds).padStart(2, "0")}
                       </p>
                       <p className="text-xs text-white/80">SEC</p>
@@ -126,7 +126,7 @@ export default function PromoModal() {
               {/* Content */}
               <div className="p-8">
                 <div className="text-center mb-6">
-                  <h3 className="text-3xl font-bold text-white mb-3 font-[family-name:var(--font-space-grotesk)]">
+                  <h3 className="text-3xl font-bold text-white mb-3 font-[family-name:var(--font-unbounded)]">
                     Ofertă Exclusivă!
                   </h3>
                   <p className="text-lg text-white mb-2">
@@ -137,7 +137,7 @@ export default function PromoModal() {
                   </p>
                   <div className="inline-block bg-[#B8001F]/10 border-2 border-[#B8001F] rounded-xl px-6 py-3 mb-4">
                     <p className="text-sm text-[#A0A0A0] line-through mb-1">7900 LEI</p>
-                    <p className="text-4xl font-bold text-[#B8001F] font-[family-name:var(--font-bebas-neue)]">
+                    <p className="text-4xl font-bold text-[#B8001F] font-[family-name:var(--font-unbounded)]">
                       -600 LEI
                     </p>
                   </div>

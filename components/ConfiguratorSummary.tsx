@@ -33,7 +33,7 @@ export default function ConfiguratorSummary({
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-3">
               <Sparkles size={20} className="text-[#B8001F]" />
-              <h3 className="text-lg font-bold text-white font-[family-name:var(--font-space-grotesk)]">
+              <h3 className="text-lg font-bold text-white font-[family-name:var(--font-unbounded)]">
                 Parcursul tău educațional
               </h3>
             </div>
@@ -102,7 +102,7 @@ export default function ConfiguratorSummary({
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 10 }}
                   transition={{ duration: 0.3 }}
-                  className="text-2xl sm:text-3xl font-bold text-white font-[family-name:var(--font-bebas-neue)]"
+                  className="text-2xl sm:text-3xl font-bold text-white font-[family-name:var(--font-unbounded)]"
                 >
                   {formatPrice(totalPrice)}
                 </motion.p>

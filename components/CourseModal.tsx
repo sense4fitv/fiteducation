@@ -106,7 +106,7 @@ export default function CourseModal({
                     <Icon size={28} className="text-white" />
                   </div>
                   <div>
-                    <h2 className="text-2xl font-bold text-white mb-1 font-[family-name:var(--font-space-grotesk)]">
+                    <h2 className="text-2xl font-bold text-white mb-1 font-[family-name:var(--font-unbounded)]">
                       {course.title}
                     </h2>
                     <p className="text-[#A0A0A0] text-sm">
@@ -146,14 +146,14 @@ export default function CourseModal({
                 {/* Price - Simple */}
                 <div className="py-6 border-b border-[#2A2A2A]">
                   <p className="text-sm text-[#666666] mb-2">Investiție</p>
-                  <p className="text-5xl font-bold text-white font-[family-name:var(--font-space-grotesk)]">
+                  <p className="text-5xl font-bold text-white font-[family-name:var(--font-unbounded)]">
                     {formatPrice(course.price)}
                   </p>
                 </div>
 
                 {/* Benefits */}
                 <div>
-                  <h3 className="text-xl font-bold text-white mb-6 font-[family-name:var(--font-space-grotesk)]">
+                  <h3 className="text-xl font-bold text-white mb-6 font-[family-name:var(--font-unbounded)]">
                     Ce vei învăța
                   </h3>
                   <ul className="space-y-4">

@@ -44,7 +44,7 @@ export default function Footer() {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            <h3 className="text-lg font-bold mb-4 font-[family-name:var(--font-space-grotesk)]">
+            <h3 className="text-lg font-bold mb-4 font-[family-name:var(--font-unbounded)]">
               Legal
             </h3>
             <ul className="space-y-2 mb-6">
@@ -61,7 +61,7 @@ export default function Footer() {
             </ul>
 
             {/* Social Media */}
-            <h3 className="text-lg font-bold mb-4 font-[family-name:var(--font-space-grotesk)]">
+            <h3 className="text-lg font-bold mb-4 font-[family-name:var(--font-unbounded)]">
               Urmărește-ne
             </h3>
             <div className="flex gap-4">

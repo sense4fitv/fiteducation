@@ -24,7 +24,7 @@ export default function StatsSection() {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               className="text-center"
             >
-              <h3 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[#0A0A0A] mb-2 font-[family-name:var(--font-space-grotesk)]">
+              <h3 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-[#0A0A0A] mb-2 font-[family-name:var(--font-unbounded)]">
                 {stat.value}
               </h3>
               <p className="text-sm sm:text-base text-[#666666]">{stat.label}</p>
