@@ -180,42 +180,22 @@ export default function CoursePage({ params }: { params: { id: string } }) {
       {/* Course Info Bar */}
       <section ref={navTriggerRef} className="py-8 sm:py-10 px-4 sm:px-8 lg:px-16">
         <div className="max-w-[1200px] mx-auto">
-          {/* Mobile: compact list */}
-          <div className="flex flex-col gap-3 sm:hidden">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-[#999]">Preț</span>
-              <span className="text-base font-bold text-[#0A0A0A]">{course.price}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-[#999]">Data de început</span>
-              <span className="text-base font-bold text-[#B8001F]">{course.nextStartDate}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-[#999]">Durată</span>
-              <span className="text-base font-bold text-[#0A0A0A]">1080 ore</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-[#999]">Nivel minim</span>
-              <span className="text-base font-bold text-[#0A0A0A]">Absolvent liceu</span>
-            </div>
-          </div>
-          {/* Desktop: 4-column grid */}
-          <div className="hidden sm:grid sm:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-8">
             <div>
-              <p className="text-sm text-[#999] mb-1">Preț</p>
-              <p className="text-2xl font-bold text-[#0A0A0A]">{course.price}</p>
+              <p className="text-xs sm:text-sm text-[#999] mb-0.5 sm:mb-1">Preț</p>
+              <p className="text-lg sm:text-2xl font-bold text-[#0A0A0A]">{course.price}</p>
             </div>
             <div>
-              <p className="text-sm text-[#999] mb-1">Data de început</p>
-              <p className="text-2xl font-bold text-[#B8001F]">{course.nextStartDate}</p>
+              <p className="text-xs sm:text-sm text-[#999] mb-0.5 sm:mb-1">Data de început</p>
+              <p className="text-lg sm:text-2xl font-bold text-[#B8001F]">{course.nextStartDate}</p>
             </div>
             <div>
-              <p className="text-sm text-[#999] mb-1">Durată</p>
-              <p className="text-2xl font-bold text-[#0A0A0A]">1080 ore</p>
+              <p className="text-xs sm:text-sm text-[#999] mb-0.5 sm:mb-1">Durată</p>
+              <p className="text-lg sm:text-2xl font-bold text-[#0A0A0A]">1080 ore</p>
             </div>
             <div>
-              <p className="text-sm text-[#999] mb-1">Nivel minim</p>
-              <p className="text-2xl font-bold text-[#0A0A0A]">Absolvent liceu</p>
+              <p className="text-xs sm:text-sm text-[#999] mb-0.5 sm:mb-1">Nivel minim</p>
+              <p className="text-lg sm:text-2xl font-bold text-[#0A0A0A]">Absolvent liceu</p>
             </div>
           </div>
         </div>
