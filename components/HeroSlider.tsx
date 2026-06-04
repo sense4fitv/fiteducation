@@ -18,12 +18,12 @@ export default function HeroSlider() {
   const [activeIndex, setActiveIndex] = useState(0);
 
   return (
-    <section className="pt-4 pb-12 px-4 sm:px-8 lg:px-16">
+    <section>
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
         transition={{ duration: 0.6 }}
-        className="max-w-[1600px] mx-auto bg-[#0A0A0A] rounded-3xl overflow-hidden shadow-2xl"
+        className="bg-[#0A0A0A] rounded-b-3xl overflow-hidden"
       >
         <Swiper
           modules={[Autoplay, Pagination, EffectFade]}
