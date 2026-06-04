@@ -38,7 +38,7 @@ export function LoginForm() {
   }, [state]);
 
   return (
-    <Card className="w-full max-w-sm">
+    <Card className="w-full max-w-sm ring-0">
       <CardHeader className="space-y-2">
         <CardTitle className="text-xl tracking-tight">
           FitEducation Admin

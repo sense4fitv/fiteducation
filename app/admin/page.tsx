@@ -15,7 +15,7 @@ export default async function AdminDashboardPage() {
 
   return (
     <div className="mx-auto max-w-3xl">
-      <Card>
+      <Card className="ring-0">
         <CardHeader>
           <CardTitle className="text-xl">
             Bun venit{user?.email ? `, ${user.email}` : ""}

@@ -11,7 +11,7 @@ export function ComingSoon({
 }) {
   return (
     <div className="flex min-h-[60vh] items-center justify-center">
-      <Card className="w-full max-w-md text-center">
+      <Card className="w-full max-w-md text-center ring-0">
         <CardContent className="flex flex-col items-center gap-4 py-12">
           <div className="flex size-14 items-center justify-center rounded-full bg-accent-primary/15 text-accent-primary">
             <Icon className="size-6" />

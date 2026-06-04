@@ -43,7 +43,7 @@ export function AdminShell({
           <div className="h-5 w-px bg-border" />
           <h1 className="text-sm font-medium">{title}</h1>
         </header>
-        <main className="admin-surface flex-1 p-6">{children}</main>
+        <main className="flex-1 p-6">{children}</main>
       </SidebarInset>
     </SidebarProvider>
   );
