@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import {
   CheckCircle2,
@@ -15,6 +15,8 @@ import Image from "next/image";
 
 export default function CoursePage({ params }: { params: { id: string } }) {
   const [showStickyButton, setShowStickyButton] = useState(false);
+  const [showStickyNav, setShowStickyNav] = useState(false);
+  const [activeSection, setActiveSection] = useState("despre");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -22,15 +24,50 @@ export default function CoursePage({ params }: { params: { id: string } }) {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const navTriggerRef = useRef<HTMLDivElement>(null);
 
   const course = courses.find((c) => c.slug === params.id) || courses[0];
+
+  const sections = [
+    { id: "despre", label: "Despre curs" },
+    { id: "competente", label: "Competențe" },
+    { id: "formatori", label: "Formatori" },
+    { id: "inscriere", label: "Înscriere" },
+  ];
 
   useEffect(() => {
     const handleScroll = () => {
       setShowStickyButton(window.scrollY > 600);
+
+      // Show sticky nav after info bar
+      if (navTriggerRef.current) {
+        const rect = navTriggerRef.current.getBoundingClientRect();
+        setShowStickyNav(rect.bottom < 64);
+      }
     };
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Track active section with IntersectionObserver
+  useEffect(() => {
+    const sectionIds = ["despre", "competente", "formatori", "inscriere"];
+    const observers: IntersectionObserver[] = [];
+
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) setActiveSection(id);
+        },
+        { rootMargin: "-80px 0px -60% 0px", threshold: 0 }
+      );
+      observer.observe(el);
+      observers.push(observer);
+    });
+
+    return () => observers.forEach((o) => o.disconnect());
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -71,13 +108,13 @@ export default function CoursePage({ params }: { params: { id: string } }) {
       </section>
 
       {/* Hero Section */}
-      <section className="pb-8 px-4 sm:px-8 lg:px-16">
+      <section className="pb-8 sm:px-8 lg:px-16">
         <div className="max-w-[1200px] mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="relative h-[400px] sm:h-[500px] bg-[#0A0A0A] rounded-3xl overflow-hidden shadow-2xl"
+            className="relative h-[400px] sm:h-[500px] bg-[#0A0A0A] sm:rounded-3xl overflow-hidden shadow-2xl"
           >
             <div
               className="absolute inset-0 bg-cover bg-center"
@@ -141,7 +178,7 @@ export default function CoursePage({ params }: { params: { id: string } }) {
       </section>
 
       {/* Course Info Bar */}
-      <section className="py-10 px-4 sm:px-8 lg:px-16">
+      <section ref={navTriggerRef} className="py-10 px-4 sm:px-8 lg:px-16">
         <div className="max-w-[1200px] mx-auto">
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8">
             <div>
@@ -164,13 +201,46 @@ export default function CoursePage({ params }: { params: { id: string } }) {
         </div>
       </section>
 
+      {/* Sticky Section Nav */}
+      <div
+        className={`sticky top-0 z-30 transition-all duration-300 ${
+          showStickyNav
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 -translate-y-full pointer-events-none"
+        }`}
+      >
+        <div className="bg-white/95 backdrop-blur-sm border-b border-[#E5E5E5]">
+          <div className="max-w-[1200px] mx-auto px-4 sm:px-8 lg:px-16">
+            <nav className="flex gap-1 overflow-x-auto" style={{ scrollbarWidth: "none" }}>
+              {sections.map((section) => (
+                <a
+                  key={section.id}
+                  href={`#${section.id}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document.getElementById(section.id)?.scrollIntoView({ behavior: "smooth" });
+                  }}
+                  className={`px-4 py-3 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${
+                    activeSection === section.id
+                      ? "text-[#B8001F] border-[#B8001F]"
+                      : "text-[#666] border-transparent hover:text-[#0A0A0A]"
+                  }`}
+                >
+                  {section.label}
+                </a>
+              ))}
+            </nav>
+          </div>
+        </div>
+      </div>
+
       {/* Divider */}
       <div className="max-w-[1200px] mx-auto px-4 sm:px-8 lg:px-16">
         <hr className="border-[#E5E5E5]" />
       </div>
 
       {/* Despre Curs */}
-      <section className="py-16 px-4 sm:px-8 lg:px-16">
+      <section id="despre" className="py-16 px-4 sm:px-8 lg:px-16 scroll-mt-16">
         <div className="max-w-[1200px] mx-auto">
           <h2 className="text-3xl sm:text-4xl font-bold text-[#0A0A0A] mb-6 font-[family-name:var(--font-unbounded)]">
             Despre Curs
@@ -217,7 +287,7 @@ export default function CoursePage({ params }: { params: { id: string } }) {
       </div>
 
       {/* Competențe */}
-      <section className="py-16 px-4 sm:px-8 lg:px-16">
+      <section id="competente" className="py-16 px-4 sm:px-8 lg:px-16 scroll-mt-16">
         <div className="max-w-[1200px] mx-auto">
           <h2 className="text-3xl sm:text-4xl font-bold text-[#0A0A0A] mb-3 font-[family-name:var(--font-unbounded)]">
             Ce vei putea face după absolvire
@@ -428,7 +498,7 @@ export default function CoursePage({ params }: { params: { id: string } }) {
       </div>
 
       {/* Formatori */}
-      <section className="py-16 px-4 sm:px-8 lg:px-16">
+      <section id="formatori" className="py-16 px-4 sm:px-8 lg:px-16 scroll-mt-16">
         <div className="max-w-[1200px] mx-auto">
           <h2 className="text-3xl sm:text-4xl font-bold text-[#0A0A0A] mb-3 font-[family-name:var(--font-unbounded)]">
             Formatorii Cursului
@@ -466,7 +536,7 @@ export default function CoursePage({ params }: { params: { id: string } }) {
       </div>
 
       {/* Înscriere și Certificare */}
-      <section className="py-16 px-4 sm:px-8 lg:px-16">
+      <section id="inscriere" className="py-16 px-4 sm:px-8 lg:px-16 scroll-mt-16">
         <div className="max-w-[1200px] mx-auto">
           <h2 className="text-3xl sm:text-4xl font-bold text-[#0A0A0A] mb-10 font-[family-name:var(--font-unbounded)]">
             Înscriere și Certificare
