@@ -170,11 +170,10 @@ export default async function CoursePage({
         ) : null}
       </section>
 
-      {/* Sticky section nav */}
-      <div className="mt-10 px-4 sm:px-8 lg:px-16">
-        <div className="mx-auto max-w-[1200px]">
-          <CourseSectionNav sections={navSections} />
-        </div>
+      {/* Sticky section nav — sits at full bleed so position:sticky can pin
+         against the entire page scroll, not a tiny max-width container. */}
+      <div className="mt-8">
+        <CourseSectionNav sections={navSections} />
       </div>
 
       <div className="mx-auto max-w-[1200px] px-4 sm:px-8 lg:px-16 pb-20">
@@ -434,7 +433,12 @@ function Section({
   // but we keep the prop for future scroll-spy adjustments.
   void inNav;
   return (
-    <section id={id} className="pt-16">
+    // scroll-mt offsets the anchor jump so the section heading lands below
+    // the sticky nav (≈52px tall) instead of being hidden underneath it.
+    <section
+      id={id}
+      className="scroll-mt-20 pt-10 first:pt-8 sm:pt-12 sm:first:pt-10"
+    >
       <h2 className="mb-6 text-2xl font-semibold text-[#0A0A0A] sm:text-[28px] font-[family-name:var(--font-unbounded)]">
         {title}
       </h2>

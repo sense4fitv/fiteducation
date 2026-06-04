@@ -10,14 +10,6 @@ export default function CourseSectionNav({
   sections: NavSection[];
 }) {
   const [active, setActive] = useState(sections[0]?.id);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setVisible(window.scrollY > 320);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   useEffect(() => {
     const observers: IntersectionObserver[] = [];
@@ -37,11 +29,7 @@ export default function CourseSectionNav({
   }, [sections]);
 
   return (
-    <div
-      className={`sticky top-0 z-30 -mx-4 sm:-mx-8 lg:-mx-16 border-b border-[#EFEFEF] bg-white/85 backdrop-blur transition-opacity duration-200 ${
-        visible ? "opacity-100" : "pointer-events-none opacity-0"
-      }`}
-    >
+    <div className="sticky top-0 z-30 border-y border-[#EAEAEA] bg-white/90 backdrop-blur">
       <nav className="mx-auto flex max-w-[1200px] gap-1 overflow-x-auto px-4 sm:px-8 lg:px-16">
         {sections.map((s) => (
           <a
