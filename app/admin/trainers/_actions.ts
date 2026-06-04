@@ -1,7 +1,7 @@
 "use server";
 
-import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 import { assertAdmin } from "@/lib/supabase/guards";
 import { slugify } from "@/lib/slug";
@@ -171,5 +171,4 @@ export async function deleteTrainer(id: string) {
     await deleteStorageObject(TRAINER_BUCKET, existing.photo_path).catch(() => {});
   }
   revalidatePath("/admin/trainers");
-  redirect("/admin/trainers");
 }
