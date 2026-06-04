@@ -3,23 +3,8 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
-  Clock,
-  DollarSign,
-  User,
-  GraduationCap,
   CheckCircle2,
-  Calendar,
-  Users,
-  Award,
-  Star,
-  TrendingUp,
   ChevronRight,
-  ChevronDown,
-  ChevronUp,
-  BookOpen,
-  Target,
-  Zap,
-  Shield,
 } from "lucide-react";
 import { courses } from "@/data/courses";
 import { trainers } from "@/data/trainers";
@@ -29,7 +14,6 @@ import WhatsAppButton from "@/components/WhatsAppButton";
 import Image from "next/image";
 
 export default function CoursePage({ params }: { params: { id: string } }) {
-  const [activeTab, setActiveTab] = useState(0);
   const [showStickyButton, setShowStickyButton] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -38,12 +22,9 @@ export default function CoursePage({ params }: { params: { id: string } }) {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
 
-  // Find course by slug
   const course = courses.find((c) => c.slug === params.id) || courses[0];
 
-  // Sticky button on scroll
   useEffect(() => {
     const handleScroll = () => {
       setShowStickyButton(window.scrollY > 600);
@@ -51,13 +32,6 @@ export default function CoursePage({ params }: { params: { id: string } }) {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  const tabs = [
-    { id: 0, label: "Despre curs", icon: BookOpen },
-    { id: 1, label: "Programa", icon: Target },
-    { id: 2, label: "Formatori", icon: Users },
-    { id: 3, label: "Inscriere si certificare", icon: Award },
-  ];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -81,7 +55,7 @@ export default function CoursePage({ params }: { params: { id: string } }) {
 
       {/* Breadcrumbs */}
       <section className="pt-24 pb-4 px-4 sm:px-8 lg:px-16">
-        <div className="max-w-[1600px] mx-auto">
+        <div className="max-w-[1200px] mx-auto">
           <div className="flex items-center gap-2 text-sm text-[#666666]">
             <a href="/" className="hover:text-[#B8001F] transition-colors">
               Acasă
@@ -96,9 +70,9 @@ export default function CoursePage({ params }: { params: { id: string } }) {
         </div>
       </section>
 
-      {/* Hero Section - Simplified */}
+      {/* Hero Section */}
       <section className="pb-8 px-4 sm:px-8 lg:px-16">
-        <div className="max-w-[1600px] mx-auto">
+        <div className="max-w-[1200px] mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -167,793 +141,391 @@ export default function CoursePage({ params }: { params: { id: string } }) {
       </section>
 
       {/* Course Info Bar */}
-      <section className="py-12 px-4 sm:px-8 lg:px-16">
-        <div className="max-w-[1400px] mx-auto">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-12 max-w-2xl mx-auto">
-              {/* Price */}
-              <div className="flex flex-col text-center">
-                <span className="text-sm text-[#666666] mb-2">Preț</span>
-                <span className="text-3xl font-bold text-[#0A0A0A]">
-                  {course.price}
-                </span>
-              </div>
-
-              {/* Start Date */}
-              <div className="flex flex-col text-center">
-                <span className="text-sm text-[#666666] mb-2">Data de început</span>
-                <span className="text-3xl font-bold text-[#B8001F]">
-                  {course.nextStartDate}
-                </span>
-              </div>
+      <section className="py-10 px-4 sm:px-8 lg:px-16">
+        <div className="max-w-[1200px] mx-auto">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8">
+            <div>
+              <p className="text-sm text-[#999] mb-1">Preț</p>
+              <p className="text-2xl font-bold text-[#0A0A0A]">{course.price}</p>
             </div>
+            <div>
+              <p className="text-sm text-[#999] mb-1">Data de început</p>
+              <p className="text-2xl font-bold text-[#B8001F]">{course.nextStartDate}</p>
+            </div>
+            <div>
+              <p className="text-sm text-[#999] mb-1">Durată</p>
+              <p className="text-2xl font-bold text-[#0A0A0A]">1080 ore</p>
+            </div>
+            <div>
+              <p className="text-sm text-[#999] mb-1">Nivel minim</p>
+              <p className="text-2xl font-bold text-[#0A0A0A]">Absolvent liceu</p>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Tabs Section */}
-      <section className="py-12 px-4 sm:px-8 lg:px-16">
-        <div className="max-w-[1600px] mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100"
-          >
-            {/* Tabs Header */}
-            <div className="flex overflow-x-auto scrollbar-hide border-b border-gray-200">
-              {tabs.map((tab) => {
-                return (
-                  <button
-                    key={tab.id}
-                    onClick={() => setActiveTab(tab.id)}
-                    className={`px-6 py-4 whitespace-nowrap transition-all duration-300 border-b-2 ${
-                      activeTab === tab.id
-                        ? "text-[#B8001F] border-[#B8001F] bg-[#B8001F]/5"
-                        : "text-[#666666] border-transparent hover:text-[#0A0A0A] hover:bg-gray-50"
-                    }`}
-                  >
-                    {tab.label}
-                  </button>
-                );
-              })}
+      {/* Divider */}
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-8 lg:px-16">
+        <hr className="border-[#E5E5E5]" />
+      </div>
+
+      {/* Despre Curs */}
+      <section className="py-16 px-4 sm:px-8 lg:px-16">
+        <div className="max-w-[1200px] mx-auto">
+          <h2 className="text-3xl sm:text-4xl font-bold text-[#0A0A0A] mb-6 font-[family-name:var(--font-unbounded)]">
+            Despre Curs
+          </h2>
+
+          <div className="max-w-3xl space-y-5 text-lg text-[#444] leading-relaxed">
+            <p>
+              <strong className="text-[#0A0A0A]">Instructor Fitness Certification</strong> este cel mai complex curs la care poți participa astăzi în România, se naște din conștientizarea complexității mișcării umane.
+            </p>
+            <p>
+              Acest curs presupune răspunsul perfect la exigențele specifice pentru care am fost creați. Un program de exerciții trebuie să ia în considerare corpul în integralitatea sa în relație cu obiectivele, abilitățile funcționale și dorințele unui individ.
+            </p>
+          </div>
+
+          {/* Certification info */}
+          <div className="mt-10 max-w-3xl">
+            <h3 className="text-xl font-bold text-[#0A0A0A] mb-4 font-[family-name:var(--font-unbounded)]">
+              Recunoaștere și Certificări
+            </h3>
+            <p className="text-[#444] leading-relaxed mb-4">
+              La finalul cursului vei primi:
+            </p>
+            <ul className="space-y-3">
+              <li className="flex items-start gap-3">
+                <CheckCircle2 size={20} className="text-[#B8001F] flex-shrink-0 mt-0.5" />
+                <span className="text-[#444]">
+                  <strong className="text-[#0A0A0A]">Certificat de Absolvire</strong> — acreditat de Ministerul Muncii și Ministerul Educației, recunoscut internațional
+                </span>
+              </li>
+              <li className="flex items-start gap-3">
+                <CheckCircle2 size={20} className="text-[#B8001F] flex-shrink-0 mt-0.5" />
+                <span className="text-[#444]">
+                  <strong className="text-[#0A0A0A]">Diplomă de Participare</strong> — Fiteducation International School, permițându-ți să activezi în România și în străinătate
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {/* Divider */}
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-8 lg:px-16">
+        <hr className="border-[#E5E5E5]" />
+      </div>
+
+      {/* Competențe */}
+      <section className="py-16 px-4 sm:px-8 lg:px-16">
+        <div className="max-w-[1200px] mx-auto">
+          <h2 className="text-3xl sm:text-4xl font-bold text-[#0A0A0A] mb-3 font-[family-name:var(--font-unbounded)]">
+            Ce vei putea face după absolvire
+          </h2>
+          <p className="text-lg text-[#666] mb-10 max-w-3xl">
+            Absolvenții vor avea competențele necesare pentru a evalua, planifica, conduce și adapta programe de antrenament personalizat, în condiții de siguranță, eficiență și progres real.
+          </p>
+
+          <div className="space-y-10 max-w-3xl">
+            {/* Competency 1 */}
+            <div>
+              <h3 className="text-lg font-bold text-[#0A0A0A] mb-3">
+                Evaluarea clienților și stabilirea obiectivelor
+              </h3>
+              <ul className="space-y-2 text-[#444]">
+                <li className="flex items-start gap-2.5">
+                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
+                  <span>Evaluări inițiale: postură, mobilitate, forță, rezistență, compoziție corporală</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
+                  <span>Identificarea dezechilibrelor musculare și limitărilor funcționale</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
+                  <span>Obiective SMART în funcție de nivel, vârstă și istoric medical</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
+                  <span>Chestionare PAR-Q și protocoale de siguranță</span>
+                </li>
+              </ul>
             </div>
 
-            {/* Tab Content */}
-            <motion.div
-              key={activeTab}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-              className="p-8 sm:p-12"
-            >
-              {/* Tab 0: Despre curs */}
-              {activeTab === 0 && (
-                <div>
-                  <h2 className="text-3xl sm:text-4xl font-bold text-[#0A0A0A] mb-8 font-[family-name:var(--font-unbounded)]">
-                    Despre Curs
-                  </h2>
+            {/* Competency 2 */}
+            <div>
+              <h3 className="text-lg font-bold text-[#0A0A0A] mb-3">
+                Programe de antrenament personalizate
+              </h3>
+              <ul className="space-y-2 text-[#444]">
+                <li className="flex items-start gap-2.5">
+                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
+                  <span>Planuri pentru: slăbire, tonifiere, hipertrofie, forță, rezistență</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
+                  <span>Principiile periodizării și progresiei</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
+                  <span>Structurarea corectă a unei ședințe (încălzire, partea principală, cooldown)</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
+                  <span>Adaptarea exercițiilor în funcție de nivelul clientului</span>
+                </li>
+              </ul>
+            </div>
 
-                  {/* Quick Info Cards */}
-                  <div className="grid sm:grid-cols-3 gap-4 mb-10">
-                    <div className="bg-gradient-to-br from-[#B8001F]/10 to-[#B8001F]/5 rounded-xl p-6 border border-[#B8001F]/20">
-                      <div className="flex items-center gap-3 mb-2">
-                        <Clock size={24} className="text-[#B8001F]" />
-                        <h3 className="text-sm font-semibold text-[#666666] uppercase tracking-wide">
-                          Durată
-                        </h3>
-                      </div>
-                      <p className="text-2xl font-bold text-[#0A0A0A]">1080 ore</p>
-                    </div>
+            {/* Competency 3 */}
+            <div>
+              <h3 className="text-lg font-bold text-[#0A0A0A] mb-3">
+                Tehnica exercițiilor de fitness
+              </h3>
+              <ul className="space-y-2 text-[#444]">
+                <li className="flex items-start gap-2.5">
+                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
+                  <span>Exerciții cu greutăți libere, aparate și greutatea corpului</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
+                  <span>Biomecanica mișcării și lanțurile kinetice</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
+                  <span>Prevenirea accidentărilor prin execuție corectă și dozaj optim</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
+                  <span>Exerciții funcționale, multiplanare și full body</span>
+                </li>
+              </ul>
+            </div>
 
-                    <div className="bg-gradient-to-br from-[#B8001F]/10 to-[#B8001F]/5 rounded-xl p-6 border border-[#B8001F]/20">
-                      <div className="flex items-center gap-3 mb-2">
-                        <GraduationCap size={24} className="text-[#B8001F]" />
-                        <h3 className="text-sm font-semibold text-[#666666] uppercase tracking-wide">
-                          Nivel
-                        </h3>
-                      </div>
-                      <p className="text-lg font-bold text-[#0A0A0A]">Absolvent liceu</p>
-                    </div>
+            {/* Competency 4 */}
+            <div>
+              <h3 className="text-lg font-bold text-[#0A0A0A] mb-3">
+                Lucrul cu diferite tipologii de clienți
+              </h3>
+              <ul className="space-y-2 text-[#444]">
+                <li className="flex items-start gap-2.5">
+                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
+                  <span>Începători, intermediari și avansați</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
+                  <span>Persoane sedentare sau supraponderale</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
+                  <span>Clienți cu limitări articulare ușoare sau posturale</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
+                  <span>Clienți orientați spre performanță estetică sau sportivă</span>
+                </li>
+              </ul>
+            </div>
 
-                    <div className="bg-gradient-to-br from-[#B8001F]/10 to-[#B8001F]/5 rounded-xl p-6 border border-[#B8001F]/20">
-                      <div className="flex items-center gap-3 mb-2">
-                        <BookOpen size={24} className="text-[#B8001F]" />
-                        <h3 className="text-sm font-semibold text-[#666666] uppercase tracking-wide">
-                          Limbă
-                        </h3>
-                      </div>
-                      <p className="text-lg font-bold text-[#0A0A0A]">Română</p>
-                    </div>
-                  </div>
+            {/* Competency 5 */}
+            <div>
+              <h3 className="text-lg font-bold text-[#0A0A0A] mb-3">
+                Nutriție și lifestyle
+              </h3>
+              <ul className="space-y-2 text-[#444]">
+                <li className="flex items-start gap-2.5">
+                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
+                  <span>Principiile nutriției pentru fitness și controlul greutății</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
+                  <span>Recomandări generale de alimentație sănătoasă</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
+                  <span>Hidratarea, recuperarea și somnul</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
+                  <span>Colaborarea cu nutriționiști și alți specialiști</span>
+                </li>
+              </ul>
+            </div>
 
-                  {/* Main Description */}
-                  <div className="mb-10">
-                    <div className="bg-[#0A0A0A] rounded-2xl p-8 sm:p-10 text-white">
-                      <div className="flex items-start gap-4 mb-6">
-                        <div className="w-12 h-12 rounded-lg bg-[#B8001F] flex items-center justify-center flex-shrink-0">
-                          <Target size={24} className="text-white" />
-                        </div>
-                        <div>
-                          <h3 className="text-2xl font-bold mb-2 font-[family-name:var(--font-unbounded)]">
-                            Instructor Fitness Certification
-                          </h3>
-                          <p className="text-[#A0A0A0] text-sm">
-                            Cel mai complex program de formare în România
-                          </p>
-                        </div>
-                      </div>
+            {/* Competency 6 */}
+            <div>
+              <h3 className="text-lg font-bold text-[#0A0A0A] mb-3">
+                Comunicare profesională
+              </h3>
+              <ul className="space-y-2 text-[#444]">
+                <li className="flex items-start gap-2.5">
+                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
+                  <span>Abilități de comunicare, motivație și coaching</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
+                  <span>Relația antrenor–client într-un mod etic și profesionist</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
+                  <span>Menținerea aderenței clientului la program</span>
+                </li>
+              </ul>
+            </div>
 
-                      <p className="text-lg text-white/90 leading-relaxed mb-6">
-                        Instructor Fitness Certification este cel mai complex curs la care poți participa astăzi în România, se naște din conștientizarea complexității mișcării umane.
-                      </p>
+            {/* Competency 7 */}
+            <div>
+              <h3 className="text-lg font-bold text-[#0A0A0A] mb-3">
+                Cadrul legal și etic
+              </h3>
+              <ul className="space-y-2 text-[#444]">
+                <li className="flex items-start gap-2.5">
+                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
+                  <span>Responsabilitățile legale ale Instructorului Fitness</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
+                  <span>Norme de siguranță, igienă și cod etic profesional</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
+                  <span>Când și cum să direcționezi clientul către alți specialiști</span>
+                </li>
+              </ul>
+            </div>
 
-                      <p className="text-lg text-white/90 leading-relaxed">
-                        Acest curs presupune răspunsul perfect la exigențele specifice pentru care am fost creați. Un program de exerciții trebuie să ia în considerare corpul în integralitatea sa în relație cu obiectivele, abilitățile funcționale și dorințele unui individ.
-                      </p>
-                    </div>
-                  </div>
+            {/* Competency 8 */}
+            <div>
+              <h3 className="text-lg font-bold text-[#0A0A0A] mb-3">
+                Instrumente moderne și carieră
+              </h3>
+              <ul className="space-y-2 text-[#444]">
+                <li className="flex items-start gap-2.5">
+                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
+                  <span>Aplicații de tracking și planificare antrenamente</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
+                  <span>Monitorizarea progresului și ajustarea programelor</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
+                  <span>Construirea unui portofoliu de clienți și marketing personal</span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
+                  <span>Servicii 1:1, small group training sau online coaching</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
 
-                  {/* Recognition Section */}
-                  <div>
-                    <h3 className="text-2xl font-bold text-[#0A0A0A] mb-6 font-[family-name:var(--font-unbounded)] flex items-center gap-3">
-                      <Award size={28} className="text-[#B8001F]" />
-                      Recunoaștere și Certificări
-                    </h3>
+      {/* Divider */}
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-8 lg:px-16">
+        <hr className="border-[#E5E5E5]" />
+      </div>
 
-                    <div className="grid sm:grid-cols-2 gap-6">
-                      {/* Certificate 1 */}
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.1 }}
-                        className="bg-gradient-to-br from-[#FAFAFA] to-white rounded-xl p-6 border-2 border-[#B8001F]/30 shadow-lg hover:shadow-xl transition-shadow"
-                      >
-                        <div className="flex items-start gap-4">
-                          <div className="w-12 h-12 rounded-full bg-[#B8001F] flex items-center justify-center flex-shrink-0">
-                            <CheckCircle2 size={24} className="text-white" />
-                          </div>
-                          <div className="flex-1">
-                            <div className="inline-block px-3 py-1 bg-[#B8001F]/10 text-[#B8001F] text-xs font-bold rounded-full mb-3">
-                              CERTIFICAT OFICIAL
-                            </div>
-                            <h4 className="text-lg font-bold text-[#0A0A0A] mb-2 leading-tight">
-                              Certificat de Absolvire
-                            </h4>
-                            <p className="text-sm text-[#666666] leading-relaxed">
-                              Acreditat de Ministerul Muncii și Ministerul Educației, recunoscut internațional
-                            </p>
-                          </div>
-                        </div>
-                      </motion.div>
+      {/* Formatori */}
+      <section className="py-16 px-4 sm:px-8 lg:px-16">
+        <div className="max-w-[1200px] mx-auto">
+          <h2 className="text-3xl sm:text-4xl font-bold text-[#0A0A0A] mb-3 font-[family-name:var(--font-unbounded)]">
+            Formatorii Cursului
+          </h2>
+          <p className="text-lg text-[#666] mb-10 max-w-3xl">
+            Echipa noastră combină experiența academică cu cea practică, având certificări internaționale și mii de ore de predare.
+          </p>
 
-                      {/* Certificate 2 */}
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.2 }}
-                        className="bg-gradient-to-br from-[#FAFAFA] to-white rounded-xl p-6 border-2 border-[#B8001F]/30 shadow-lg hover:shadow-xl transition-shadow"
-                      >
-                        <div className="flex items-start gap-4">
-                          <div className="w-12 h-12 rounded-full bg-[#B8001F] flex items-center justify-center flex-shrink-0">
-                            <CheckCircle2 size={24} className="text-white" />
-                          </div>
-                          <div className="flex-1">
-                            <div className="inline-block px-3 py-1 bg-[#B8001F]/10 text-[#B8001F] text-xs font-bold rounded-full mb-3">
-                              DIPLOMA INTERNAȚIONALĂ
-                            </div>
-                            <h4 className="text-lg font-bold text-[#0A0A0A] mb-2 leading-tight">
-                              Diplomă de Participare
-                            </h4>
-                            <p className="text-sm text-[#666666] leading-relaxed">
-                              Fiteducation International School
-                            </p>
-                          </div>
-                        </div>
-                      </motion.div>
-                    </div>
-
-                    {/* Additional Recognition Info */}
-                    <div className="mt-6 bg-[#B8001F]/5 border-l-4 border-[#B8001F] rounded-lg p-6">
-                      <div className="flex items-start gap-3">
-                        <Shield size={24} className="text-[#B8001F] flex-shrink-0 mt-1" />
-                        <div>
-                          <h4 className="font-bold text-[#0A0A0A] mb-2">
-                            Certificare Dublă
-                          </h4>
-                          <p className="text-sm text-[#666666] leading-relaxed">
-                            La finalul cursului vei primi atât certificatul oficial acreditat de minister, cât și diploma internațională Fiteducation, permițându-ți să activezi ca instructor de fitness certificat în România și în străinătate.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-8">
+            {trainers.map((trainer) => (
+              <div key={trainer.id} className="flex items-start gap-4">
+                <div className="relative w-14 h-14 rounded-full overflow-hidden flex-shrink-0 bg-[#E5E5E5]">
+                  <Image
+                    src={trainer.image}
+                    alt={trainer.name}
+                    fill
+                    className="object-cover"
+                  />
                 </div>
-              )}
-
-              {/* Tab 1: Programa */}
-              {activeTab === 1 && (
                 <div>
-                  <h2 className="text-3xl sm:text-4xl font-bold text-[#0A0A0A] mb-6 font-[family-name:var(--font-unbounded)]">
-                    Competențe și Abilități
-                  </h2>
-
-                  {/* Introduction */}
-                  <div className="bg-gradient-to-r from-[#B8001F] to-[#8B0018] rounded-2xl p-6 sm:p-8 mb-10 text-white">
-                    <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0">
-                        <Target size={24} className="text-white" />
-                      </div>
-                      <div>
-                        <h3 className="text-xl sm:text-2xl font-bold mb-3 font-[family-name:var(--font-unbounded)]">
-                          Ce vei putea face după absolvire
-                        </h3>
-                        <p className="text-white/90 leading-relaxed">
-                          După finalizarea programului, absolvenții vor avea competențele necesare pentru a <strong>evalua, planifica, conduce și adapta programe de antrenament personalizat</strong>, în condiții de siguranță, eficiență și progres real.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Competencies Grid */}
-                  <div className="space-y-6">
-                    {/* Competency 1 */}
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.1 }}
-                      className="bg-white rounded-xl border-2 border-gray-100 hover:border-[#B8001F]/30 transition-all p-6 shadow-sm hover:shadow-md"
-                    >
-                      <div className="flex items-start gap-4 mb-4">
-                        <div className="w-10 h-10 rounded-lg bg-[#B8001F]/10 flex items-center justify-center flex-shrink-0">
-                          <Target size={20} className="text-[#B8001F]" />
-                        </div>
-                        <h4 className="text-lg sm:text-xl font-bold text-[#0A0A0A] flex-1">
-                          Să evalueze corect clienții și să stabilească obiective realiste
-                        </h4>
-                      </div>
-                      <ul className="space-y-2.5 ml-14">
-                        <li className="flex items-start gap-3 text-[#666666]">
-                          <CheckCircle2 size={18} className="text-[#B8001F] flex-shrink-0 mt-0.5" />
-                          <span>Să efectueze evaluări inițiale: postură, mobilitate, forță, rezistență, compoziție corporală</span>
-                        </li>
-                        <li className="flex items-start gap-3 text-[#666666]">
-                          <CheckCircle2 size={18} className="text-[#B8001F] flex-shrink-0 mt-0.5" />
-                          <span>Să identifice dezechilibre musculare și limitări funcționale</span>
-                        </li>
-                        <li className="flex items-start gap-3 text-[#666666]">
-                          <CheckCircle2 size={18} className="text-[#B8001F] flex-shrink-0 mt-0.5" />
-                          <span>Să stabilească obiective SMART în funcție de nivel, vârstă și istoric medical</span>
-                        </li>
-                        <li className="flex items-start gap-3 text-[#666666]">
-                          <CheckCircle2 size={18} className="text-[#B8001F] flex-shrink-0 mt-0.5" />
-                          <span>Să utilizeze chestionare PAR-Q și protocoale de siguranță</span>
-                        </li>
-                      </ul>
-                    </motion.div>
-
-                    {/* Competency 2 */}
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.2 }}
-                      className="bg-white rounded-xl border-2 border-gray-100 hover:border-[#B8001F]/30 transition-all p-6 shadow-sm hover:shadow-md"
-                    >
-                      <div className="flex items-start gap-4 mb-4">
-                        <div className="w-10 h-10 rounded-lg bg-[#B8001F]/10 flex items-center justify-center flex-shrink-0">
-                          <BookOpen size={20} className="text-[#B8001F]" />
-                        </div>
-                        <h4 className="text-lg sm:text-xl font-bold text-[#0A0A0A] flex-1">
-                          Să construiască programe de antrenament personalizate
-                        </h4>
-                      </div>
-                      <ul className="space-y-2.5 ml-14">
-                        <li className="flex items-start gap-3 text-[#666666]">
-                          <CheckCircle2 size={18} className="text-[#B8001F] flex-shrink-0 mt-0.5" />
-                          <span>Să elaboreze planuri de antrenament pentru: slăbire, tonifiere, hipertrofie, forță, rezistență</span>
-                        </li>
-                        <li className="flex items-start gap-3 text-[#666666]">
-                          <CheckCircle2 size={18} className="text-[#B8001F] flex-shrink-0 mt-0.5" />
-                          <span>Să aplice principiile periodizării și progresiei</span>
-                        </li>
-                        <li className="flex items-start gap-3 text-[#666666]">
-                          <CheckCircle2 size={18} className="text-[#B8001F] flex-shrink-0 mt-0.5" />
-                          <span>Să structureze corect o ședință de antrenament (încălzire, partea principală, cooldown)</span>
-                        </li>
-                        <li className="flex items-start gap-3 text-[#666666]">
-                          <CheckCircle2 size={18} className="text-[#B8001F] flex-shrink-0 mt-0.5" />
-                          <span>Să adapteze exercițiile în funcție de nivelul clientului</span>
-                        </li>
-                      </ul>
-                    </motion.div>
-
-                    {/* Competency 3 */}
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.3 }}
-                      className="bg-white rounded-xl border-2 border-gray-100 hover:border-[#B8001F]/30 transition-all p-6 shadow-sm hover:shadow-md"
-                    >
-                      <div className="flex items-start gap-4 mb-4">
-                        <div className="w-10 h-10 rounded-lg bg-[#B8001F]/10 flex items-center justify-center flex-shrink-0">
-                          <Zap size={20} className="text-[#B8001F]" />
-                        </div>
-                        <h4 className="text-lg sm:text-xl font-bold text-[#0A0A0A] flex-1">
-                          Să aplice corect tehnica exercițiilor de fitness
-                        </h4>
-                      </div>
-                      <ul className="space-y-2.5 ml-14">
-                        <li className="flex items-start gap-3 text-[#666666]">
-                          <CheckCircle2 size={18} className="text-[#B8001F] flex-shrink-0 mt-0.5" />
-                          <span>Să execute și să corecteze exerciții cu greutăți libere, aparate și greutatea corpului</span>
-                        </li>
-                        <li className="flex items-start gap-3 text-[#666666]">
-                          <CheckCircle2 size={18} className="text-[#B8001F] flex-shrink-0 mt-0.5" />
-                          <span>Să înțeleagă biomecanica mișcării și lanțurile kinetice</span>
-                        </li>
-                        <li className="flex items-start gap-3 text-[#666666]">
-                          <CheckCircle2 size={18} className="text-[#B8001F] flex-shrink-0 mt-0.5" />
-                          <span>Să prevină accidentările prin execuție corectă și dozaj optim</span>
-                        </li>
-                        <li className="flex items-start gap-3 text-[#666666]">
-                          <CheckCircle2 size={18} className="text-[#B8001F] flex-shrink-0 mt-0.5" />
-                          <span>Să utilizeze exerciții funcționale, multiplanare și full body</span>
-                        </li>
-                      </ul>
-                    </motion.div>
-
-                    {/* Competency 4 */}
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.4 }}
-                      className="bg-white rounded-xl border-2 border-gray-100 hover:border-[#B8001F]/30 transition-all p-6 shadow-sm hover:shadow-md"
-                    >
-                      <div className="flex items-start gap-4 mb-4">
-                        <div className="w-10 h-10 rounded-lg bg-[#B8001F]/10 flex items-center justify-center flex-shrink-0">
-                          <Users size={20} className="text-[#B8001F]" />
-                        </div>
-                        <h4 className="text-lg sm:text-xl font-bold text-[#0A0A0A] flex-1">
-                          Să lucreze eficient cu diferite tipologii de clienți
-                        </h4>
-                      </div>
-                      <ul className="space-y-2.5 ml-14">
-                        <li className="flex items-start gap-3 text-[#666666]">
-                          <CheckCircle2 size={18} className="text-[#B8001F] flex-shrink-0 mt-0.5" />
-                          <span>Începători, intermediari și avansați</span>
-                        </li>
-                        <li className="flex items-start gap-3 text-[#666666]">
-                          <CheckCircle2 size={18} className="text-[#B8001F] flex-shrink-0 mt-0.5" />
-                          <span>Persoane sedentare sau supraponderale</span>
-                        </li>
-                        <li className="flex items-start gap-3 text-[#666666]">
-                          <CheckCircle2 size={18} className="text-[#B8001F] flex-shrink-0 mt-0.5" />
-                          <span>Clienți cu limitări articulare ușoare sau posturale</span>
-                        </li>
-                        <li className="flex items-start gap-3 text-[#666666]">
-                          <CheckCircle2 size={18} className="text-[#B8001F] flex-shrink-0 mt-0.5" />
-                          <span>Clienți orientați spre performanță estetică sau sportivă</span>
-                        </li>
-                        <li className="flex items-start gap-3 text-[#666666]">
-                          <CheckCircle2 size={18} className="text-[#B8001F] flex-shrink-0 mt-0.5" />
-                          <span>Clienți care urmăresc sănătatea și menținerea pe termen lung</span>
-                        </li>
-                      </ul>
-                    </motion.div>
-
-                    {/* Competency 5 */}
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.5 }}
-                      className="bg-white rounded-xl border-2 border-gray-100 hover:border-[#B8001F]/30 transition-all p-6 shadow-sm hover:shadow-md"
-                    >
-                      <div className="flex items-start gap-4 mb-4">
-                        <div className="w-10 h-10 rounded-lg bg-[#B8001F]/10 flex items-center justify-center flex-shrink-0">
-                          <Star size={20} className="text-[#B8001F]" />
-                        </div>
-                        <h4 className="text-lg sm:text-xl font-bold text-[#0A0A0A] flex-1">
-                          Să aplice noțiuni de bază din nutriție și lifestyle
-                        </h4>
-                      </div>
-                      <ul className="space-y-2.5 ml-14">
-                        <li className="flex items-start gap-3 text-[#666666]">
-                          <CheckCircle2 size={18} className="text-[#B8001F] flex-shrink-0 mt-0.5" />
-                          <span>Să înțeleagă principiile nutriției pentru fitness și controlul greutății</span>
-                        </li>
-                        <li className="flex items-start gap-3 text-[#666666]">
-                          <CheckCircle2 size={18} className="text-[#B8001F] flex-shrink-0 mt-0.5" />
-                          <span>Să ofere recomandări generale de alimentație sănătoasă (în limitele competenței)</span>
-                        </li>
-                        <li className="flex items-start gap-3 text-[#666666]">
-                          <CheckCircle2 size={18} className="text-[#B8001F] flex-shrink-0 mt-0.5" />
-                          <span>Să educe clienții privind hidratarea, recuperarea și somnul</span>
-                        </li>
-                        <li className="flex items-start gap-3 text-[#666666]">
-                          <CheckCircle2 size={18} className="text-[#B8001F] flex-shrink-0 mt-0.5" />
-                          <span>Să colaboreze eficient cu nutriționiști și alți specialiști</span>
-                        </li>
-                      </ul>
-                    </motion.div>
-
-                    {/* Competency 6 */}
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.6 }}
-                      className="bg-white rounded-xl border-2 border-gray-100 hover:border-[#B8001F]/30 transition-all p-6 shadow-sm hover:shadow-md"
-                    >
-                      <div className="flex items-start gap-4 mb-4">
-                        <div className="w-10 h-10 rounded-lg bg-[#B8001F]/10 flex items-center justify-center flex-shrink-0">
-                          <User size={20} className="text-[#B8001F]" />
-                        </div>
-                        <h4 className="text-lg sm:text-xl font-bold text-[#0A0A0A] flex-1">
-                          Să comunice profesionist și să construiască relații durabile cu clienții
-                        </h4>
-                      </div>
-                      <ul className="space-y-2.5 ml-14">
-                        <li className="flex items-start gap-3 text-[#666666]">
-                          <CheckCircle2 size={18} className="text-[#B8001F] flex-shrink-0 mt-0.5" />
-                          <span>Să dezvolte abilități de comunicare, motivație și coaching</span>
-                        </li>
-                        <li className="flex items-start gap-3 text-[#666666]">
-                          <CheckCircle2 size={18} className="text-[#B8001F] flex-shrink-0 mt-0.5" />
-                          <span>Să gestioneze relația antrenor–client într-un mod etic și profesionist</span>
-                        </li>
-                        <li className="flex items-start gap-3 text-[#666666]">
-                          <CheckCircle2 size={18} className="text-[#B8001F] flex-shrink-0 mt-0.5" />
-                          <span>Să mențină aderența clientului la program</span>
-                        </li>
-                        <li className="flex items-start gap-3 text-[#666666]">
-                          <CheckCircle2 size={18} className="text-[#B8001F] flex-shrink-0 mt-0.5" />
-                          <span>Să creeze un climat de încredere și siguranță</span>
-                        </li>
-                      </ul>
-                    </motion.div>
-
-                    {/* Competency 7 */}
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.7 }}
-                      className="bg-white rounded-xl border-2 border-gray-100 hover:border-[#B8001F]/30 transition-all p-6 shadow-sm hover:shadow-md"
-                    >
-                      <div className="flex items-start gap-4 mb-4">
-                        <div className="w-10 h-10 rounded-lg bg-[#B8001F]/10 flex items-center justify-center flex-shrink-0">
-                          <Shield size={20} className="text-[#B8001F]" />
-                        </div>
-                        <h4 className="text-lg sm:text-xl font-bold text-[#0A0A0A] flex-1">
-                          Să respecte cadrul legal, etic și profesional
-                        </h4>
-                      </div>
-                      <ul className="space-y-2.5 ml-14">
-                        <li className="flex items-start gap-3 text-[#666666]">
-                          <CheckCircle2 size={18} className="text-[#B8001F] flex-shrink-0 mt-0.5" />
-                          <span>Să înțeleagă responsabilitățile legale ale Instructorului Fitness</span>
-                        </li>
-                        <li className="flex items-start gap-3 text-[#666666]">
-                          <CheckCircle2 size={18} className="text-[#B8001F] flex-shrink-0 mt-0.5" />
-                          <span>Să aplice norme de siguranță și igienă</span>
-                        </li>
-                        <li className="flex items-start gap-3 text-[#666666]">
-                          <CheckCircle2 size={18} className="text-[#B8001F] flex-shrink-0 mt-0.5" />
-                          <span>Să lucreze conform codului etic profesional</span>
-                        </li>
-                        <li className="flex items-start gap-3 text-[#666666]">
-                          <CheckCircle2 size={18} className="text-[#B8001F] flex-shrink-0 mt-0.5" />
-                          <span>Să știe când și cum să direcționeze clientul către alți specialiști</span>
-                        </li>
-                      </ul>
-                    </motion.div>
-
-                    {/* Competency 8 */}
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.8 }}
-                      className="bg-white rounded-xl border-2 border-gray-100 hover:border-[#B8001F]/30 transition-all p-6 shadow-sm hover:shadow-md"
-                    >
-                      <div className="flex items-start gap-4 mb-4">
-                        <div className="w-10 h-10 rounded-lg bg-[#B8001F]/10 flex items-center justify-center flex-shrink-0">
-                          <TrendingUp size={20} className="text-[#B8001F]" />
-                        </div>
-                        <h4 className="text-lg sm:text-xl font-bold text-[#0A0A0A] flex-1">
-                          Să utilizeze instrumente moderne din fitness
-                        </h4>
-                      </div>
-                      <ul className="space-y-2.5 ml-14">
-                        <li className="flex items-start gap-3 text-[#666666]">
-                          <CheckCircle2 size={18} className="text-[#B8001F] flex-shrink-0 mt-0.5" />
-                          <span>Să lucreze cu aplicații de tracking și planificare antrenamente</span>
-                        </li>
-                        <li className="flex items-start gap-3 text-[#666666]">
-                          <CheckCircle2 size={18} className="text-[#B8001F] flex-shrink-0 mt-0.5" />
-                          <span>Să folosească echipamente moderne și accesorii funcționale</span>
-                        </li>
-                        <li className="flex items-start gap-3 text-[#666666]">
-                          <CheckCircle2 size={18} className="text-[#B8001F] flex-shrink-0 mt-0.5" />
-                          <span>Să monitorizeze progresul și să ajusteze programele în timp</span>
-                        </li>
-                        <li className="flex items-start gap-3 text-[#666666]">
-                          <CheckCircle2 size={18} className="text-[#B8001F] flex-shrink-0 mt-0.5" />
-                          <span>Să înțeleagă indicatori de performanță și progres</span>
-                        </li>
-                      </ul>
-                    </motion.div>
-
-                    {/* Competency 9 */}
-                    <motion.div
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.9 }}
-                      className="bg-white rounded-xl border-2 border-gray-100 hover:border-[#B8001F]/30 transition-all p-6 shadow-sm hover:shadow-md"
-                    >
-                      <div className="flex items-start gap-4 mb-4">
-                        <div className="w-10 h-10 rounded-lg bg-[#B8001F]/10 flex items-center justify-center flex-shrink-0">
-                          <Award size={20} className="text-[#B8001F]" />
-                        </div>
-                        <h4 className="text-lg sm:text-xl font-bold text-[#0A0A0A] flex-1">
-                          Să își construiască o carieră și un business în fitness
-                        </h4>
-                      </div>
-                      <ul className="space-y-2.5 ml-14">
-                        <li className="flex items-start gap-3 text-[#666666]">
-                          <CheckCircle2 size={18} className="text-[#B8001F] flex-shrink-0 mt-0.5" />
-                          <span>Să lucreze ca Personal Trainer în sală sau independent</span>
-                        </li>
-                        <li className="flex items-start gap-3 text-[#666666]">
-                          <CheckCircle2 size={18} className="text-[#B8001F] flex-shrink-0 mt-0.5" />
-                          <span>Să își construiască un portofoliu de clienți</span>
-                        </li>
-                        <li className="flex items-start gap-3 text-[#666666]">
-                          <CheckCircle2 size={18} className="text-[#B8001F] flex-shrink-0 mt-0.5" />
-                          <span>Să înțeleagă bazele marketingului personal în fitness</span>
-                        </li>
-                        <li className="flex items-start gap-3 text-[#666666]">
-                          <CheckCircle2 size={18} className="text-[#B8001F] flex-shrink-0 mt-0.5" />
-                          <span>Să dezvolte servicii 1:1, small group training sau online coaching</span>
-                        </li>
-                        <li className="flex items-start gap-3 text-[#666666]">
-                          <CheckCircle2 size={18} className="text-[#B8001F] flex-shrink-0 mt-0.5" />
-                          <span>Să creeze o identitate profesională clară și credibilă</span>
-                        </li>
-                      </ul>
-                    </motion.div>
-                  </div>
-                </div>
-              )}
-
-              {/* Tab 2: Formatori */}
-              {activeTab === 2 && (
-                <div>
-                  <h2 className="text-3xl sm:text-4xl font-bold text-[#0A0A0A] mb-6 font-[family-name:var(--font-unbounded)]">
-                    Formatorii Cursului
-                  </h2>
-                  <p className="text-lg text-[#666666] mb-10">
-                    Echipa noastră de formatori certificați internațional îți va oferi toată experiența și cunoștințele necesare pentru a avea succes în domeniul fitness.
+                  <h3 className="font-bold text-[#0A0A0A]">{trainer.name}</h3>
+                  <p className="text-sm text-[#666] mt-0.5 leading-relaxed">
+                    {trainer.description}
                   </p>
-
-                  <div className="grid md:grid-cols-2 gap-6">
-                    {trainers.map((trainer, index) => (
-                      <motion.div
-                        key={trainer.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.1 }}
-                        className="bg-white rounded-2xl border-2 border-gray-100 hover:border-[#B8001F]/30 transition-all p-6 shadow-sm hover:shadow-lg group"
-                      >
-                        <div className="flex flex-col sm:flex-row gap-6">
-                          {/* Trainer Image */}
-                          <div className="relative w-28 h-28 rounded-xl overflow-hidden flex-shrink-0 bg-gradient-to-br from-[#B8001F]/20 to-[#B8001F]/5 mx-auto sm:mx-0">
-                            <Image
-                              src={trainer.image}
-                              alt={trainer.name}
-                              fill
-                              className="object-cover group-hover:scale-105 transition-transform duration-300"
-                            />
-                          </div>
-
-                          {/* Trainer Info */}
-                          <div className="flex-1 text-center sm:text-left">
-                            <h3 className="text-xl sm:text-2xl font-bold text-[#0A0A0A] mb-2 font-[family-name:var(--font-unbounded)]">
-                              {trainer.name}
-                            </h3>
-                            <p className="text-[#666666] leading-relaxed">
-                              {trainer.description}
-                            </p>
-                          </div>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
-
-                  {/* Team Highlight */}
-                  <div className="mt-10 bg-gradient-to-r from-[#0A0A0A] to-[#1A1A1A] rounded-2xl p-8 text-white">
-                    <div className="flex items-start gap-4">
-                      <div className="w-12 h-12 rounded-lg bg-[#B8001F] flex items-center justify-center flex-shrink-0">
-                        <Award size={24} className="text-white" />
-                      </div>
-                      <div>
-                        <h3 className="text-2xl font-bold mb-3 font-[family-name:var(--font-unbounded)]">
-                          Echipă de Experți
-                        </h3>
-                        <p className="text-white/90 leading-relaxed">
-                          Formatorii noștri combină experiența academică cu cea practică, având certificări internaționale și mii de ore de predare. Vei beneficia de mentorat direct de la profesioniști activi în domeniu, care înțeleg atât teoria, cât și provocările reale din industria fitness.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
                 </div>
-              )}
-
-              {/* Tab 3: Inscriere si certificare */}
-              {activeTab === 3 && (
-                <div>
-                  <h2 className="text-3xl sm:text-4xl font-bold text-[#0A0A0A] mb-8 font-[family-name:var(--font-unbounded)]">
-                    Înscriere și Certificare
-                  </h2>
-
-                  {/* Documente necesare */}
-                  <div className="mb-12">
-                    <div className="flex items-center gap-3 mb-6">
-                      <div className="w-10 h-10 rounded-lg bg-[#B8001F]/10 flex items-center justify-center">
-                        <CheckCircle2 size={24} className="text-[#B8001F]" />
-                      </div>
-                      <h3 className="text-2xl font-bold text-[#0A0A0A]">
-                        Acte Necesare
-                      </h3>
-                    </div>
-
-                    <div className="grid gap-4">
-                      <motion.div
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.1 }}
-                        className="flex items-start gap-4 bg-white border-2 border-gray-100 rounded-xl p-5 hover:border-[#B8001F]/30 transition-all"
-                      >
-                        <div className="w-6 h-6 rounded-full bg-[#B8001F]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <span className="text-[#B8001F] font-bold text-sm">1</span>
-                        </div>
-                        <p className="text-[#0A0A0A] leading-relaxed">
-                          Copie certificat de naștere
-                        </p>
-                      </motion.div>
-
-                      <motion.div
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.2 }}
-                        className="flex items-start gap-4 bg-white border-2 border-gray-100 rounded-xl p-5 hover:border-[#B8001F]/30 transition-all"
-                      >
-                        <div className="w-6 h-6 rounded-full bg-[#B8001F]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <span className="text-[#B8001F] font-bold text-sm">2</span>
-                        </div>
-                        <p className="text-[#0A0A0A] leading-relaxed">
-                          Copie după ultima formă de învățământ absolvită (minim studii liceale)
-                        </p>
-                      </motion.div>
-
-                      <motion.div
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.3 }}
-                        className="flex items-start gap-4 bg-white border-2 border-gray-100 rounded-xl p-5 hover:border-[#B8001F]/30 transition-all"
-                      >
-                        <div className="w-6 h-6 rounded-full bg-[#B8001F]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <span className="text-[#B8001F] font-bold text-sm">3</span>
-                        </div>
-                        <p className="text-[#0A0A0A] leading-relaxed">
-                          Copie carte de identitate
-                        </p>
-                      </motion.div>
-
-                      <motion.div
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.4 }}
-                        className="flex items-start gap-4 bg-white border-2 border-gray-100 rounded-xl p-5 hover:border-[#B8001F]/30 transition-all"
-                      >
-                        <div className="w-6 h-6 rounded-full bg-[#B8001F]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <span className="text-[#B8001F] font-bold text-sm">4</span>
-                        </div>
-                        <p className="text-[#0A0A0A] leading-relaxed">
-                          Copie certificat de căsătorie (dacă este cazul)
-                        </p>
-                      </motion.div>
-
-                      <motion.div
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: 0.5 }}
-                        className="flex items-start gap-4 bg-gradient-to-r from-[#B8001F]/10 to-[#B8001F]/5 border-2 border-[#B8001F]/30 rounded-xl p-5"
-                      >
-                        <div className="w-6 h-6 rounded-full bg-[#B8001F] flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <span className="text-white font-bold text-sm">5</span>
-                        </div>
-                        <p className="text-[#0A0A0A] leading-relaxed">
-                          <strong>Adeverință medicală în original</strong>, care să ateste faptul că participantul este apt pentru activități sportive
-                        </p>
-                      </motion.div>
-                    </div>
-                  </div>
-
-                  {/* Examen și Certificare */}
-                  <div>
-                    <div className="flex items-center gap-3 mb-6">
-                      <div className="w-10 h-10 rounded-lg bg-[#B8001F]/10 flex items-center justify-center">
-                        <Award size={24} className="text-[#B8001F]" />
-                      </div>
-                      <h3 className="text-2xl font-bold text-[#0A0A0A]">
-                        Examen Final și Certificare
-                      </h3>
-                    </div>
-
-                    <div className="grid md:grid-cols-2 gap-6 mb-8">
-                      {/* Format Examen */}
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.1 }}
-                        className="bg-white border-2 border-gray-100 rounded-xl p-6 hover:border-[#B8001F]/30 transition-all"
-                      >
-                        <div className="flex items-center gap-3 mb-4">
-                          <div className="w-10 h-10 rounded-lg bg-[#B8001F]/10 flex items-center justify-center">
-                            <BookOpen size={20} className="text-[#B8001F]" />
-                          </div>
-                          <h4 className="text-lg font-bold text-[#0A0A0A]">
-                            Format Examen
-                          </h4>
-                        </div>
-                        <p className="text-[#666666] leading-relaxed">
-                          {course.exam.format}
-                        </p>
-                      </motion.div>
-
-                      {/* Certificare */}
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.2 }}
-                        className="bg-white border-2 border-gray-100 rounded-xl p-6 hover:border-[#B8001F]/30 transition-all"
-                      >
-                        <div className="flex items-center gap-3 mb-4">
-                          <div className="w-10 h-10 rounded-lg bg-[#B8001F]/10 flex items-center justify-center">
-                            <Award size={20} className="text-[#B8001F]" />
-                          </div>
-                          <h4 className="text-lg font-bold text-[#0A0A0A]">
-                            Certificare
-                          </h4>
-                        </div>
-                        <p className="text-[#666666] leading-relaxed">
-                          {course.exam.certification}
-                        </p>
-                      </motion.div>
-                    </div>
-
-                    {/* Certification Highlight */}
-                    <div className="bg-gradient-to-r from-[#B8001F] to-[#8B0018] rounded-2xl p-8 text-white">
-                      <div className="flex items-start gap-4">
-                        <div className="w-14 h-14 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0">
-                          <Award size={28} className="text-white" />
-                        </div>
-                        <div>
-                          <h4 className="text-2xl font-bold mb-3 font-[family-name:var(--font-unbounded)]">
-                            Certificare Recunoscută Internațional
-                          </h4>
-                          <p className="text-white/95 leading-relaxed text-lg">
-                            Certificarea obținută este recunoscută internațional și îți va permite să activezi ca profesionist în domeniu în România și în multe țări din Uniunea Europeană.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </motion.div>
-          </motion.div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* CTA Section - Enrollment Form */}
+      {/* Divider */}
+      <div className="max-w-[1200px] mx-auto px-4 sm:px-8 lg:px-16">
+        <hr className="border-[#E5E5E5]" />
+      </div>
+
+      {/* Înscriere și Certificare */}
+      <section className="py-16 px-4 sm:px-8 lg:px-16">
+        <div className="max-w-[1200px] mx-auto">
+          <h2 className="text-3xl sm:text-4xl font-bold text-[#0A0A0A] mb-10 font-[family-name:var(--font-unbounded)]">
+            Înscriere și Certificare
+          </h2>
+
+          <div className="grid lg:grid-cols-2 gap-16">
+            {/* Acte necesare */}
+            <div>
+              <h3 className="text-xl font-bold text-[#0A0A0A] mb-5 font-[family-name:var(--font-unbounded)]">
+                Acte necesare
+              </h3>
+              <ol className="space-y-3 text-[#444]">
+                <li className="flex items-start gap-3">
+                  <span className="text-[#B8001F] font-bold text-sm mt-0.5 w-5 flex-shrink-0">1.</span>
+                  <span>Copie certificat de naștere</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-[#B8001F] font-bold text-sm mt-0.5 w-5 flex-shrink-0">2.</span>
+                  <span>Copie după ultima formă de învățământ absolvită (minim studii liceale)</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-[#B8001F] font-bold text-sm mt-0.5 w-5 flex-shrink-0">3.</span>
+                  <span>Copie carte de identitate</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-[#B8001F] font-bold text-sm mt-0.5 w-5 flex-shrink-0">4.</span>
+                  <span>Copie certificat de căsătorie (dacă este cazul)</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-[#B8001F] font-bold text-sm mt-0.5 w-5 flex-shrink-0">5.</span>
+                  <span><strong className="text-[#0A0A0A]">Adeverință medicală în original</strong> — care să ateste faptul că participantul este apt pentru activități sportive</span>
+                </li>
+              </ol>
+            </div>
+
+            {/* Examen final */}
+            <div>
+              <h3 className="text-xl font-bold text-[#0A0A0A] mb-5 font-[family-name:var(--font-unbounded)]">
+                Examen final și certificare
+              </h3>
+              <div className="space-y-5 text-[#444] leading-relaxed">
+                <div>
+                  <p className="font-semibold text-[#0A0A0A] mb-1">Format examen</p>
+                  <p>{course.exam.format}</p>
+                </div>
+                <div>
+                  <p className="font-semibold text-[#0A0A0A] mb-1">Certificare</p>
+                  <p>{course.exam.certification}</p>
+                </div>
+                <p className="text-[#0A0A0A] font-medium bg-[#B8001F]/5 border-l-3 border-[#B8001F] pl-4 py-3 rounded-r">
+                  Certificarea este recunoscută internațional și îți permite să activezi ca profesionist în România și în Uniunea Europeană.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Enrollment Form */}
       <section id="enrollment" className="py-20 px-4 sm:px-8 lg:px-16">
         <div className="max-w-[1200px] mx-auto">
           <motion.div
@@ -1066,7 +638,7 @@ export default function CoursePage({ params }: { params: { id: string } }) {
                   {isSubmitting
                     ? "Se trimite..."
                     : submitSuccess
-                      ? "✓ Trimis cu succes!"
+                      ? "Trimis cu succes!"
                       : "Trimite Cererea"}
                 </motion.button>
 

@@ -50,7 +50,7 @@ export default function HeroSlider() {
         >
           {courses.map((course, index) => (
             <SwiperSlide key={course.id}>
-              <div className="relative h-[450px] sm:h-[500px] lg:h-[550px]">
+              <div className="relative h-[585px] sm:h-[650px] lg:h-[715px]">
                 {/* Background Image with Overlay */}
                 <div
                   className="absolute inset-0 bg-cover bg-center"
