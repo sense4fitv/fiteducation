@@ -2,11 +2,16 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
-import { trainers } from "@/data/trainers";
+
 import TrainerPanel from "./TrainerPanel";
 import TrainerMobileCard from "./TrainerMobileCard";
+import type { PublicTrainer } from "@/lib/supabase/queries/public";
 
-export default function TrainersSection() {
+export default function TrainersSection({
+  trainers,
+}: {
+  trainers: PublicTrainer[];
+}) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [activeDot, setActiveDot] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -19,12 +24,14 @@ export default function TrainersSection() {
       const scrollLeft = container.scrollLeft;
       const cardWidth = 260 + 12; // min-w + gap
       const index = Math.round(scrollLeft / cardWidth);
-      setActiveDot(Math.min(index, trainers.length - 1));
+      setActiveDot(Math.min(index, Math.max(trainers.length - 1, 0)));
     };
 
     container.addEventListener("scroll", handleScroll, { passive: true });
     return () => container.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [trainers.length]);
+
+  if (trainers.length === 0) return null;
 
   return (
     <section id="traineri" className="py-20 px-4 sm:px-8 lg:px-16">
@@ -36,7 +43,6 @@ export default function TrainersSection() {
           transition={{ duration: 0.6 }}
           className="bg-[#0A0A0A] rounded-3xl p-8 sm:p-12 lg:p-16 shadow-2xl"
         >
-          {/* Header */}
           <div className="text-center mb-12">
             <motion.p
               initial={{ opacity: 0, y: 10 }}
@@ -58,7 +64,6 @@ export default function TrainersSection() {
             </motion.h2>
           </div>
 
-          {/* Desktop: Expanding Panels */}
           <div className="hidden lg:flex gap-1.5">
             {trainers.map((trainer, index) => (
               <TrainerPanel
@@ -70,7 +75,6 @@ export default function TrainersSection() {
             ))}
           </div>
 
-          {/* Mobile: Horizontal Scroll */}
           <div className="lg:hidden">
             <div
               ref={scrollRef}
@@ -90,11 +94,10 @@ export default function TrainersSection() {
               ))}
             </div>
 
-            {/* Scroll Indicator Dots */}
             <div className="flex justify-center gap-1.5 mt-4">
-              {trainers.map((_, index) => (
+              {trainers.map((trainer, index) => (
                 <div
-                  key={index}
+                  key={trainer.id}
                   className={`h-[3px] rounded-full transition-all duration-300 ${
                     activeDot === index
                       ? "w-5 bg-[#B8001F]"

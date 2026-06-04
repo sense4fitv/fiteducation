@@ -1,11 +1,12 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { Instagram, Facebook, Linkedin } from "lucide-react";
-import type { Trainer } from "@/data/trainers";
+import { Instagram } from "lucide-react";
+
+import type { PublicTrainer } from "@/lib/supabase/queries/public";
 
 interface TrainerPanelProps {
-  trainer: Trainer;
+  trainer: PublicTrainer;
   isActive: boolean;
   onActivate: () => void;
 }
@@ -32,16 +33,13 @@ export default function TrainerPanel({
       onMouseEnter={onActivate}
       className="relative h-[500px] rounded-2xl overflow-hidden cursor-pointer"
     >
-      {/* Background Image */}
       <div
         className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${trainer.image})` }}
+        style={{ backgroundImage: `url(${trainer.photo})` }}
       />
 
-      {/* Gradient Overlay */}
       <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/60 to-transparent" />
 
-      {/* Collapsed State — Vertical Name */}
       {!isActive && (
         <div className="absolute bottom-0 left-0 right-0 p-4 flex justify-center">
           <span
@@ -56,7 +54,6 @@ export default function TrainerPanel({
         </div>
       )}
 
-      {/* Expanded State — Full Content */}
       <AnimatePresence>
         {isActive && (
           <motion.div
@@ -65,23 +62,23 @@ export default function TrainerPanel({
             exit="exit"
             className="absolute bottom-0 left-0 right-0 p-6"
           >
-            {/* Tags */}
-            <motion.div
-              custom={0}
-              variants={contentVariants}
-              className="flex flex-wrap gap-2 mb-3"
-            >
-              {trainer.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="bg-[rgba(184,0,31,0.3)] border border-[rgba(184,0,31,0.5)] text-[#ff6b7a] text-[10px] px-2.5 py-0.5 rounded-full uppercase tracking-wide font-medium"
-                >
-                  {tag}
-                </span>
-              ))}
-            </motion.div>
+            {trainer.tags.length > 0 && (
+              <motion.div
+                custom={0}
+                variants={contentVariants}
+                className="flex flex-wrap gap-2 mb-3"
+              >
+                {trainer.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="bg-[rgba(184,0,31,0.3)] border border-[rgba(184,0,31,0.5)] text-[#ff6b7a] text-[10px] px-2.5 py-0.5 rounded-full uppercase tracking-wide font-medium"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </motion.div>
+            )}
 
-            {/* Name */}
             <motion.h3
               custom={1}
               variants={contentVariants}
@@ -90,63 +87,42 @@ export default function TrainerPanel({
               {trainer.name}
             </motion.h3>
 
-            {/* Credentials */}
-            <motion.p
-              custom={2}
-              variants={contentVariants}
-              className="text-[#B8001F] text-xs font-semibold uppercase tracking-wider mt-1"
-            >
-              {trainer.description}
-            </motion.p>
+            {trainer.credentials ? (
+              <motion.p
+                custom={2}
+                variants={contentVariants}
+                className="text-[#B8001F] text-xs font-semibold uppercase tracking-wider mt-1"
+              >
+                {trainer.credentials}
+              </motion.p>
+            ) : null}
 
-            {/* Bio */}
-            <motion.p
-              custom={3}
-              variants={contentVariants}
-              className="text-[#999] text-sm leading-relaxed mt-3 max-w-[320px]"
-            >
-              {trainer.bio}
-            </motion.p>
+            {trainer.bio ? (
+              <motion.p
+                custom={3}
+                variants={contentVariants}
+                className="text-[#999] text-sm leading-relaxed mt-3 max-w-[320px]"
+              >
+                {trainer.bio}
+              </motion.p>
+            ) : null}
 
-            {/* Social Links */}
-            {trainer.socialLinks && (
+            {trainer.instagram_url ? (
               <motion.div
                 custom={4}
                 variants={contentVariants}
                 className="flex gap-3 mt-4"
               >
-                {trainer.socialLinks.instagram && (
-                  <a
-                    href={trainer.socialLinks.instagram}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-[#aaa] hover:text-white transition-colors"
-                  >
-                    <Instagram size={14} />
-                  </a>
-                )}
-                {trainer.socialLinks.facebook && (
-                  <a
-                    href={trainer.socialLinks.facebook}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-[#aaa] hover:text-white transition-colors"
-                  >
-                    <Facebook size={14} />
-                  </a>
-                )}
-                {trainer.socialLinks.linkedin && (
-                  <a
-                    href={trainer.socialLinks.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-[#aaa] hover:text-white transition-colors"
-                  >
-                    <Linkedin size={14} />
-                  </a>
-                )}
+                <a
+                  href={trainer.instagram_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-[#aaa] hover:text-white transition-colors"
+                >
+                  <Instagram size={14} />
+                </a>
               </motion.div>
-            )}
+            ) : null}
           </motion.div>
         )}
       </AnimatePresence>

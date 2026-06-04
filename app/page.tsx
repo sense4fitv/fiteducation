@@ -7,19 +7,42 @@ import CTASection from "@/components/CTASection";
 import FAQSection from "@/components/FAQSection";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
-export default function Home() {
+
+import {
+  listAllTrainers,
+  listHeroCourses,
+  listPublishedCourses,
+} from "@/lib/supabase/queries/public";
+import {
+  splitByCategory,
+  toSpecializationVM,
+} from "@/lib/specialization-vm";
+
+export const dynamic = "force-dynamic";
+
+export default async function Home() {
+  const [heroCourses, allCourses, trainers] = await Promise.all([
+    listHeroCourses(),
+    listPublishedCourses(),
+    listAllTrainers(),
+  ]);
+
+  const vms = allCourses.map(toSpecializationVM);
+  const { foundations, specializations } = splitByCategory(vms);
+
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
       <Navbar />
-      <HeroSlider />
+      <HeroSlider courses={heroCourses} />
       <StatsBar />
-      <Configurator />
-      <TrainersSection />
+      <Configurator
+        foundations={foundations}
+        specializations={specializations}
+      />
+      <TrainersSection trainers={trainers} />
       <CTASection />
       <FAQSection />
       <Footer />
-
-      {/* Global Components */}
       <WhatsAppButton />
     </div>
   );

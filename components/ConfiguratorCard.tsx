@@ -2,11 +2,12 @@
 
 import { motion } from "framer-motion";
 import { Check, Info } from "lucide-react";
-import { formatPrice } from "@/lib/utils";
-import type { Specialization } from "@/data/specializations";
+
+import { formatPrice } from "@/lib/format";
+import type { SpecializationVM } from "@/lib/specialization-vm";
 
 interface ConfiguratorCardProps {
-  specialization: Specialization;
+  specialization: SpecializationVM;
   isSelected: boolean;
   isDisabled?: boolean;
   onClick: () => void;
@@ -39,7 +40,6 @@ export default function ConfiguratorCard({
         ${isDisabled ? "opacity-40 cursor-not-allowed" : "cursor-pointer"}
       `}
     >
-      {/* Selection Indicator */}
       <div className="flex items-start justify-between mb-6">
         <div
           className={`
@@ -55,9 +55,13 @@ export default function ConfiguratorCard({
         </div>
 
         <div className="flex items-center gap-2">
-          <div className={`text-xs font-medium px-2 py-1 rounded ${
-            isSelected ? "bg-[#B8001F]/10 text-[#B8001F]" : "bg-[#2A2A2A] text-[#666666]"
-          }`}>
+          <div
+            className={`text-xs font-medium px-2 py-1 rounded ${
+              isSelected
+                ? "bg-[#B8001F]/10 text-[#B8001F]"
+                : "bg-[#2A2A2A] text-[#666666]"
+            }`}
+          >
             {specialization.duration}
           </div>
           {!hideInfo && (
@@ -75,20 +79,17 @@ export default function ConfiguratorCard({
         </div>
       </div>
 
-      {/* Title */}
       <h3 className="text-xl font-bold text-white mb-2 font-[family-name:var(--font-unbounded)]">
         {specialization.title}
       </h3>
 
-      {/* Description */}
       <p className="text-[#A0A0A0] text-sm mb-6 leading-relaxed min-h-[40px] flex-1">
         {specialization.description}
       </p>
 
-      {/* Price */}
       <div className="pt-4 border-t border-[#2A2A2A] mt-auto">
         <span className="text-2xl font-bold text-white font-[family-name:var(--font-unbounded)]">
-          {formatPrice(specialization.price)}
+          {formatPrice(specialization.price, specialization.currency)}
         </span>
       </div>
     </motion.div>

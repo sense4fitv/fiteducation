@@ -2,24 +2,25 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
-import { formatPrice } from "@/lib/utils";
-import type { Specialization } from "@/data/specializations";
+
+import { formatPrice } from "@/lib/format";
+import type { SpecializationVM } from "@/lib/specialization-vm";
 
 interface ConfiguratorSummaryProps {
   selectedSpecs: {
-    foundation: Specialization | null;
-    specialization: Specialization | null;
+    foundation: SpecializationVM | null;
+    specialization: SpecializationVM | null;
   };
-  totalPrice: number;
 }
 
 export default function ConfiguratorSummary({
   selectedSpecs,
-  totalPrice,
 }: ConfiguratorSummaryProps) {
-  const hasSelection =
-    selectedSpecs.foundation ||
-    selectedSpecs.specialization;
+  const selected = [
+    selectedSpecs.foundation,
+    selectedSpecs.specialization,
+  ].filter(Boolean) as SpecializationVM[];
+  const hasSelection = selected.length > 0;
 
   return (
     <motion.div
@@ -29,7 +30,6 @@ export default function ConfiguratorSummary({
     >
       <div className="max-w-4xl mx-auto bg-gradient-to-r from-[#1A1A1A] to-[#222222] rounded-2xl border border-[#2A2A2A] p-6 shadow-2xl backdrop-blur-sm">
         <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-          {/* Selection Path */}
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-3">
               <Sparkles size={20} className="text-[#B8001F]" />
@@ -59,7 +59,10 @@ export default function ConfiguratorSummary({
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.8 }}
                   >
-                    <ArrowRight size={14} className="text-[#A0A0A0] sm:w-4 sm:h-4" />
+                    <ArrowRight
+                      size={14}
+                      className="text-[#A0A0A0] sm:w-4 sm:h-4"
+                    />
                   </motion.div>
                 )}
 
@@ -90,26 +93,29 @@ export default function ConfiguratorSummary({
             </div>
           </div>
 
-          {/* Price & CTA */}
           <div className="flex flex-col sm:flex-row items-center sm:gap-6 w-full lg:w-auto gap-4">
-            {/* Total Price */}
             <div className="text-center sm:text-right w-full sm:w-auto">
-              <p className="text-[#A0A0A0] text-xs sm:text-sm mb-1">Total investiție</p>
-              <AnimatePresence mode="wait">
-                <motion.p
-                  key={totalPrice}
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 10 }}
-                  transition={{ duration: 0.3 }}
-                  className="text-2xl sm:text-3xl font-bold text-white font-[family-name:var(--font-unbounded)]"
-                >
-                  {formatPrice(totalPrice)}
-                </motion.p>
-              </AnimatePresence>
+              <p className="text-[#A0A0A0] text-xs sm:text-sm mb-1">
+                Investiție
+              </p>
+              {hasSelection ? (
+                <div className="space-y-0.5">
+                  {selected.map((s) => (
+                    <p
+                      key={s.id}
+                      className="text-xl sm:text-2xl font-bold text-white font-[family-name:var(--font-unbounded)] tabular-nums"
+                    >
+                      {formatPrice(s.price, s.currency)}
+                    </p>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-xl sm:text-2xl font-bold text-[#666666] font-[family-name:var(--font-unbounded)]">
+                  —
+                </p>
+              )}
             </div>
 
-            {/* CTA Button */}
             <motion.a
               href="#contact"
               whileHover={{ scale: hasSelection ? 1.05 : 1 }}
