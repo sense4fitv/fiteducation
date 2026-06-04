@@ -197,10 +197,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* Hide scrollbar for trainers mobile scroll */
-.lg\:hidden [style*="scroll-snap-type"] {
+.trainers-scroll {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
-.lg\:hidden [style*="scroll-snap-type"]::-webkit-scrollbar {
+.trainers-scroll::-webkit-scrollbar {
   display: none;
 }

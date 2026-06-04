@@ -74,7 +74,7 @@ export default function TrainersSection() {
           <div className="lg:hidden">
             <div
               ref={scrollRef}
-              className="flex gap-3 overflow-x-auto pb-4"
+              className="trainers-scroll flex gap-3 overflow-x-auto pb-4"
               style={{
                 scrollSnapType: "x mandatory",
                 WebkitOverflowScrolling: "touch",

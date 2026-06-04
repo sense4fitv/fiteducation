@@ -19,7 +19,7 @@ export default function TrainerMobileCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="min-w-[260px] h-[340px] rounded-2xl overflow-hidden relative flex-shrink-0 scroll-snap-align-start"
+      className="min-w-[260px] h-[340px] rounded-2xl overflow-hidden relative flex-shrink-0"
       style={{ scrollSnapAlign: "start" }}
     >
       {/* Background Image */}
