@@ -1,21 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 
 export default function Navbar() {
-  const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   const menuItems = [
     { label: "Acasă", href: "#" },
@@ -25,21 +15,8 @@ export default function Navbar() {
   ];
 
   return (
-    <motion.nav
-      initial={{ y: 0 }}
-      animate={{
-        backgroundColor: isScrolled
-          ? "rgba(255, 255, 255, 0.95)"
-          : "rgba(255, 255, 255, 0)",
-        backdropFilter: isScrolled ? "blur(12px)" : "blur(0px)",
-        borderBottomLeftRadius: isScrolled ? "24px" : "0px",
-        borderBottomRightRadius: isScrolled ? "24px" : "0px",
-        boxShadow: isScrolled
-          ? "0 4px 20px rgba(0, 0, 0, 0.08)"
-          : "0 0 0 rgba(0, 0, 0, 0)",
-      }}
-      transition={{ duration: 0.3, ease: "easeInOut" }}
-      className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-8 lg:px-16"
+    <nav
+      className="absolute top-0 left-0 right-0 z-50 px-4 sm:px-8 lg:px-16"
     >
       <div className="max-w-[1600px] mx-auto">
         <div className="flex items-center justify-between h-20">
@@ -58,7 +35,7 @@ export default function Navbar() {
               <a
                 key={item.label}
                 href={item.href}
-                className="text-[#0A0A0A] hover:text-[#B8001F] transition-colors duration-200 font-medium"
+                className="text-white/80 hover:text-white transition-colors duration-200 font-medium"
               >
                 {item.label}
               </a>
@@ -78,7 +55,7 @@ export default function Navbar() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-2 text-[#0A0A0A] hover:bg-gray-100 rounded-lg transition-colors"
+            className="md:hidden p-2 text-white hover:bg-white/10 rounded-lg transition-colors"
             aria-label="Toggle menu"
           >
             {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -118,6 +95,6 @@ export default function Navbar() {
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.nav>
+    </nav>
   );
 }
