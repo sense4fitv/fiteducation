@@ -108,7 +108,7 @@ export default function CoursePage({ params }: { params: { id: string } }) {
       </section>
 
       {/* Hero Section */}
-      <section className="pb-8 sm:px-8 lg:px-16">
+      <section className="pb-4 sm:pb-8 sm:px-8 lg:px-16">
         <div className="max-w-[1200px] mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -178,7 +178,7 @@ export default function CoursePage({ params }: { params: { id: string } }) {
       </section>
 
       {/* Course Info Bar */}
-      <section ref={navTriggerRef} className="py-8 sm:py-10 px-4 sm:px-8 lg:px-16">
+      <section ref={navTriggerRef} className="py-4 sm:py-10 px-4 sm:px-8 lg:px-16">
         <div className="max-w-[1200px] mx-auto">
           {/* Mobile: price + date only */}
           <div className="flex items-center justify-center gap-6 sm:hidden">
@@ -253,7 +253,7 @@ export default function CoursePage({ params }: { params: { id: string } }) {
       </div>
 
       {/* Despre Curs */}
-      <section id="despre" className="py-16 px-4 sm:px-8 lg:px-16 scroll-mt-16">
+      <section id="despre" className="pt-8 pb-16 sm:py-16 px-4 sm:px-8 lg:px-16 scroll-mt-16">
         <div className="max-w-[1200px] mx-auto">
           <h2 className="text-3xl sm:text-4xl font-bold text-[#0A0A0A] mb-6 font-[family-name:var(--font-unbounded)]">
             Despre Curs
