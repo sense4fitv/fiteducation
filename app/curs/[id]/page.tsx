@@ -178,9 +178,29 @@ export default function CoursePage({ params }: { params: { id: string } }) {
       </section>
 
       {/* Course Info Bar */}
-      <section ref={navTriggerRef} className="py-10 px-4 sm:px-8 lg:px-16">
+      <section ref={navTriggerRef} className="py-8 sm:py-10 px-4 sm:px-8 lg:px-16">
         <div className="max-w-[1200px] mx-auto">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 sm:gap-8">
+          {/* Mobile: compact list */}
+          <div className="flex flex-col gap-3 sm:hidden">
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-[#999]">Preț</span>
+              <span className="text-base font-bold text-[#0A0A0A]">{course.price}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-[#999]">Data de început</span>
+              <span className="text-base font-bold text-[#B8001F]">{course.nextStartDate}</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-[#999]">Durată</span>
+              <span className="text-base font-bold text-[#0A0A0A]">1080 ore</span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm text-[#999]">Nivel minim</span>
+              <span className="text-base font-bold text-[#0A0A0A]">Absolvent liceu</span>
+            </div>
+          </div>
+          {/* Desktop: 4-column grid */}
+          <div className="hidden sm:grid sm:grid-cols-4 gap-8">
             <div>
               <p className="text-sm text-[#999] mb-1">Preț</p>
               <p className="text-2xl font-bold text-[#0A0A0A]">{course.price}</p>
