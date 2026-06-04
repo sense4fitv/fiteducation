@@ -5,13 +5,17 @@ import Image from "next/image";
 import { ImagePlus, RefreshCw, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
-import type { TrainerActionState } from "@/app/admin/trainers/_actions";
 import { Button } from "@/components/ui/button";
 
+type UploadResult =
+  | { ok: true }
+  | { ok: false; error: string }
+  | null;
+
 type SaveAction = (
-  prev: TrainerActionState,
+  prev: UploadResult,
   fd: FormData,
-) => Promise<TrainerActionState>;
+) => Promise<UploadResult>;
 
 export function ImageUploader({
   entityId,
