@@ -6,7 +6,55 @@ import { Select as SelectPrimitive } from "@base-ui/react/select"
 import { cn } from "@/lib/utils"
 import { ChevronDownIcon, CheckIcon, ChevronUpIcon } from "lucide-react"
 
-const Select = SelectPrimitive.Root
+function collectSelectItems(
+  node: React.ReactNode,
+  into: Record<string, React.ReactNode>,
+): void {
+  React.Children.forEach(node, (child) => {
+    if (!React.isValidElement(child)) return;
+    if (child.type === SelectItem) {
+      const props = child.props as {
+        value?: unknown;
+        children?: React.ReactNode;
+        label?: React.ReactNode;
+      };
+      if (props.value !== undefined && props.value !== null) {
+        into[String(props.value)] = props.label ?? props.children;
+      }
+      return;
+    }
+    const props = child.props as { children?: React.ReactNode } | null;
+    if (props?.children !== undefined) {
+      collectSelectItems(props.children, into);
+    }
+  });
+}
+
+function Select<Value, Multiple extends boolean | undefined = false>({
+  children,
+  items,
+  ...props
+}: SelectPrimitive.Root.Props<Value, Multiple>) {
+  // Base UI renders the trigger's <Select.Value> from the `items` map on
+  // <Select.Root>. Without it, the trigger shows the raw value (UUID, sentinel,
+  // etc). Walk the JSX once and pass items automatically so existing call
+  // sites that just nest <SelectItem value="x">Label</SelectItem> keep working.
+  const autoItems = React.useMemo(() => {
+    if (items) return items;
+    const collected: Record<string, React.ReactNode> = {};
+    collectSelectItems(children, collected);
+    return collected;
+  }, [items, children]);
+
+  return (
+    <SelectPrimitive.Root
+      items={autoItems as SelectPrimitive.Root.Props<Value, Multiple>["items"]}
+      {...props}
+    >
+      {children}
+    </SelectPrimitive.Root>
+  );
+}
 
 function SelectGroup({ className, ...props }: SelectPrimitive.Group.Props) {
   return (
