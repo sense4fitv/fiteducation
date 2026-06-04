@@ -52,15 +52,10 @@ export function AdminSidebar({ email }: { email: string }) {
 
   return (
     <Sidebar collapsible="icon">
-      <SidebarHeader className="border-b">
-        <div className="flex items-center gap-3 px-2 py-1">
-          <div className="flex size-9 items-center justify-center rounded-md bg-accent-primary text-sm font-bold text-white">
-            FE
-          </div>
-          <div className="flex flex-col group-data-[collapsible=icon]:hidden">
-            <span className="text-sm font-semibold">FitEducation</span>
-            <span className="text-xs text-muted-foreground">Admin</span>
-          </div>
+      <SidebarHeader>
+        <div className="px-2 py-1 group-data-[collapsible=icon]:hidden">
+          <span className="text-sm font-semibold">FitEducation</span>
+          <span className="ml-1 text-xs text-muted-foreground">Admin</span>
         </div>
       </SidebarHeader>
 
@@ -101,7 +96,7 @@ export function AdminSidebar({ email }: { email: string }) {
             }
           >
             <Avatar className="size-8">
-              <AvatarFallback className="bg-accent-primary text-xs text-white">
+              <AvatarFallback className="text-xs">
                 {initials(email)}
               </AvatarFallback>
             </Avatar>
