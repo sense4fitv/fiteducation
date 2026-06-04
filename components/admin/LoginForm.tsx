@@ -38,21 +38,17 @@ export function LoginForm() {
   }, [state]);
 
   return (
-    <Card className="w-full max-w-sm border-zinc-800 bg-zinc-900 text-zinc-100">
+    <Card className="w-full max-w-sm">
       <CardHeader className="space-y-2">
         <CardTitle className="text-xl tracking-tight">
           FitEducation Admin
         </CardTitle>
-        <CardDescription className="text-zinc-400">
-          Conectează-te pentru a continua.
-        </CardDescription>
+        <CardDescription>Conectează-te pentru a continua.</CardDescription>
       </CardHeader>
       <form action={formAction}>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="email" className="text-zinc-300">
-              Email
-            </Label>
+            <Label htmlFor="email">Email</Label>
             <Input
               id="email"
               name="email"
@@ -60,14 +56,11 @@ export function LoginForm() {
               autoComplete="email"
               required
               disabled={isPending}
-              className="border-zinc-800 bg-zinc-950 text-zinc-100 placeholder:text-zinc-500"
               placeholder="admin@fiteducationschool.com"
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="password" className="text-zinc-300">
-              Parolă
-            </Label>
+            <Label htmlFor="password">Parolă</Label>
             <Input
               id="password"
               name="password"
@@ -75,7 +68,6 @@ export function LoginForm() {
               autoComplete="current-password"
               required
               disabled={isPending}
-              className="border-zinc-800 bg-zinc-950 text-zinc-100"
             />
           </div>
         </CardContent>

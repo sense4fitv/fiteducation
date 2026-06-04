@@ -51,26 +51,22 @@ export function AdminSidebar({ email }: { email: string }) {
   const pathname = usePathname();
 
   return (
-    <Sidebar collapsible="icon" className="border-r border-zinc-800 bg-zinc-950">
-      <SidebarHeader className="border-b border-zinc-800 py-4">
-        <div className="flex items-center gap-3 px-2">
+    <Sidebar collapsible="icon">
+      <SidebarHeader className="border-b">
+        <div className="flex items-center gap-3 px-2 py-1">
           <div className="flex size-9 items-center justify-center rounded-md bg-accent-primary text-sm font-bold text-white">
             FE
           </div>
           <div className="flex flex-col group-data-[collapsible=icon]:hidden">
-            <span className="text-sm font-semibold text-zinc-100">
-              FitEducation
-            </span>
-            <span className="text-xs text-zinc-500">Admin</span>
+            <span className="text-sm font-semibold">FitEducation</span>
+            <span className="text-xs text-muted-foreground">Admin</span>
           </div>
         </div>
       </SidebarHeader>
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel className="text-zinc-500">
-            Management
-          </SidebarGroupLabel>
+          <SidebarGroupLabel>Management</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {NAV_ITEMS.map((item) => {
@@ -82,11 +78,6 @@ export function AdminSidebar({ email }: { email: string }) {
                       render={<Link href={item.href} />}
                       isActive={active}
                       tooltip={item.label}
-                      className={
-                        active
-                          ? "bg-accent-primary/15 text-zinc-100 hover:bg-accent-primary/20 data-[active=true]:bg-accent-primary/15 data-[active=true]:text-zinc-100"
-                          : "text-zinc-400 hover:bg-zinc-900 hover:text-zinc-100"
-                      }
                     >
                       <Icon className="size-4" />
                       <span>{item.label}</span>
@@ -99,13 +90,13 @@ export function AdminSidebar({ email }: { email: string }) {
         </SidebarGroup>
       </SidebarContent>
 
-      <SidebarFooter className="border-t border-zinc-800">
+      <SidebarFooter className="border-t">
         <DropdownMenu>
           <DropdownMenuTrigger
             render={
               <button
                 type="button"
-                className="flex w-full items-center gap-3 rounded-md px-2 py-2 text-left text-sm text-zinc-300 hover:bg-zinc-900"
+                className="flex w-full items-center gap-3 rounded-md px-2 py-2 text-left text-sm hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
               />
             }
           >
@@ -115,21 +106,17 @@ export function AdminSidebar({ email }: { email: string }) {
               </AvatarFallback>
             </Avatar>
             <div className="flex min-w-0 flex-1 flex-col group-data-[collapsible=icon]:hidden">
-              <span className="truncate text-xs text-zinc-500">
+              <span className="truncate text-xs text-muted-foreground">
                 Conectat ca
               </span>
-              <span className="truncate text-sm text-zinc-200">{email}</span>
+              <span className="truncate text-sm">{email}</span>
             </div>
           </DropdownMenuTrigger>
-          <DropdownMenuContent
-            side="top"
-            align="end"
-            className="w-56 border-zinc-800 bg-zinc-900 text-zinc-100"
-          >
+          <DropdownMenuContent side="top" align="end" className="w-56">
             <form action={signOutAdmin}>
               <DropdownMenuItem
                 render={<button type="submit" />}
-                className="w-full cursor-pointer text-zinc-200 focus:bg-zinc-800 focus:text-zinc-100"
+                className="w-full cursor-pointer"
               >
                 <LogOut className="size-4" />
                 Deconectare

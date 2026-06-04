@@ -15,16 +15,14 @@ export default async function AdminDashboardPage() {
 
   return (
     <div className="mx-auto max-w-3xl">
-      <Card className="border-zinc-800 bg-zinc-900 text-zinc-100">
+      <Card>
         <CardHeader>
           <CardTitle className="text-xl">
             Bun venit{user?.email ? `, ${user.email}` : ""}
           </CardTitle>
-          <CardDescription className="text-zinc-400">
-            Panou administrare FitEducation.
-          </CardDescription>
+          <CardDescription>Panou administrare FitEducation.</CardDescription>
         </CardHeader>
-        <CardContent className="text-sm text-zinc-400">
+        <CardContent className="text-sm text-muted-foreground">
           Funcționalitățile complete (traineri, cursuri, înscrieri) vor fi
           disponibile în secțiunile dedicate, în curând.
         </CardContent>

@@ -37,11 +37,11 @@ export function AdminShell({
   return (
     <SidebarProvider>
       <AdminSidebar email={email} />
-      <SidebarInset className="bg-section-dark text-zinc-100">
-        <header className="sticky top-0 z-10 flex h-14 items-center gap-3 border-b border-zinc-800 bg-section-dark/95 px-4 backdrop-blur">
-          <SidebarTrigger className="text-zinc-300 hover:bg-zinc-900 hover:text-zinc-100" />
-          <div className="h-5 w-px bg-zinc-800" />
-          <h1 className="text-sm font-medium text-zinc-200">{title}</h1>
+      <SidebarInset>
+        <header className="sticky top-0 z-10 flex h-14 items-center gap-3 border-b bg-background/95 px-4 backdrop-blur">
+          <SidebarTrigger />
+          <div className="h-5 w-px bg-border" />
+          <h1 className="text-sm font-medium">{title}</h1>
         </header>
         <main className="flex-1 p-6">{children}</main>
       </SidebarInset>

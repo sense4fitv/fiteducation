@@ -22,7 +22,7 @@ export default async function AdminLoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-section-dark px-4">
+    <div className="dark flex min-h-screen items-center justify-center bg-background px-4 text-foreground">
       <Suspense fallback={null}>
         <LoginForm />
       </Suspense>
