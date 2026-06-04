@@ -1,90 +1,55 @@
-"use client";
-
-import { useState, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
+import Link from "next/link";
+import { notFound } from "next/navigation";
 import {
+  Award,
+  CalendarDays,
   CheckCircle2,
   ChevronRight,
+  Clock,
+  Globe,
+  GraduationCap,
+  Instagram,
+  MapPin,
+  Target,
+  Users,
 } from "lucide-react";
-import { courses } from "@/data/courses";
-import { trainers } from "@/data/trainers";
-import Navbar from "@/components/Navbar";
+
+import EnrollmentForm from "@/components/EnrollmentForm";
 import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
 import WhatsAppButton from "@/components/WhatsAppButton";
-import Image from "next/image";
+import { formatDate, formatDateRange, formatPrice } from "@/lib/format";
+import { getCourseBySlug } from "@/lib/supabase/queries/public";
+import type { Enums } from "@/lib/supabase/types";
 
-export default function CoursePage({ params }: { params: { id: string } }) {
-  const [showStickyButton, setShowStickyButton] = useState(false);
-  const [showStickyNav, setShowStickyNav] = useState(false);
-  const [activeSection, setActiveSection] = useState("despre");
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitSuccess, setSubmitSuccess] = useState(false);
-  const navTriggerRef = useRef<HTMLDivElement>(null);
+export const dynamic = "force-dynamic";
 
-  const course = courses.find((c) => c.slug === params.id) || courses[0];
+const CATEGORY_LABEL: Record<Enums<"requirement_category">, string> = {
+  inscriere: "Condiții de înscriere",
+  acte: "Acte necesare",
+  participare: "Participare la curs",
+  examen: "Examen și certificare",
+};
 
-  const sections = [
-    { id: "despre", label: "Despre curs" },
-    { id: "competente", label: "Competențe" },
-    { id: "formatori", label: "Formatori" },
-    { id: "inscriere", label: "Înscriere" },
-  ];
+export default async function CoursePage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id: slug } = await params;
+  const course = await getCourseBySlug(slug);
+  if (!course) notFound();
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setShowStickyButton(window.scrollY > 600);
+  const typeLabel =
+    course.type === "curs_acreditat" ? "Curs acreditat" : "Workshop";
 
-      // Show sticky nav after info bar
-      if (navTriggerRef.current) {
-        const rect = navTriggerRef.current.getBoundingClientRect();
-        setShowStickyNav(rect.bottom < 64);
-      }
-    };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  const featuredTrainers = course.trainers.filter((t) => t.is_featured);
+  const otherTrainers = course.trainers.filter((t) => !t.is_featured);
 
-  // Track active section with IntersectionObserver
-  useEffect(() => {
-    const sectionIds = ["despre", "competente", "formatori", "inscriere"];
-    const observers: IntersectionObserver[] = [];
-
-    sectionIds.forEach((id) => {
-      const el = document.getElementById(id);
-      if (!el) return;
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) setActiveSection(id);
-        },
-        { rootMargin: "-80px 0px -60% 0px", threshold: 0 }
-      );
-      observer.observe(el);
-      observers.push(observer);
-    });
-
-    return () => observers.forEach((o) => o.disconnect());
-  }, []);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    setIsSubmitting(false);
-    setSubmitSuccess(true);
-    setTimeout(() => {
-      setFormData({ name: "", email: "", phone: "" });
-      setSubmitSuccess(false);
-    }, 3000);
-  };
-
-  const scrollToEnrollment = () => {
-    document.getElementById("enrollment")?.scrollIntoView({ behavior: "smooth" });
-  };
+  const descriptionParagraphs = (course.description ?? "")
+    .split(/\n{2,}/)
+    .map((p) => p.trim())
+    .filter(Boolean);
 
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
@@ -94,688 +59,413 @@ export default function CoursePage({ params }: { params: { id: string } }) {
       <section className="pt-4 pb-4 px-4 sm:px-8 lg:px-16">
         <div className="max-w-[1200px] mx-auto">
           <div className="flex items-center gap-2 text-sm text-[#666666]">
-            <a href="/" className="hover:text-[#B8001F] transition-colors">
+            <Link href="/" className="hover:text-[#B8001F] transition-colors">
               Acasă
-            </a>
+            </Link>
             <ChevronRight size={16} />
-            <a href="/#specializari" className="hover:text-[#B8001F] transition-colors">
-              Cursuri
-            </a>
+            <Link
+              href="/#specializari"
+              className="hover:text-[#B8001F] transition-colors"
+            >
+              {typeLabel}
+            </Link>
             <ChevronRight size={16} />
             <span className="text-[#0A0A0A] font-medium">{course.title}</span>
           </div>
         </div>
       </section>
 
-      {/* Hero Section */}
-      <section className="pb-4 sm:pb-8 sm:px-8 lg:px-16">
+      {/* Hero */}
+      <section className="px-4 sm:px-8 lg:px-16">
         <div className="max-w-[1200px] mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="relative h-[400px] sm:h-[500px] bg-[#0A0A0A] sm:rounded-3xl overflow-hidden shadow-2xl"
-          >
+          <div className="relative overflow-hidden rounded-3xl bg-[#0A0A0A]">
             <div
-              className="absolute inset-0 bg-cover bg-center"
-              style={{
-                backgroundImage:
-                  "url(https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1600)",
-              }}
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0A]/95 via-[#0A0A0A]/85 to-transparent" />
-            </div>
-
-            <div className="relative h-full flex flex-col justify-center px-8 sm:px-12 lg:px-20">
-              <motion.h1
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2, duration: 0.6 }}
-                className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4 font-[family-name:var(--font-unbounded)] leading-tight max-w-3xl"
-              >
-                {course.title}
-              </motion.h1>
-
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3, duration: 0.6 }}
-                className="text-lg sm:text-xl text-[#A0A0A0] mb-8 max-w-2xl"
-              >
-                {course.description}
-              </motion.p>
-
-              {course.id === 1 ? (
-                <motion.a
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4, duration: 0.6 }}
-                  href="https://checkout.sense4fitsummit.com/pages/index_beta?spid=prod_UBjZWMpQiKFT1k"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="inline-flex items-center justify-center px-8 py-4 bg-[#B8001F] text-white rounded-full font-semibold text-lg hover:bg-[#490207] transition-all duration-300 hover:shadow-lg hover:shadow-[#B8001F]/50 w-fit"
-                >
-                  Cumpără Acum
-                </motion.a>
-              ) : (
-                <motion.button
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4, duration: 0.6 }}
-                  onClick={scrollToEnrollment}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="inline-flex items-center justify-center px-8 py-4 bg-[#B8001F] text-white rounded-full font-semibold text-lg hover:bg-[#490207] transition-all duration-300 hover:shadow-lg hover:shadow-[#B8001F]/50 w-fit"
-                >
-                  Înscrie-te Acum
-                </motion.button>
-              )}
-            </div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Course Info Bar */}
-      <section ref={navTriggerRef} className="py-4 sm:py-10 px-4 sm:px-8 lg:px-16">
-        <div className="max-w-[1200px] mx-auto">
-          {/* Mobile: price + date only */}
-          <div className="flex items-center justify-center gap-6 sm:hidden">
-            <div className="text-center">
-              <p className="text-xs text-[#999] mb-0.5">Preț</p>
-              <p className="text-lg font-bold text-[#0A0A0A]">{course.price}</p>
-            </div>
-            <div className="w-px h-8 bg-[#E5E5E5]" />
-            <div className="text-center">
-              <p className="text-xs text-[#999] mb-0.5">Data de început</p>
-              <p className="text-lg font-bold text-[#B8001F]">{course.nextStartDate}</p>
-            </div>
-          </div>
-          {/* Desktop: all 4 */}
-          <div className="hidden sm:grid sm:grid-cols-4 gap-8">
-            <div>
-              <p className="text-sm text-[#999] mb-1">Preț</p>
-              <p className="text-2xl font-bold text-[#0A0A0A]">{course.price}</p>
-            </div>
-            <div>
-              <p className="text-sm text-[#999] mb-1">Data de început</p>
-              <p className="text-2xl font-bold text-[#B8001F]">{course.nextStartDate}</p>
-            </div>
-            <div>
-              <p className="text-sm text-[#999] mb-1">Durată</p>
-              <p className="text-2xl font-bold text-[#0A0A0A]">1080 ore</p>
-            </div>
-            <div>
-              <p className="text-sm text-[#999] mb-1">Nivel minim</p>
-              <p className="text-2xl font-bold text-[#0A0A0A]">Absolvent liceu</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Sticky Section Nav */}
-      <div
-        className={`sticky top-0 z-30 transition-all duration-300 ${
-          showStickyNav
-            ? "opacity-100 translate-y-0"
-            : "opacity-0 -translate-y-full pointer-events-none"
-        }`}
-      >
-        <div className="bg-white/95 backdrop-blur-sm border-b border-[#E5E5E5]">
-          <div className="max-w-[1200px] mx-auto px-4 sm:px-8 lg:px-16">
-            <nav className="flex gap-1 overflow-x-auto" style={{ scrollbarWidth: "none" }}>
-              {sections.map((section) => (
-                <a
-                  key={section.id}
-                  href={`#${section.id}`}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    document.getElementById(section.id)?.scrollIntoView({ behavior: "smooth" });
-                  }}
-                  className={`px-4 py-3 text-sm font-medium whitespace-nowrap border-b-2 transition-colors ${
-                    activeSection === section.id
-                      ? "text-[#B8001F] border-[#B8001F]"
-                      : "text-[#666] border-transparent hover:text-[#0A0A0A]"
-                  }`}
-                >
-                  {section.label}
-                </a>
-              ))}
-            </nav>
-          </div>
-        </div>
-      </div>
-
-      {/* Divider */}
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-8 lg:px-16">
-        <hr className="border-[#E5E5E5]" />
-      </div>
-
-      {/* Despre Curs */}
-      <section id="despre" className="pt-8 pb-16 sm:py-16 px-4 sm:px-8 lg:px-16 scroll-mt-16">
-        <div className="max-w-[1200px] mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-bold text-[#0A0A0A] mb-6 font-[family-name:var(--font-unbounded)]">
-            Despre Curs
-          </h2>
-
-          {/* Duration + Level (mobile only, moved from info bar) */}
-          <div className="flex items-center gap-4 text-sm text-[#666] mb-6 sm:hidden">
-            <span><strong className="text-[#0A0A0A]">1080 ore</strong> durată</span>
-            <span className="text-[#DDD]">·</span>
-            <span>Nivel minim: <strong className="text-[#0A0A0A]">Absolvent liceu</strong></span>
-          </div>
-
-          <div className="max-w-3xl space-y-5 text-lg text-[#444] leading-relaxed">
-            <p>
-              <strong className="text-[#0A0A0A]">Instructor Fitness Certification</strong> este cel mai complex curs la care poți participa astăzi în România, se naște din conștientizarea complexității mișcării umane.
-            </p>
-            <p>
-              Acest curs presupune răspunsul perfect la exigențele specifice pentru care am fost creați. Un program de exerciții trebuie să ia în considerare corpul în integralitatea sa în relație cu obiectivele, abilitățile funcționale și dorințele unui individ.
-            </p>
-          </div>
-
-          {/* Certification info */}
-          <div className="mt-10 max-w-3xl">
-            <h3 className="text-xl font-bold text-[#0A0A0A] mb-4 font-[family-name:var(--font-unbounded)]">
-              Recunoaștere și Certificări
-            </h3>
-            <p className="text-[#444] leading-relaxed mb-4">
-              La finalul cursului vei primi:
-            </p>
-            <ul className="space-y-3">
-              <li className="flex items-start gap-3">
-                <CheckCircle2 size={20} className="text-[#B8001F] flex-shrink-0 mt-0.5" />
-                <span className="text-[#444]">
-                  <strong className="text-[#0A0A0A]">Certificat de Absolvire</strong> — acreditat de Ministerul Muncii și Ministerul Educației, recunoscut internațional
+              className="absolute inset-0 bg-cover bg-center opacity-50"
+              style={{ backgroundImage: `url(${course.hero_image})` }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0A] via-[#0A0A0A]/80 to-transparent" />
+            <div className="relative px-8 py-16 sm:px-12 sm:py-20 lg:px-16 lg:py-24">
+              <div className="max-w-2xl space-y-5">
+                <span className="inline-flex items-center gap-2 rounded-full border border-[#B8001F]/40 bg-[#B8001F]/20 px-4 py-1.5 text-xs uppercase tracking-wider text-white">
+                  {typeLabel}
                 </span>
-              </li>
-              <li className="flex items-start gap-3">
-                <CheckCircle2 size={20} className="text-[#B8001F] flex-shrink-0 mt-0.5" />
-                <span className="text-[#444]">
-                  <strong className="text-[#0A0A0A]">Diplomă de Participare</strong> — Fiteducation International School, permițându-ți să activezi în România și în străinătate
-                </span>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      {/* Divider */}
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-8 lg:px-16">
-        <hr className="border-[#E5E5E5]" />
-      </div>
-
-      {/* Competențe */}
-      <section id="competente" className="py-16 px-4 sm:px-8 lg:px-16 scroll-mt-16">
-        <div className="max-w-[1200px] mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-bold text-[#0A0A0A] mb-3 font-[family-name:var(--font-unbounded)]">
-            Ce vei putea face după absolvire
-          </h2>
-          <p className="text-lg text-[#666] mb-10 max-w-3xl">
-            Absolvenții vor avea competențele necesare pentru a evalua, planifica, conduce și adapta programe de antrenament personalizat, în condiții de siguranță, eficiență și progres real.
-          </p>
-
-          <div className="space-y-10 max-w-3xl">
-            {/* Competency 1 */}
-            <div>
-              <h3 className="text-lg font-bold text-[#0A0A0A] mb-3">
-                Evaluarea clienților și stabilirea obiectivelor
-              </h3>
-              <ul className="space-y-2 text-[#444]">
-                <li className="flex items-start gap-2.5">
-                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
-                  <span>Evaluări inițiale: postură, mobilitate, forță, rezistență, compoziție corporală</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
-                  <span>Identificarea dezechilibrelor musculare și limitărilor funcționale</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
-                  <span>Obiective SMART în funcție de nivel, vârstă și istoric medical</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
-                  <span>Chestionare PAR-Q și protocoale de siguranță</span>
-                </li>
-              </ul>
-            </div>
-
-            {/* Competency 2 */}
-            <div>
-              <h3 className="text-lg font-bold text-[#0A0A0A] mb-3">
-                Programe de antrenament personalizate
-              </h3>
-              <ul className="space-y-2 text-[#444]">
-                <li className="flex items-start gap-2.5">
-                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
-                  <span>Planuri pentru: slăbire, tonifiere, hipertrofie, forță, rezistență</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
-                  <span>Principiile periodizării și progresiei</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
-                  <span>Structurarea corectă a unei ședințe (încălzire, partea principală, cooldown)</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
-                  <span>Adaptarea exercițiilor în funcție de nivelul clientului</span>
-                </li>
-              </ul>
-            </div>
-
-            {/* Competency 3 */}
-            <div>
-              <h3 className="text-lg font-bold text-[#0A0A0A] mb-3">
-                Tehnica exercițiilor de fitness
-              </h3>
-              <ul className="space-y-2 text-[#444]">
-                <li className="flex items-start gap-2.5">
-                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
-                  <span>Exerciții cu greutăți libere, aparate și greutatea corpului</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
-                  <span>Biomecanica mișcării și lanțurile kinetice</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
-                  <span>Prevenirea accidentărilor prin execuție corectă și dozaj optim</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
-                  <span>Exerciții funcționale, multiplanare și full body</span>
-                </li>
-              </ul>
-            </div>
-
-            {/* Competency 4 */}
-            <div>
-              <h3 className="text-lg font-bold text-[#0A0A0A] mb-3">
-                Lucrul cu diferite tipologii de clienți
-              </h3>
-              <ul className="space-y-2 text-[#444]">
-                <li className="flex items-start gap-2.5">
-                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
-                  <span>Începători, intermediari și avansați</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
-                  <span>Persoane sedentare sau supraponderale</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
-                  <span>Clienți cu limitări articulare ușoare sau posturale</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
-                  <span>Clienți orientați spre performanță estetică sau sportivă</span>
-                </li>
-              </ul>
-            </div>
-
-            {/* Competency 5 */}
-            <div>
-              <h3 className="text-lg font-bold text-[#0A0A0A] mb-3">
-                Nutriție și lifestyle
-              </h3>
-              <ul className="space-y-2 text-[#444]">
-                <li className="flex items-start gap-2.5">
-                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
-                  <span>Principiile nutriției pentru fitness și controlul greutății</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
-                  <span>Recomandări generale de alimentație sănătoasă</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
-                  <span>Hidratarea, recuperarea și somnul</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
-                  <span>Colaborarea cu nutriționiști și alți specialiști</span>
-                </li>
-              </ul>
-            </div>
-
-            {/* Competency 6 */}
-            <div>
-              <h3 className="text-lg font-bold text-[#0A0A0A] mb-3">
-                Comunicare profesională
-              </h3>
-              <ul className="space-y-2 text-[#444]">
-                <li className="flex items-start gap-2.5">
-                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
-                  <span>Abilități de comunicare, motivație și coaching</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
-                  <span>Relația antrenor–client într-un mod etic și profesionist</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
-                  <span>Menținerea aderenței clientului la program</span>
-                </li>
-              </ul>
-            </div>
-
-            {/* Competency 7 */}
-            <div>
-              <h3 className="text-lg font-bold text-[#0A0A0A] mb-3">
-                Cadrul legal și etic
-              </h3>
-              <ul className="space-y-2 text-[#444]">
-                <li className="flex items-start gap-2.5">
-                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
-                  <span>Responsabilitățile legale ale Instructorului Fitness</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
-                  <span>Norme de siguranță, igienă și cod etic profesional</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
-                  <span>Când și cum să direcționezi clientul către alți specialiști</span>
-                </li>
-              </ul>
-            </div>
-
-            {/* Competency 8 */}
-            <div>
-              <h3 className="text-lg font-bold text-[#0A0A0A] mb-3">
-                Instrumente moderne și carieră
-              </h3>
-              <ul className="space-y-2 text-[#444]">
-                <li className="flex items-start gap-2.5">
-                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
-                  <span>Aplicații de tracking și planificare antrenamente</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
-                  <span>Monitorizarea progresului și ajustarea programelor</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
-                  <span>Construirea unui portofoliu de clienți și marketing personal</span>
-                </li>
-                <li className="flex items-start gap-2.5">
-                  <span className="text-[#B8001F] mt-1.5 text-xs">&#9679;</span>
-                  <span>Servicii 1:1, small group training sau online coaching</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Divider */}
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-8 lg:px-16">
-        <hr className="border-[#E5E5E5]" />
-      </div>
-
-      {/* Formatori */}
-      <section id="formatori" className="py-16 px-4 sm:px-8 lg:px-16 scroll-mt-16">
-        <div className="max-w-[1200px] mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-bold text-[#0A0A0A] mb-3 font-[family-name:var(--font-unbounded)]">
-            Formatorii Cursului
-          </h2>
-          <p className="text-lg text-[#666] mb-10 max-w-3xl">
-            Echipa noastră combină experiența academică cu cea practică, având certificări internaționale și mii de ore de predare.
-          </p>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-8">
-            {trainers.map((trainer) => (
-              <div key={trainer.id} className="flex items-start gap-4">
-                <div className="relative w-14 h-14 rounded-full overflow-hidden flex-shrink-0 bg-[#E5E5E5]">
-                  <Image
-                    src={trainer.image}
-                    alt={trainer.name}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <div>
-                  <h3 className="font-bold text-[#0A0A0A]">{trainer.name}</h3>
-                  <p className="text-sm text-[#666] mt-0.5 leading-relaxed">
-                    {trainer.description}
+                <h1 className="text-4xl font-bold text-white sm:text-5xl lg:text-6xl font-[family-name:var(--font-unbounded)]">
+                  {course.title}
+                </h1>
+                {course.motto ? (
+                  <p className="text-lg text-[#A0A0A0] sm:text-xl">
+                    {course.motto}
                   </p>
+                ) : null}
+                <div className="flex flex-wrap items-center gap-6 pt-4">
+                  <div>
+                    <p className="text-xs uppercase tracking-wider text-[#666666]">
+                      Preț
+                    </p>
+                    <p className="text-3xl font-bold text-white">
+                      {formatPrice(course.price_amount, course.currency)}
+                    </p>
+                    {course.full_payment_price ? (
+                      <p className="text-xs text-[#B8001F]">
+                        Plată integrală:{" "}
+                        {formatPrice(course.full_payment_price, course.currency)}
+                      </p>
+                    ) : null}
+                  </div>
+                  <a
+                    href="#inscriere"
+                    className="rounded-full bg-[#B8001F] px-7 py-3.5 font-semibold text-white transition-all hover:bg-[#490207] hover:shadow-lg hover:shadow-[#B8001F]/40"
+                  >
+                    Înscrie-te acum
+                  </a>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Announcement bar */}
+      {course.announcement_bar_text ? (
+        <section className="px-4 sm:px-8 lg:px-16 mt-6">
+          <div className="max-w-[1200px] mx-auto rounded-2xl border border-[#B8001F]/30 bg-[#B8001F]/10 px-6 py-4 text-sm font-semibold text-[#B8001F]">
+            {course.announcement_bar_text}
+          </div>
+        </section>
+      ) : null}
+
+      {/* Info bar */}
+      <section className="px-4 sm:px-8 lg:px-16 mt-8">
+        <div className="max-w-[1200px] mx-auto grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <InfoCard
+            icon={<CalendarDays size={18} />}
+            label="Data lansării"
+            value={course.launch_date ? formatDate(course.launch_date) : "TBA"}
+          />
+          <InfoCard
+            icon={<Clock size={18} />}
+            label="Durată"
+            value={`${course.duration_hours} ore`}
+          />
+          <InfoCard
+            icon={<Globe size={18} />}
+            label="Limbă"
+            value={course.language}
+          />
+          <InfoCard
+            icon={<GraduationCap size={18} />}
+            label="Vârstă minimă"
+            value={`${course.min_age} ani`}
+          />
+        </div>
+      </section>
+
+      {/* Description */}
+      {descriptionParagraphs.length > 0 ? (
+        <Section id="despre" title="Despre curs">
+          <div className="space-y-4 text-base leading-relaxed text-[#444]">
+            {descriptionParagraphs.map((p, i) => (
+              <p key={i}>{p}</p>
+            ))}
+          </div>
+        </Section>
+      ) : null}
+
+      {/* Curriculum */}
+      {course.curriculum.length > 0 ? (
+        <Section id="programa" title="Programa">
+          <div className="space-y-6">
+            {course.curriculum.map((sec) => (
+              <div
+                key={sec.id}
+                className="rounded-2xl border border-[#E5E5E5] bg-white p-6 sm:p-8"
+              >
+                <h3 className="text-xl font-semibold text-[#0A0A0A]">
+                  {sec.title}
+                </h3>
+                {sec.subtitle ? (
+                  <p className="mt-1 text-sm text-[#666666]">{sec.subtitle}</p>
+                ) : null}
+                {sec.items.length > 0 ? (
+                  <ul className="mt-4 space-y-2.5">
+                    {sec.items.map((it) => (
+                      <li
+                        key={it.id}
+                        className="flex items-start gap-3 text-[#444]"
+                      >
+                        <span className="mt-2 size-1.5 shrink-0 rounded-full bg-[#B8001F]" />
+                        <span className="text-sm leading-relaxed">
+                          {it.content}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : null}
               </div>
             ))}
           </div>
-        </div>
-      </section>
+        </Section>
+      ) : null}
 
-      {/* Divider */}
-      <div className="max-w-[1200px] mx-auto px-4 sm:px-8 lg:px-16">
-        <hr className="border-[#E5E5E5]" />
-      </div>
-
-      {/* Înscriere și Certificare */}
-      <section id="inscriere" className="py-16 px-4 sm:px-8 lg:px-16 scroll-mt-16">
-        <div className="max-w-[1200px] mx-auto">
-          <h2 className="text-3xl sm:text-4xl font-bold text-[#0A0A0A] mb-10 font-[family-name:var(--font-unbounded)]">
-            Înscriere și Certificare
-          </h2>
-
-          <div className="grid lg:grid-cols-2 gap-16">
-            {/* Acte necesare */}
-            <div>
-              <h3 className="text-xl font-bold text-[#0A0A0A] mb-5 font-[family-name:var(--font-unbounded)]">
-                Acte necesare
-              </h3>
-              <ol className="space-y-3 text-[#444]">
-                <li className="flex items-start gap-3">
-                  <span className="text-[#B8001F] font-bold text-sm mt-0.5 w-5 flex-shrink-0">1.</span>
-                  <span>Copie certificat de naștere</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-[#B8001F] font-bold text-sm mt-0.5 w-5 flex-shrink-0">2.</span>
-                  <span>Copie după ultima formă de învățământ absolvită (minim studii liceale)</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-[#B8001F] font-bold text-sm mt-0.5 w-5 flex-shrink-0">3.</span>
-                  <span>Copie carte de identitate</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-[#B8001F] font-bold text-sm mt-0.5 w-5 flex-shrink-0">4.</span>
-                  <span>Copie certificat de căsătorie (dacă este cazul)</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-[#B8001F] font-bold text-sm mt-0.5 w-5 flex-shrink-0">5.</span>
-                  <span><strong className="text-[#0A0A0A]">Adeverință medicală în original</strong> — care să ateste faptul că participantul este apt pentru activități sportive</span>
-                </li>
-              </ol>
-            </div>
-
-            {/* Examen final */}
-            <div>
-              <h3 className="text-xl font-bold text-[#0A0A0A] mb-5 font-[family-name:var(--font-unbounded)]">
-                Examen final și certificare
-              </h3>
-              <div className="space-y-5 text-[#444] leading-relaxed">
-                <div>
-                  <p className="font-semibold text-[#0A0A0A] mb-1">Format examen</p>
-                  <p>{course.exam.format}</p>
-                </div>
-                <div>
-                  <p className="font-semibold text-[#0A0A0A] mb-1">Certificare</p>
-                  <p>{course.exam.certification}</p>
-                </div>
-                <p className="text-[#0A0A0A] font-medium bg-[#B8001F]/5 border-l-3 border-[#B8001F] pl-4 py-3 rounded-r">
-                  Certificarea este recunoscută internațional și îți permite să activezi ca profesionist în România și în Uniunea Europeană.
+      {/* Sessions */}
+      {course.sessions.length > 0 ? (
+        <Section id="sesiuni" title="Sesiuni programate">
+          <div className="grid gap-4 sm:grid-cols-2">
+            {course.sessions.map((s) => (
+              <div
+                key={s.id}
+                className="rounded-2xl border border-[#E5E5E5] bg-white p-6"
+              >
+                <p className="text-lg font-semibold text-[#0A0A0A]">
+                  {formatDateRange(s.start_date, s.end_date)}
                 </p>
+                {s.location ? (
+                  <p className="mt-2 flex items-center gap-2 text-sm text-[#666666]">
+                    <MapPin size={16} />
+                    {s.location.map_url ? (
+                      <a
+                        href={s.location.map_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-[#B8001F]"
+                      >
+                        {s.location.name}
+                      </a>
+                    ) : (
+                      <span>{s.location.name}</span>
+                    )}
+                  </p>
+                ) : null}
+                {s.note ? (
+                  <p className="mt-3 text-sm text-[#444]">{s.note}</p>
+                ) : null}
               </div>
-            </div>
+            ))}
           </div>
-        </div>
-      </section>
+        </Section>
+      ) : null}
 
-      {/* Enrollment Form */}
-      <section id="enrollment" className="py-20 px-4 sm:px-8 lg:px-16">
-        <div className="max-w-[1200px] mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="grid lg:grid-cols-2 rounded-3xl overflow-hidden shadow-lg"
-          >
-            <div className="bg-[#0A0A0A] p-8 sm:p-12 flex flex-col justify-center">
-              <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4 font-[family-name:var(--font-unbounded)]">
-                Solicită Înscriere
-              </h2>
-              <p className="text-[#A0A0A0] text-lg mb-6">
-                Completează formularul și te vom contacta în cel mai scurt timp
-                cu toate detaliile necesare pentru înscrierea ta.
-              </p>
-
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <CheckCircle2 size={20} className="text-[#B8001F]" />
-                  <span className="text-white">Răspuns în 24 de ore</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <CheckCircle2 size={20} className="text-[#B8001F]" />
-                  <span className="text-white">Consultanță gratuită</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <CheckCircle2 size={20} className="text-[#B8001F]" />
-                  <span className="text-white">
-                    Informații despre opțiuni de plată
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white p-8 sm:p-12">
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                  <label
-                    htmlFor="name"
-                    className="block text-sm font-semibold text-[#0A0A0A] mb-2"
-                  >
-                    Nume Complet *
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    required
-                    value={formData.name}
-                    onChange={(e) =>
-                      setFormData({ ...formData, name: e.target.value })
-                    }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B8001F] focus:border-transparent transition-all"
-                    placeholder="Ion Popescu"
+      {/* Trainers */}
+      {course.trainers.length > 0 ? (
+        <Section id="formatori" title="Formatori">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {featuredTrainers.concat(otherTrainers).map((t) => (
+              <article
+                key={t.id}
+                className="overflow-hidden rounded-2xl bg-[#0A0A0A]"
+              >
+                <div className="relative h-72">
+                  <div
+                    className="absolute inset-0 bg-cover bg-center"
+                    style={{ backgroundImage: `url(${t.photo})` }}
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/40 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
+                    {t.is_featured ? (
+                      <span className="mb-2 inline-block rounded-full bg-[#B8001F] px-2 py-0.5 text-[10px] uppercase tracking-wider">
+                        Formator principal
+                      </span>
+                    ) : null}
+                    <h3 className="text-lg font-bold">{t.name}</h3>
+                    {t.credentials ? (
+                      <p className="mt-0.5 text-[10px] uppercase tracking-wider text-[#B8001F]">
+                        {t.credentials}
+                      </p>
+                    ) : null}
+                  </div>
                 </div>
-
-                <div>
-                  <label
-                    htmlFor="email"
-                    className="block text-sm font-semibold text-[#0A0A0A] mb-2"
-                  >
-                    Email *
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    required
-                    value={formData.email}
-                    onChange={(e) =>
-                      setFormData({ ...formData, email: e.target.value })
-                    }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B8001F] focus:border-transparent transition-all"
-                    placeholder="ion@exemplu.ro"
-                  />
+                <div className="space-y-3 p-5 text-sm text-[#A0A0A0]">
+                  {t.bio ? <p className="leading-relaxed">{t.bio}</p> : null}
+                  {t.instagram_url ? (
+                    <a
+                      href={t.instagram_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 text-xs text-white hover:text-[#B8001F]"
+                    >
+                      <Instagram size={14} />
+                      Instagram
+                    </a>
+                  ) : null}
                 </div>
+              </article>
+            ))}
+          </div>
+        </Section>
+      ) : null}
 
-                <div>
-                  <label
-                    htmlFor="phone"
-                    className="block text-sm font-semibold text-[#0A0A0A] mb-2"
-                  >
-                    Telefon *
-                  </label>
-                  <input
-                    type="tel"
-                    id="phone"
-                    required
-                    value={formData.phone}
-                    onChange={(e) =>
-                      setFormData({ ...formData, phone: e.target.value })
-                    }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#B8001F] focus:border-transparent transition-all"
-                    placeholder="0712 345 678"
-                  />
-                </div>
+      {/* Audiences */}
+      {course.audiences.length > 0 ? (
+        <Section
+          id="audienta"
+          title={`Pentru cine este acest ${course.type === "workshop" ? "workshop" : "curs"}?`}
+          icon={<Target size={20} />}
+        >
+          <div className="flex flex-wrap gap-3">
+            {course.audiences.map((a) => (
+              <span
+                key={a.id}
+                className="rounded-full border border-[#B8001F]/30 bg-[#B8001F]/10 px-4 py-2 text-sm font-medium text-[#B8001F]"
+              >
+                {a.label}
+              </span>
+            ))}
+          </div>
+        </Section>
+      ) : null}
 
-                <motion.button
-                  type="submit"
-                  disabled={isSubmitting || submitSuccess}
-                  whileHover={{ scale: submitSuccess ? 1 : 1.02 }}
-                  whileTap={{ scale: submitSuccess ? 1 : 0.98 }}
-                  className={`w-full py-4 rounded-full font-semibold text-lg transition-all duration-300 ${
-                    submitSuccess
-                      ? "bg-green-500 text-white"
-                      : "bg-[#B8001F] text-white hover:bg-[#490207] hover:shadow-lg hover:shadow-[#B8001F]/50"
-                  }`}
+      {/* Requirements */}
+      {Object.values(course.requirements_by_category).some(
+        (arr) => arr.length > 0,
+      ) ? (
+        <Section id="cerinte" title="Cerințe">
+          <div className="grid gap-6 sm:grid-cols-2">
+            {(
+              Object.entries(course.requirements_by_category) as [
+                Enums<"requirement_category">,
+                Array<{ id: string; label: string }>,
+              ][]
+            )
+              .filter(([, arr]) => arr.length > 0)
+              .map(([cat, arr]) => (
+                <div
+                  key={cat}
+                  className="rounded-2xl border border-[#E5E5E5] bg-white p-6"
                 >
-                  {isSubmitting
-                    ? "Se trimite..."
-                    : submitSuccess
-                      ? "Trimis cu succes!"
-                      : "Trimite Cererea"}
-                </motion.button>
+                  <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-[#B8001F]">
+                    {CATEGORY_LABEL[cat]}
+                  </h3>
+                  <ul className="space-y-2">
+                    {arr.map((r) => (
+                      <li
+                        key={r.id}
+                        className="flex items-start gap-2 text-sm text-[#444]"
+                      >
+                        <CheckCircle2
+                          size={16}
+                          className="mt-0.5 shrink-0 text-[#B8001F]"
+                        />
+                        <span>{r.label}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+          </div>
+        </Section>
+      ) : null}
 
-                <p className="text-sm text-[#666666] text-center">
-                  Prin trimiterea formularului ești de acord cu{" "}
-                  <a href="#" className="text-[#B8001F] hover:underline">
-                    politica de confidențialitate
-                  </a>
-                  .
-                </p>
-              </form>
-            </div>
-          </motion.div>
+      {/* Certifications */}
+      {course.certifications.length > 0 ? (
+        <Section
+          id="certificari"
+          title="Certificări"
+          icon={<Award size={20} />}
+        >
+          <div className="space-y-4">
+            {course.certifications.map((c) => (
+              <div
+                key={c.id}
+                className="rounded-2xl border border-[#E5E5E5] bg-white p-6"
+              >
+                <h3 className="font-semibold text-[#0A0A0A]">{c.name}</h3>
+                {c.issuer ? (
+                  <p className="mt-0.5 text-xs uppercase tracking-wider text-[#B8001F]">
+                    {c.issuer}
+                  </p>
+                ) : null}
+                {c.description ? (
+                  <p className="mt-3 text-sm leading-relaxed text-[#444]">
+                    {c.description}
+                  </p>
+                ) : null}
+              </div>
+            ))}
+          </div>
+        </Section>
+      ) : null}
+
+      {/* Enrollment */}
+      <Section
+        id="inscriere"
+        title="Formular de înscriere"
+        icon={<Users size={20} />}
+      >
+        <div className="grid gap-6 lg:grid-cols-[2fr_1fr]">
+          <EnrollmentForm
+            courseId={course.id}
+            sessions={course.sessions.map((s) => ({
+              id: s.id,
+              start_date: s.start_date,
+              end_date: s.end_date,
+            }))}
+            klarnaEnabled={course.klarna_enabled}
+          />
+          <aside className="space-y-3 rounded-2xl border border-[#E5E5E5] bg-white p-6 text-sm text-[#444]">
+            <p className="text-xs uppercase tracking-wider text-[#B8001F] font-semibold">
+              Ce urmează
+            </p>
+            <p>
+              Trimiți formularul → te contactăm în maxim 24 ore → confirmăm
+              locul și detaliile de plată.
+            </p>
+            {course.klarna_enabled ? (
+              <p className="text-xs text-[#666666]">
+                Posibilitatea de a achita în rate prin Klarna.
+              </p>
+            ) : null}
+          </aside>
         </div>
-      </section>
-
-      {/* Sticky CTA Button */}
-      {showStickyButton && (
-        course.id === 1 ? (
-          <motion.a
-            initial={{ y: 100, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 100, opacity: 0 }}
-            href="https://checkout.sense4fitsummit.com/pages/index_beta?spid=prod_UBjZWMpQiKFT1k"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="fixed bottom-8 right-8 bg-[#B8001F] text-white px-8 py-4 rounded-full font-semibold shadow-2xl hover:bg-[#490207] transition-all duration-300 hover:scale-105 z-40 flex items-center gap-2"
-          >
-            <span>Cumpără Acum</span>
-            <ChevronRight size={20} />
-          </motion.a>
-        ) : (
-          <motion.button
-            initial={{ y: 100, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 100, opacity: 0 }}
-            onClick={scrollToEnrollment}
-            className="fixed bottom-8 right-8 bg-[#B8001F] text-white px-8 py-4 rounded-full font-semibold shadow-2xl hover:bg-[#490207] transition-all duration-300 hover:scale-105 z-40 flex items-center gap-2"
-          >
-            <span>Înscrie-te Acum</span>
-            <ChevronRight size={20} />
-          </motion.button>
-        )
-      )}
+      </Section>
 
       <Footer />
       <WhatsAppButton />
+    </div>
+  );
+}
+
+function Section({
+  id,
+  title,
+  icon,
+  children,
+}: {
+  id: string;
+  title: string;
+  icon?: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <section id={id} className="px-4 sm:px-8 lg:px-16 mt-12">
+      <div className="max-w-[1200px] mx-auto">
+        <div className="mb-6 flex items-center gap-2">
+          {icon ? <span className="text-[#B8001F]">{icon}</span> : null}
+          <h2 className="text-2xl font-bold text-[#0A0A0A] sm:text-3xl font-[family-name:var(--font-unbounded)]">
+            {title}
+          </h2>
+        </div>
+        {children}
+      </div>
+    </section>
+  );
+}
+
+function InfoCard({
+  icon,
+  label,
+  value,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="rounded-2xl border border-[#E5E5E5] bg-white p-4">
+      <div className="flex items-center gap-2 text-xs uppercase tracking-wider text-[#666666]">
+        <span className="text-[#B8001F]">{icon}</span>
+        {label}
+      </div>
+      <p className="mt-1 text-sm font-semibold text-[#0A0A0A]">{value}</p>
     </div>
   );
 }
