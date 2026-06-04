@@ -12,238 +12,540 @@ export type Database = {
   }
   public: {
     Tables: {
-      enrollments: {
+      audiences: {
         Row: {
-          amount_paid: number | null
-          created_at: string | null
           id: string
-          notes: string | null
-          product_id: string | null
-          status: string | null
-          updated_at: string | null
-          user_id: string | null
+          label: string
         }
         Insert: {
-          amount_paid?: number | null
-          created_at?: string | null
           id?: string
-          notes?: string | null
-          product_id?: string | null
-          status?: string | null
-          updated_at?: string | null
-          user_id?: string | null
+          label: string
         }
         Update: {
-          amount_paid?: number | null
-          created_at?: string | null
           id?: string
-          notes?: string | null
-          product_id?: string | null
-          status?: string | null
-          updated_at?: string | null
-          user_id?: string | null
+          label?: string
+        }
+        Relationships: []
+      }
+      certifications: {
+        Row: {
+          description: string | null
+          id: string
+          issuer: string | null
+          name: string
+        }
+        Insert: {
+          description?: string | null
+          id?: string
+          issuer?: string | null
+          name: string
+        }
+        Update: {
+          description?: string | null
+          id?: string
+          issuer?: string | null
+          name?: string
+        }
+        Relationships: []
+      }
+      course_audiences: {
+        Row: {
+          audience_id: string
+          course_id: string
+        }
+        Insert: {
+          audience_id: string
+          course_id: string
+        }
+        Update: {
+          audience_id?: string
+          course_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "enrollments_product_id_fkey"
-            columns: ["product_id"]
+            foreignKeyName: "course_audiences_audience_id_fkey"
+            columns: ["audience_id"]
             isOneToOne: false
-            referencedRelation: "products"
+            referencedRelation: "audiences"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "course_audiences_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          }
         ]
       }
-      product_trainers: {
+      course_certifications: {
         Row: {
-          product_id: string
-          sort_order: number | null
+          certification_id: string
+          course_id: string
+        }
+        Insert: {
+          certification_id: string
+          course_id: string
+        }
+        Update: {
+          certification_id?: string
+          course_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_certifications_certification_id_fkey"
+            columns: ["certification_id"]
+            isOneToOne: false
+            referencedRelation: "certifications"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_certifications_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      course_requirements: {
+        Row: {
+          course_id: string
+          requirement_id: string
+        }
+        Insert: {
+          course_id: string
+          requirement_id: string
+        }
+        Update: {
+          course_id?: string
+          requirement_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_requirements_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_requirements_requirement_id_fkey"
+            columns: ["requirement_id"]
+            isOneToOne: false
+            referencedRelation: "requirements"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      course_sessions: {
+        Row: {
+          course_id: string
+          created_at: string
+          end_date: string | null
+          id: string
+          location_id: string | null
+          note: string | null
+          sort_order: number
+          start_date: string | null
+        }
+        Insert: {
+          course_id: string
+          created_at?: string
+          end_date?: string | null
+          id?: string
+          location_id?: string | null
+          note?: string | null
+          sort_order?: number
+          start_date?: string | null
+        }
+        Update: {
+          course_id?: string
+          created_at?: string
+          end_date?: string | null
+          id?: string
+          location_id?: string | null
+          note?: string | null
+          sort_order?: number
+          start_date?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_sessions_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_sessions_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      course_trainers: {
+        Row: {
+          course_id: string
+          is_featured: boolean
+          role: Database["public"]["Enums"]["trainer_role"]
+          sort_order: number
           trainer_id: string
         }
         Insert: {
-          product_id: string
-          sort_order?: number | null
+          course_id: string
+          is_featured?: boolean
+          role?: Database["public"]["Enums"]["trainer_role"]
+          sort_order?: number
           trainer_id: string
         }
         Update: {
-          product_id?: string
-          sort_order?: number | null
+          course_id?: string
+          is_featured?: boolean
+          role?: Database["public"]["Enums"]["trainer_role"]
+          sort_order?: number
           trainer_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "product_trainers_product_id_fkey"
-            columns: ["product_id"]
+            foreignKeyName: "course_trainers_course_id_fkey"
+            columns: ["course_id"]
             isOneToOne: false
-            referencedRelation: "products"
+            referencedRelation: "courses"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "product_trainers_trainer_id_fkey"
+            foreignKeyName: "course_trainers_trainer_id_fkey"
             columns: ["trainer_id"]
             isOneToOne: false
             referencedRelation: "trainers"
             referencedColumns: ["id"]
-          },
+          }
         ]
       }
-      products: {
+      courses: {
         Row: {
-          category: string | null
-          certifications: Json | null
-          competencies: Json | null
-          created_at: string | null
-          curriculum: Json | null
+          announcement_bar_text: string | null
+          cover_image_alt: string | null
+          cover_image_path: string | null
+          created_at: string
+          currency: Database["public"]["Enums"]["currency_code"]
           description: string | null
-          duration: string | null
-          exam_info: Json | null
-          external_checkout_url: string | null
-          faq: Json | null
-          fees_structure: Json | null
-          full_description: string | null
-          highlights: Json | null
+          duration_hours: number
+          full_payment_price: number | null
+          hero_image_path: string | null
+          hero_sort_order: number | null
           id: string
-          image_url: string | null
-          included: Json | null
-          language: string | null
-          level: string | null
-          location: string | null
-          min_education: string | null
-          price: number
-          promo_end: string | null
-          promo_price: number | null
-          promo_start: string | null
-          requirements_docs: Json | null
-          schedule: string | null
+          klarna_enabled: boolean
+          language: string
+          launch_date: string | null
+          min_age: number
+          motto: string | null
+          price_amount: number
+          requires_bacalaureat: boolean
+          show_in_hero: boolean
           slug: string
-          sort_order: number | null
-          spots_total: number | null
-          start_date: string | null
-          status: string
-          tags: Json | null
-          testimonials: Json | null
+          status: Database["public"]["Enums"]["course_status"]
           title: string
-          type: string
-          updated_at: string | null
+          type: Database["public"]["Enums"]["course_type"]
+          updated_at: string
         }
         Insert: {
-          category?: string | null
-          certifications?: Json | null
-          competencies?: Json | null
-          created_at?: string | null
-          curriculum?: Json | null
+          announcement_bar_text?: string | null
+          cover_image_alt?: string | null
+          cover_image_path?: string | null
+          created_at?: string
+          currency: Database["public"]["Enums"]["currency_code"]
           description?: string | null
-          duration?: string | null
-          exam_info?: Json | null
-          external_checkout_url?: string | null
-          faq?: Json | null
-          fees_structure?: Json | null
-          full_description?: string | null
-          highlights?: Json | null
+          duration_hours: number
+          full_payment_price?: number | null
+          hero_image_path?: string | null
+          hero_sort_order?: number | null
           id?: string
-          image_url?: string | null
-          included?: Json | null
-          language?: string | null
-          level?: string | null
-          location?: string | null
-          min_education?: string | null
-          price: number
-          promo_end?: string | null
-          promo_price?: number | null
-          promo_start?: string | null
-          requirements_docs?: Json | null
-          schedule?: string | null
+          klarna_enabled?: boolean
+          language?: string
+          launch_date?: string | null
+          min_age?: number
+          motto?: string | null
+          price_amount: number
+          requires_bacalaureat?: boolean
+          show_in_hero?: boolean
           slug: string
-          sort_order?: number | null
-          spots_total?: number | null
-          start_date?: string | null
-          status?: string
-          tags?: Json | null
-          testimonials?: Json | null
+          status?: Database["public"]["Enums"]["course_status"]
           title: string
-          type: string
-          updated_at?: string | null
+          type: Database["public"]["Enums"]["course_type"]
+          updated_at?: string
         }
         Update: {
-          category?: string | null
-          certifications?: Json | null
-          competencies?: Json | null
-          created_at?: string | null
-          curriculum?: Json | null
+          announcement_bar_text?: string | null
+          cover_image_alt?: string | null
+          cover_image_path?: string | null
+          created_at?: string
+          currency?: Database["public"]["Enums"]["currency_code"]
           description?: string | null
-          duration?: string | null
-          exam_info?: Json | null
-          external_checkout_url?: string | null
-          faq?: Json | null
-          fees_structure?: Json | null
-          full_description?: string | null
-          highlights?: Json | null
+          duration_hours?: number
+          full_payment_price?: number | null
+          hero_image_path?: string | null
+          hero_sort_order?: number | null
           id?: string
-          image_url?: string | null
-          included?: Json | null
-          language?: string | null
-          level?: string | null
-          location?: string | null
-          min_education?: string | null
-          price?: number
-          promo_end?: string | null
-          promo_price?: number | null
-          promo_start?: string | null
-          requirements_docs?: Json | null
-          schedule?: string | null
+          klarna_enabled?: boolean
+          language?: string
+          launch_date?: string | null
+          min_age?: number
+          motto?: string | null
+          price_amount?: number
+          requires_bacalaureat?: boolean
+          show_in_hero?: boolean
           slug?: string
-          sort_order?: number | null
-          spots_total?: number | null
-          start_date?: string | null
-          status?: string
-          tags?: Json | null
-          testimonials?: Json | null
+          status?: Database["public"]["Enums"]["course_status"]
           title?: string
-          type?: string
-          updated_at?: string | null
+          type?: Database["public"]["Enums"]["course_type"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      curriculum_items: {
+        Row: {
+          content: string
+          id: string
+          section_id: string
+          sort_order: number
+        }
+        Insert: {
+          content: string
+          id?: string
+          section_id: string
+          sort_order?: number
+        }
+        Update: {
+          content?: string
+          id?: string
+          section_id?: string
+          sort_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "curriculum_items_section_id_fkey"
+            columns: ["section_id"]
+            isOneToOne: false
+            referencedRelation: "curriculum_sections"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      curriculum_sections: {
+        Row: {
+          course_id: string
+          id: string
+          sort_order: number
+          subtitle: string | null
+          title: string
+        }
+        Insert: {
+          course_id: string
+          id?: string
+          sort_order?: number
+          subtitle?: string | null
+          title: string
+        }
+        Update: {
+          course_id?: string
+          id?: string
+          sort_order?: number
+          subtitle?: string | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "curriculum_sections_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      enrollments: {
+        Row: {
+          course_id: string
+          created_at: string
+          created_by_admin: boolean
+          email: string
+          full_name: string
+          gdpr_accepted_at: string
+          id: string
+          internal_notes: string | null
+          invoice_number: string | null
+          message: string | null
+          paid_amount: number | null
+          paid_at: string | null
+          paid_currency: Database["public"]["Enums"]["currency_code"] | null
+          payment_method: Database["public"]["Enums"]["payment_method"] | null
+          payment_plan: Database["public"]["Enums"]["payment_plan"] | null
+          phone: string
+          session_id: string | null
+          status: Database["public"]["Enums"]["enrollment_status"]
+          updated_at: string
+        }
+        Insert: {
+          course_id: string
+          created_at?: string
+          created_by_admin?: boolean
+          email: string
+          full_name: string
+          gdpr_accepted_at: string
+          id?: string
+          internal_notes?: string | null
+          invoice_number?: string | null
+          message?: string | null
+          paid_amount?: number | null
+          paid_at?: string | null
+          paid_currency?: Database["public"]["Enums"]["currency_code"] | null
+          payment_method?: Database["public"]["Enums"]["payment_method"] | null
+          payment_plan?: Database["public"]["Enums"]["payment_plan"] | null
+          phone: string
+          session_id?: string | null
+          status?: Database["public"]["Enums"]["enrollment_status"]
+          updated_at?: string
+        }
+        Update: {
+          course_id?: string
+          created_at?: string
+          created_by_admin?: boolean
+          email?: string
+          full_name?: string
+          gdpr_accepted_at?: string
+          id?: string
+          internal_notes?: string | null
+          invoice_number?: string | null
+          message?: string | null
+          paid_amount?: number | null
+          paid_at?: string | null
+          paid_currency?: Database["public"]["Enums"]["currency_code"] | null
+          payment_method?: Database["public"]["Enums"]["payment_method"] | null
+          payment_plan?: Database["public"]["Enums"]["payment_plan"] | null
+          phone?: string
+          session_id?: string | null
+          status?: Database["public"]["Enums"]["enrollment_status"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "enrollments_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "enrollments_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "course_sessions"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      locations: {
+        Row: {
+          address: string | null
+          created_at: string
+          id: string
+          map_url: string | null
+          name: string
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          id?: string
+          map_url?: string | null
+          name: string
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          id?: string
+          map_url?: string | null
+          name?: string
+        }
+        Relationships: []
+      }
+      requirements: {
+        Row: {
+          category: Database["public"]["Enums"]["requirement_category"]
+          id: string
+          label: string
+          sort_order: number
+        }
+        Insert: {
+          category: Database["public"]["Enums"]["requirement_category"]
+          id?: string
+          label: string
+          sort_order?: number
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["requirement_category"]
+          id?: string
+          label?: string
+          sort_order?: number
         }
         Relationships: []
       }
       trainers: {
         Row: {
-          created_at: string | null
-          description: string | null
+          bio: string | null
+          created_at: string
+          credentials: string | null
           id: string
-          image_url: string | null
+          instagram_url: string | null
           name: string
-          sort_order: number | null
-          updated_at: string | null
+          photo_alt: string | null
+          photo_path: string | null
+          slug: string
+          updated_at: string
         }
         Insert: {
-          created_at?: string | null
-          description?: string | null
+          bio?: string | null
+          created_at?: string
+          credentials?: string | null
           id?: string
-          image_url?: string | null
+          instagram_url?: string | null
           name: string
-          sort_order?: number | null
-          updated_at?: string | null
+          photo_alt?: string | null
+          photo_path?: string | null
+          slug: string
+          updated_at?: string
         }
         Update: {
-          created_at?: string | null
-          description?: string | null
+          bio?: string | null
+          created_at?: string
+          credentials?: string | null
           id?: string
-          image_url?: string | null
+          instagram_url?: string | null
           name?: string
-          sort_order?: number | null
-          updated_at?: string | null
+          photo_alt?: string | null
+          photo_path?: string | null
+          slug?: string
+          updated_at?: string
         }
         Relationships: []
       }
       user_roles: {
         Row: {
-          role: string
+          created_at: string
+          role: Database["public"]["Enums"]["app_role"]
           user_id: string
         }
         Insert: {
-          role?: string
+          created_at?: string
+          role: Database["public"]["Enums"]["app_role"]
           user_id: string
         }
         Update: {
-          role?: string
+          created_at?: string
+          role?: Database["public"]["Enums"]["app_role"]
           user_id?: string
         }
         Relationships: []
@@ -256,7 +558,15 @@ export type Database = {
       is_admin: { Args: never; Returns: boolean }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin"
+      course_status: "draft" | "published" | "archived"
+      course_type: "curs_acreditat" | "workshop"
+      currency_code: "RON" | "EUR"
+      enrollment_status: "nou" | "contactat" | "confirmat" | "platit" | "anulat"
+      payment_method: "stripe" | "transfer" | "cash" | "other"
+      payment_plan: "integral" | "rate_klarna"
+      requirement_category: "inscriere" | "acte" | "participare" | "examen"
+      trainer_role: "principal" | "secundar"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -345,4 +655,21 @@ export type TablesUpdate<
       }
       ? U
       : never
+    : never
+
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never = never,
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
     : never

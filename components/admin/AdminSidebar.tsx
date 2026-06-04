@@ -5,7 +5,9 @@ import { usePathname } from "next/navigation";
 import {
   ClipboardList,
   LayoutDashboard,
+  Library,
   LogOut,
+  MapPin,
   Package,
   Users,
 } from "lucide-react";
@@ -31,11 +33,26 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
-const NAV_ITEMS = [
-  { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/admin/products", label: "Cursuri & Workshops", icon: Package },
-  { href: "/admin/trainers", label: "Traineri", icon: Users },
-  { href: "/admin/enrollments", label: "Înscrieri", icon: ClipboardList },
+const NAV_GROUPS = [
+  {
+    label: "General",
+    items: [{ href: "/admin", label: "Dashboard", icon: LayoutDashboard }],
+  },
+  {
+    label: "Conținut",
+    items: [
+      { href: "/admin/products", label: "Cursuri & Workshops", icon: Package },
+      { href: "/admin/trainers", label: "Traineri", icon: Users },
+      { href: "/admin/library", label: "Bibliotecă", icon: Library },
+      { href: "/admin/locations", label: "Locații", icon: MapPin },
+    ],
+  },
+  {
+    label: "Operare",
+    items: [
+      { href: "/admin/enrollments", label: "Înscrieri", icon: ClipboardList },
+    ],
+  },
 ] as const;
 
 function isActive(pathname: string, href: string) {
@@ -60,29 +77,31 @@ export function AdminSidebar({ email }: { email: string }) {
       </SidebarHeader>
 
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel>Management</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {NAV_ITEMS.map((item) => {
-                const active = isActive(pathname, item.href);
-                const Icon = item.icon;
-                return (
-                  <SidebarMenuItem key={item.href}>
-                    <SidebarMenuButton
-                      render={<Link href={item.href} />}
-                      isActive={active}
-                      tooltip={item.label}
-                    >
-                      <Icon className="size-4" />
-                      <span>{item.label}</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                );
-              })}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
+        {NAV_GROUPS.map((group) => (
+          <SidebarGroup key={group.label}>
+            <SidebarGroupLabel>{group.label}</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {group.items.map((item) => {
+                  const active = isActive(pathname, item.href);
+                  const Icon = item.icon;
+                  return (
+                    <SidebarMenuItem key={item.href}>
+                      <SidebarMenuButton
+                        render={<Link href={item.href} />}
+                        isActive={active}
+                        tooltip={item.label}
+                      >
+                        <Icon className="size-4" />
+                        <span>{item.label}</span>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                })}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        ))}
       </SidebarContent>
 
       <SidebarFooter className="border-t">
