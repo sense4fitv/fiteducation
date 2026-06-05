@@ -1,7 +1,7 @@
 import Navbar from "@/components/Navbar";
 import HeroSlider from "@/components/HeroSlider";
 import StatsBar from "@/components/StatsBar";
-import Configurator from "@/components/Configurator";
+import CoursesSection from "@/components/CoursesSection";
 import TrainersSection from "@/components/TrainersSection";
 import CTASection from "@/components/CTASection";
 import FAQSection from "@/components/FAQSection";
@@ -13,10 +13,6 @@ import {
   listHeroCourses,
   listPublishedCourses,
 } from "@/lib/supabase/queries/public";
-import {
-  splitByCategory,
-  toSpecializationVM,
-} from "@/lib/specialization-vm";
 
 export const dynamic = "force-dynamic";
 
@@ -27,18 +23,35 @@ export default async function Home() {
     listAllTrainers(),
   ]);
 
-  const vms = allCourses.map(toSpecializationVM);
-  const { foundations, specializations } = splitByCategory(vms);
+  const accredited = allCourses.filter((c) => c.type === "curs_acreditat");
+  const workshops = allCourses.filter((c) => c.type === "workshop");
 
   return (
     <div className="min-h-screen bg-[#FAFAFA]">
       <Navbar />
       <HeroSlider courses={heroCourses} />
       <StatsBar />
-      <Configurator
-        foundations={foundations}
-        specializations={specializations}
-      />
+
+      <div id="specializari">
+        <CoursesSection
+          id="cursuri-acreditate"
+          eyebrow="Programe acreditate"
+          title="Cursuri acreditate"
+          description="Programe complete de formare profesională acreditate ANC & Ministerul Muncii, cu certificare recunoscută internațional."
+          courses={accredited}
+          variant="large"
+        />
+
+        <CoursesSection
+          id="workshopuri"
+          eyebrow="Specializări"
+          title="Workshop-uri"
+          description="Experiențe educaționale intensive, susținute de traineri de renume internațional, pentru pasionați și profesioniști din fitness."
+          courses={workshops}
+          variant="compact"
+        />
+      </div>
+
       <TrainersSection trainers={trainers} />
       <CTASection />
       <FAQSection />
