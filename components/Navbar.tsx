@@ -8,10 +8,10 @@ export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const menuItems = [
-    { label: "Acasă", href: "#" },
-    { label: "Specializări", href: "#specializari" },
-    { label: "Traineri", href: "#traineri" },
-    { label: "Contact", href: "#contact" },
+    { label: "Acasă", href: "/" },
+    { label: "Specializări", href: "/#specializari" },
+    { label: "Traineri", href: "/#traineri" },
+    { label: "Contact", href: "/#contact" },
   ];
 
   return (
@@ -21,7 +21,7 @@ export default function Navbar() {
       <div className="max-w-[1600px] mx-auto">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <a href="#" className="flex items-center">
+          <a href="/" className="flex items-center">
             <img
               src="/LogoFiteducation.svg"
               alt="Fiteducation"
@@ -45,7 +45,7 @@ export default function Navbar() {
           {/* CTA Button */}
           <div className="hidden md:block">
             <a
-              href="#contact"
+              href="/#contact"
               className="inline-flex items-center justify-center px-6 py-3 bg-[#B8001F] text-white rounded-full font-semibold hover:bg-[#490207] transition-all duration-300 hover:scale-105"
             >
               Înscrie-te
@@ -85,7 +85,7 @@ export default function Navbar() {
                 </a>
               ))}
               <a
-                href="#contact"
+                href="/#contact"
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="block w-full px-6 py-3 bg-[#B8001F] text-white text-center rounded-full font-semibold hover:bg-[#490207] transition-colors"
               >
