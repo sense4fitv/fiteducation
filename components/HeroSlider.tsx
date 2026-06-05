@@ -64,7 +64,7 @@ export default function HeroSlider({
         >
           {courses.map((course, index) => (
             <SwiperSlide key={course.id}>
-              <div className="relative h-[585px] sm:h-[650px] lg:h-[715px]">
+              <div className="relative h-[480px] sm:h-[620px] lg:h-[715px]">
                 <div
                   className="absolute inset-0 bg-cover bg-center"
                   style={{ backgroundImage: `url(${course.hero_image})` }}
@@ -72,7 +72,7 @@ export default function HeroSlider({
                   <div className="absolute inset-0 bg-gradient-to-r from-[#0A0A0A]/90 via-[#0A0A0A]/70 to-transparent" />
                 </div>
 
-                <div className="relative h-full flex items-center px-8 sm:px-12 lg:px-20">
+                <div className="relative h-full flex items-center px-5 sm:px-12 lg:px-20">
                   <motion.div
                     initial={{ opacity: 0, x: -50 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -83,10 +83,10 @@ export default function HeroSlider({
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.4, duration: 0.5 }}
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-[#B8001F]/20 border border-[#B8001F]/40 rounded-full mb-6"
+                      className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 bg-[#B8001F]/20 border border-[#B8001F]/40 rounded-full mb-4 sm:mb-6"
                     >
-                      <Clock size={16} className="text-[#B8001F]" />
-                      <span className="text-white text-sm font-medium">
+                      <Clock size={14} className="text-[#B8001F] sm:size-4" />
+                      <span className="text-white text-xs sm:text-sm font-medium">
                         {durationLabel(course)}
                       </span>
                     </motion.div>
@@ -95,7 +95,7 @@ export default function HeroSlider({
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.5, duration: 0.5 }}
-                      className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-4 font-[family-name:var(--font-unbounded)]"
+                      className="text-3xl sm:text-5xl lg:text-6xl font-bold text-white mb-3 sm:mb-4 font-[family-name:var(--font-unbounded)] leading-tight"
                     >
                       {course.title}
                     </motion.h1>
@@ -104,7 +104,7 @@ export default function HeroSlider({
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.6, duration: 0.5 }}
-                      className="text-lg sm:text-xl text-[#A0A0A0] mb-8 leading-relaxed"
+                      className="text-sm sm:text-lg lg:text-xl text-[#A0A0A0] mb-6 sm:mb-8 leading-relaxed"
                     >
                       {course.motto ?? ""}
                     </motion.p>
@@ -114,7 +114,7 @@ export default function HeroSlider({
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.7, duration: 0.5 }}
                       href={`/curs/${course.slug}`}
-                      className="inline-flex items-center justify-center px-8 py-4 bg-[#B8001F] text-white rounded-full font-semibold text-lg hover:bg-[#490207] transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-[#B8001F]/50"
+                      className="inline-flex items-center justify-center px-6 py-3 sm:px-8 sm:py-4 bg-[#B8001F] text-white rounded-full font-semibold text-sm sm:text-lg hover:bg-[#490207] transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-[#B8001F]/50"
                     >
                       Descoperă cursul
                     </motion.a>
