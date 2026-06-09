@@ -323,6 +323,25 @@ export async function deleteSession(id: string, courseId: string) {
 
 // -------- Curriculum --------
 
+export async function updateSkillsDescription(
+  _prev: CourseActionState,
+  fd: FormData,
+): Promise<CourseActionState> {
+  const { supabase } = await assertAdmin();
+  const courseId = String(fd.get("course_id") ?? "");
+  if (!courseId) return { ok: false, error: "ID curs lipsă." };
+
+  const { error } = await supabase
+    .from("courses")
+    .update({ skills_description: cleanString(fd.get("skills_description")) })
+    .eq("id", courseId);
+  if (error) return { ok: false, error: error.message };
+
+  revalidatePath(`/admin/products/${courseId}/curriculum`);
+  bumpProductPaths(courseId);
+  return { ok: true };
+}
+
 export async function saveCurriculumSection(
   _prev: CourseActionState,
   fd: FormData,

@@ -4,6 +4,7 @@ import {
   CurriculumManager,
   type SectionWithItems,
 } from "@/components/admin/products/CurriculumManager";
+import { SkillsDescriptionForm } from "@/components/admin/products/SkillsDescriptionForm";
 import { SubrouteHeader } from "@/components/admin/products/SubrouteHeader";
 import { assertAdmin } from "@/lib/supabase/guards";
 
@@ -19,7 +20,11 @@ export default async function CourseCurriculumPage({
 
   const [{ data: course }, { data: sections }, { data: items }] =
     await Promise.all([
-      supabase.from("courses").select("id, title").eq("id", id).maybeSingle(),
+      supabase
+        .from("courses")
+        .select("id, title, skills_description")
+        .eq("id", id)
+        .maybeSingle(),
       supabase
         .from("curriculum_sections")
         .select("*")
@@ -61,6 +66,10 @@ export default async function CourseCurriculumPage({
         courseTitle={course.title}
         title="Programa"
         description="Secțiuni și bullet-uri. Folosește săgețile pentru a reordona."
+      />
+      <SkillsDescriptionForm
+        courseId={id}
+        initialValue={course.skills_description}
       />
       <CurriculumManager courseId={id} sections={withItems} />
     </div>

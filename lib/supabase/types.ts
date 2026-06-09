@@ -246,6 +246,7 @@ export type Database = {
           price_amount: number
           requires_bacalaureat: boolean
           show_in_hero: boolean
+          skills_description: string | null
           slug: string
           status: Database["public"]["Enums"]["course_status"]
           title: string
@@ -272,6 +273,7 @@ export type Database = {
           price_amount: number
           requires_bacalaureat?: boolean
           show_in_hero?: boolean
+          skills_description?: string | null
           slug: string
           status?: Database["public"]["Enums"]["course_status"]
           title: string
@@ -298,6 +300,7 @@ export type Database = {
           price_amount?: number
           requires_bacalaureat?: boolean
           show_in_hero?: boolean
+          skills_description?: string | null
           slug?: string
           status?: Database["public"]["Enums"]["course_status"]
           title?: string

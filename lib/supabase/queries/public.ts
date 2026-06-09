@@ -48,6 +48,7 @@ export type PublicTrainer = {
 
 export type PublicCourseDetail = PublicCourseSummary & {
   description: string | null;
+  skills_description: string | null;
   min_age: number;
   requires_bacalaureat: boolean;
   language: string;
@@ -335,6 +336,7 @@ export async function getCourseBySlug(
     hero_sort_order: course.hero_sort_order,
     first_session_start: firstSession?.start_date ?? null,
     description: course.description,
+    skills_description: course.skills_description,
     min_age: course.min_age,
     requires_bacalaureat: course.requires_bacalaureat,
     language: course.language,

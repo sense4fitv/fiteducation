@@ -196,6 +196,16 @@ export default async function CoursePage({
         {/* Programa */}
         {course.curriculum.length > 0 ? (
           <Section id="programa" title="Programa">
+            {course.skills_description ? (
+              <div className="mb-10 rounded-2xl border border-[#B8001F]/20 bg-gradient-to-br from-[#B8001F]/10 via-[#B8001F]/5 to-transparent p-6 sm:p-7">
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-[#B8001F]">
+                  Competențe și Abilități
+                </h3>
+                <p className="mt-2 text-[15px] leading-relaxed text-[#3A3A3A] whitespace-pre-line">
+                  {course.skills_description}
+                </p>
+              </div>
+            ) : null}
             <ol className="space-y-10">
               {course.curriculum.map((sec, i) => (
                 <li key={sec.id} className="grid gap-4 sm:grid-cols-[3rem_1fr]">
