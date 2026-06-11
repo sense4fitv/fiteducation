@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Unbounded, Geist, Inter } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import CookieConsent from "@/components/CookieConsent";
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
@@ -61,6 +62,7 @@ export default function RootLayout({
         className={`${unbounded.variable} ${inter.variable} antialiased`}
       >
         {children}
+        <CookieConsent />
       </body>
     </html>
   );

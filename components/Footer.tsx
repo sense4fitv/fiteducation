@@ -6,8 +6,9 @@ import { Instagram } from "lucide-react";
 export default function Footer() {
   const links = {
     legal: [
-      { label: "Termeni & Condiții", href: "#" },
-      { label: "Politica de confidențialitate", href: "#" },
+      { label: "Termeni & Condiții", href: "/termeni-si-conditii" },
+      { label: "Politica de confidențialitate", href: "/politica-de-confidentialitate" },
+      { label: "Politica de cookies", href: "/politica-de-cookies" },
     ],
     social: [
       { icon: Instagram, href: "https://www.instagram.com/fiteducationschool?igsh=MXBrOXgzNDJrY2E3bw==", label: "Instagram" },
