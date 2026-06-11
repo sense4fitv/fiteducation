@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   ClipboardList,
+  CreditCard,
   LayoutDashboard,
   Library,
   LogOut,
@@ -51,6 +52,7 @@ const NAV_GROUPS = [
     label: "Operare",
     items: [
       { href: "/admin/enrollments", label: "Înscrieri", icon: ClipboardList },
+      { href: "/admin/payments", label: "Plăți", icon: CreditCard },
     ],
   },
 ] as const;

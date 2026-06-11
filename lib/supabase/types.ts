@@ -7,6 +7,8 @@ export type Json =
   | Json[]
 
 export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "14.5"
   }
@@ -75,7 +77,7 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "courses"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       course_certifications: {
@@ -105,7 +107,7 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "courses"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       course_requirements: {
@@ -135,7 +137,7 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "requirements"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       course_sessions: {
@@ -183,7 +185,7 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "locations"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       course_trainers: {
@@ -222,7 +224,7 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "trainers"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       courses: {
@@ -335,7 +337,7 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "curriculum_sections"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       curriculum_sections: {
@@ -367,7 +369,7 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "courses"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       enrollments: {
@@ -448,7 +450,7 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "course_sessions"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
       locations: {
@@ -474,6 +476,94 @@ export type Database = {
           name?: string
         }
         Relationships: []
+      }
+      payments: {
+        Row: {
+          amount: number
+          completed_at: string | null
+          course_id: string
+          created_at: string
+          currency: string
+          customer_email: string | null
+          customer_name: string | null
+          customer_phone: string | null
+          enrollment_id: string | null
+          error_message: string | null
+          id: string
+          metadata: Json
+          payment_plan: Database["public"]["Enums"]["payment_plan"] | null
+          session_id: string | null
+          status: Database["public"]["Enums"]["payment_status"]
+          stripe_payment_intent_id: string | null
+          stripe_payment_method_type: string | null
+          stripe_session_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          completed_at?: string | null
+          course_id: string
+          created_at?: string
+          currency: string
+          customer_email?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          enrollment_id?: string | null
+          error_message?: string | null
+          id?: string
+          metadata?: Json
+          payment_plan?: Database["public"]["Enums"]["payment_plan"] | null
+          session_id?: string | null
+          status?: Database["public"]["Enums"]["payment_status"]
+          stripe_payment_intent_id?: string | null
+          stripe_payment_method_type?: string | null
+          stripe_session_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          completed_at?: string | null
+          course_id?: string
+          created_at?: string
+          currency?: string
+          customer_email?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          enrollment_id?: string | null
+          error_message?: string | null
+          id?: string
+          metadata?: Json
+          payment_plan?: Database["public"]["Enums"]["payment_plan"] | null
+          session_id?: string | null
+          status?: Database["public"]["Enums"]["payment_status"]
+          stripe_payment_intent_id?: string | null
+          stripe_payment_method_type?: string | null
+          stripe_session_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_enrollment_id_fkey"
+            columns: ["enrollment_id"]
+            isOneToOne: false
+            referencedRelation: "enrollments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "course_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       requirements: {
         Row: {
@@ -568,6 +658,12 @@ export type Database = {
       enrollment_status: "nou" | "contactat" | "confirmat" | "platit" | "anulat"
       payment_method: "stripe" | "transfer" | "cash" | "other"
       payment_plan: "integral" | "rate_klarna"
+      payment_status:
+        | "pending"
+        | "completed"
+        | "failed"
+        | "refunded"
+        | "expired"
       requirement_category: "inscriere" | "acte" | "participare" | "examen"
       trainer_role: "principal" | "secundar"
     }
@@ -676,3 +772,37 @@ export type Enums<
   : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
     ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
     : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never
+
+export const Constants = {
+  public: {
+    Enums: {
+      app_role: ["admin"],
+      course_status: ["draft", "published", "archived"],
+      course_type: ["curs_acreditat", "workshop"],
+      currency_code: ["RON", "EUR"],
+      enrollment_status: ["nou", "contactat", "confirmat", "platit", "anulat"],
+      payment_method: ["stripe", "transfer", "cash", "other"],
+      payment_plan: ["integral", "rate_klarna"],
+      payment_status: ["pending", "completed", "failed", "refunded", "expired"],
+      requirement_category: ["inscriere", "acte", "participare", "examen"],
+      trainer_role: ["principal", "secundar"],
+    },
+  },
+} as const

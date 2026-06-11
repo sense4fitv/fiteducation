@@ -1,8 +1,11 @@
 "use server";
 
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
 import { createAdminClient } from "@/lib/supabase/admin";
+import { klarnaSupportedFor, stripe } from "@/lib/stripe";
 import type { Enums } from "@/lib/supabase/types";
 
 export type EnrollSubmitState =
@@ -59,4 +62,95 @@ export async function submitEnrollment(
 
   revalidatePath("/admin/enrollments");
   return { ok: true };
+}
+
+async function getSiteOrigin(): Promise<string> {
+  if (process.env.NEXT_PUBLIC_SITE_URL) return process.env.NEXT_PUBLIC_SITE_URL;
+  const h = await headers();
+  const host = h.get("x-forwarded-host") ?? h.get("host");
+  const proto = h.get("x-forwarded-proto") ?? "https";
+  return `${proto}://${host}`;
+}
+
+export async function startStripeCheckout(fd: FormData): Promise<void> {
+  const courseId = String(fd.get("course_id") ?? "");
+  const slug = String(fd.get("slug") ?? "");
+  const klarnaOnly = fd.get("klarna_only") === "1";
+  if (!courseId || !slug) throw new Error("Curs invalid.");
+
+  const admin = createAdminClient();
+  const { data: course, error } = await admin
+    .from("courses")
+    .select(
+      "id, slug, title, price_amount, full_payment_price, currency, klarna_enabled, status",
+    )
+    .eq("id", courseId)
+    .maybeSingle();
+
+  if (error || !course) throw new Error("Cursul nu a fost găsit.");
+  if (course.status !== "published")
+    throw new Error("Cursul nu este disponibil pentru achiziție.");
+
+  // Prefer the full-payment price if defined (it's the "pay upfront" amount).
+  const amount = Number(course.full_payment_price ?? course.price_amount);
+  if (!Number.isFinite(amount) || amount <= 0)
+    throw new Error("Prețul cursului nu este valid.");
+
+  const currency = course.currency.toLowerCase();
+  const klarnaAvailable =
+    course.klarna_enabled && klarnaSupportedFor(currency);
+
+  if (klarnaOnly && !klarnaAvailable) {
+    throw new Error("Klarna nu este disponibilă pentru acest curs.");
+  }
+
+  const paymentMethodTypes: Array<"card" | "klarna"> = klarnaOnly
+    ? ["klarna"]
+    : klarnaAvailable
+      ? ["card", "klarna"]
+      : ["card"];
+
+  const origin = await getSiteOrigin();
+
+  const session = await stripe.checkout.sessions.create({
+    mode: "payment",
+    payment_method_types: paymentMethodTypes,
+    line_items: [
+      {
+        quantity: 1,
+        price_data: {
+          currency,
+          unit_amount: Math.round(amount * 100),
+          product_data: {
+            name: course.title,
+            metadata: { course_id: course.id, slug: course.slug },
+          },
+        },
+      },
+    ],
+    phone_number_collection: { enabled: true },
+    consent_collection: { terms_of_service: "required" },
+    custom_text: {
+      terms_of_service_acceptance: {
+        message:
+          "Sunt de acord cu [Termenii și Condițiile](/termeni-si-conditii) Fiteducation.",
+      },
+    },
+    metadata: { course_id: course.id, slug: course.slug },
+    success_url: `${origin}/curs/${course.slug}/success?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${origin}/curs/${course.slug}?canceled=1#inscriere`,
+  });
+
+  // Pre-record the payment row so the webhook can resolve it by session id.
+  await admin.from("payments").insert({
+    course_id: course.id,
+    stripe_session_id: session.id,
+    status: "pending",
+    amount,
+    currency: course.currency,
+    payment_plan: paymentMethodTypes.includes("klarna") ? null : "integral",
+  });
+
+  if (!session.url) throw new Error("Stripe nu a returnat un URL de plată.");
+  redirect(session.url);
 }

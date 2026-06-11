@@ -9,6 +9,7 @@ interface TrainerPanelProps {
   trainer: PublicTrainer;
   isActive: boolean;
   onActivate: () => void;
+  onOpen: () => void;
 }
 
 const contentVariants = {
@@ -24,6 +25,7 @@ export default function TrainerPanel({
   trainer,
   isActive,
   onActivate,
+  onOpen,
 }: TrainerPanelProps) {
   return (
     <motion.div
@@ -31,6 +33,7 @@ export default function TrainerPanel({
       animate={{ flex: isActive ? 3.5 : 1 }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
       onMouseEnter={onActivate}
+      onClick={onOpen}
       className="relative h-[500px] rounded-2xl overflow-hidden cursor-pointer"
     >
       <div
@@ -87,21 +90,11 @@ export default function TrainerPanel({
               {trainer.name}
             </motion.h3>
 
-            {trainer.credentials ? (
+            {trainer.bio ? (
               <motion.p
                 custom={2}
                 variants={contentVariants}
-                className="text-[#B8001F] text-xs font-semibold uppercase tracking-wider mt-1"
-              >
-                {trainer.credentials}
-              </motion.p>
-            ) : null}
-
-            {trainer.bio ? (
-              <motion.p
-                custom={3}
-                variants={contentVariants}
-                className="text-[#999] text-sm leading-relaxed mt-3 max-w-[320px]"
+                className="text-[#999] text-sm leading-relaxed mt-3 max-w-[320px] line-clamp-3"
               >
                 {trainer.bio}
               </motion.p>
@@ -109,7 +102,7 @@ export default function TrainerPanel({
 
             {trainer.instagram_url ? (
               <motion.div
-                custom={4}
+                custom={3}
                 variants={contentVariants}
                 className="flex gap-3 mt-4"
               >
@@ -117,6 +110,7 @@ export default function TrainerPanel({
                   href={trainer.instagram_url}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
                   className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-[#aaa] hover:text-white transition-colors"
                 >
                   <Instagram size={14} />

@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 
 import TrainerPanel from "./TrainerPanel";
 import TrainerMobileCard from "./TrainerMobileCard";
+import TrainerModal from "./TrainerModal";
 import type { PublicTrainer } from "@/lib/supabase/queries/public";
 
 export default function TrainersSection({
@@ -14,6 +15,7 @@ export default function TrainersSection({
 }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [activeDot, setActiveDot] = useState(0);
+  const [openTrainer, setOpenTrainer] = useState<PublicTrainer | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -71,6 +73,7 @@ export default function TrainersSection({
                 trainer={trainer}
                 isActive={activeIndex === index}
                 onActivate={() => setActiveIndex(index)}
+                onOpen={() => setOpenTrainer(trainer)}
               />
             ))}
           </div>
@@ -90,6 +93,7 @@ export default function TrainersSection({
                   key={trainer.id}
                   trainer={trainer}
                   index={index}
+                  onOpen={() => setOpenTrainer(trainer)}
                 />
               ))}
             </div>
@@ -109,6 +113,11 @@ export default function TrainersSection({
           </div>
         </motion.div>
       </div>
+
+      <TrainerModal
+        trainer={openTrainer}
+        onClose={() => setOpenTrainer(null)}
+      />
     </section>
   );
 }

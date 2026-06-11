@@ -8,11 +8,13 @@ import type { PublicTrainer } from "@/lib/supabase/queries/public";
 interface TrainerMobileCardProps {
   trainer: PublicTrainer;
   index: number;
+  onOpen: () => void;
 }
 
 export default function TrainerMobileCard({
   trainer,
   index,
+  onOpen,
 }: TrainerMobileCardProps) {
   return (
     <motion.div
@@ -20,7 +22,8 @@ export default function TrainerMobileCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="min-w-[260px] h-[340px] rounded-2xl overflow-hidden relative flex-shrink-0"
+      onClick={onOpen}
+      className="min-w-[260px] h-[340px] rounded-2xl overflow-hidden relative flex-shrink-0 cursor-pointer"
       style={{ scrollSnapAlign: "start" }}
     >
       <div
@@ -46,12 +49,6 @@ export default function TrainerMobileCard({
 
         <h3 className="text-lg font-extrabold text-white">{trainer.name}</h3>
 
-        {trainer.credentials ? (
-          <p className="text-[#B8001F] text-[10px] font-semibold uppercase tracking-wider mt-1">
-            {trainer.credentials}
-          </p>
-        ) : null}
-
         {trainer.bio ? (
           <p className="text-[#999] text-[10px] leading-relaxed mt-2 line-clamp-3">
             {trainer.bio}
@@ -64,6 +61,7 @@ export default function TrainerMobileCard({
               href={trainer.instagram_url}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
               className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-[#aaa]"
             >
               <Instagram size={12} />

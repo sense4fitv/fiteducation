@@ -2,12 +2,14 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
   ChevronRight,
+  CreditCard,
   Instagram,
   MapPin,
 } from "lucide-react";
 
 import CourseSectionNav from "@/components/CourseSectionNav";
 import EnrollmentForm from "@/components/EnrollmentForm";
+import { startStripeCheckout } from "./_actions";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import WhatsAppButton from "@/components/WhatsAppButton";
@@ -140,7 +142,7 @@ export default async function CoursePage({
 
               <dl className="grid grid-cols-2 gap-4 text-sm">
                 <Stat
-                  label="Data lansării"
+                  label="Start"
                   value={
                     course.launch_date ? formatDate(course.launch_date) : "TBA"
                   }
@@ -154,12 +156,44 @@ export default async function CoursePage({
               </dl>
             </div>
 
-            <a
-              href="#inscriere"
-              className="inline-flex items-center justify-center rounded-full bg-[#B8001F] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#490207]"
-            >
-              Înscrie-te acum
-            </a>
+            <div className="flex flex-col gap-3">
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <a
+                  href="#inscriere"
+                  className="inline-flex flex-1 items-center justify-center rounded-full border border-[#0A0A0A]/15 bg-white px-6 py-3 text-sm font-semibold text-[#0A0A0A] transition-colors hover:border-[#0A0A0A]/40 hover:bg-[#F4F4F4]"
+                >
+                  Înscrie-te acum
+                </a>
+                <form action={startStripeCheckout} className="flex-1">
+                  <input type="hidden" name="course_id" value={course.id} />
+                  <input type="hidden" name="slug" value={course.slug} />
+                  <button
+                    type="submit"
+                    className="inline-flex w-full items-center justify-center rounded-full bg-[#B8001F] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#490207]"
+                  >
+                    Cumpără acum
+                  </button>
+                </form>
+              </div>
+              {course.klarna_enabled && course.currency === "EUR" ? (
+                <form action={startStripeCheckout}>
+                  <input type="hidden" name="course_id" value={course.id} />
+                  <input type="hidden" name="slug" value={course.slug} />
+                  <input type="hidden" name="klarna_only" value="1" />
+                  <button
+                    type="submit"
+                    className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#0A0A0A] via-[#490207] to-[#B8001F] px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:shadow-md hover:brightness-110"
+                  >
+                    <CreditCard size={16} className="opacity-90" />
+                    Plătește în rate
+                  </button>
+                </form>
+              ) : null}
+              <p className="text-xs italic leading-relaxed text-[#777]">
+                * Apăsând „Înscrie-te acum" un membru al echipei te va contacta
+                pentru mai multe detalii. Nu implică nicio plată.
+              </p>
+            </div>
           </div>
         </div>
 
