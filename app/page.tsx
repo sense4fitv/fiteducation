@@ -24,7 +24,13 @@ export default async function Home() {
   ]);
 
   const accredited = allCourses.filter((c) => c.type === "curs_acreditat");
-  const workshops = allCourses.filter((c) => c.type === "workshop");
+  const workshops = allCourses
+    .filter((c) => c.type === "workshop")
+    .sort((a, b) => {
+      if (!a.first_session_start) return 1;
+      if (!b.first_session_start) return -1;
+      return a.first_session_start.localeCompare(b.first_session_start);
+    });
 
   return (
     <div className="min-h-screen bg-[#FAFAFA]">

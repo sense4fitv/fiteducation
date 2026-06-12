@@ -38,7 +38,7 @@ export default function CourseCard({
         </span>
         {course.klarna_enabled ? (
           <span className="absolute right-4 top-4 inline-flex items-center rounded-full bg-[#0A0A0A]/85 px-2.5 py-1 text-[10px] font-medium uppercase tracking-[1.4px] text-white">
-            Klarna
+            Plată în rate
           </span>
         ) : null}
       </Link>

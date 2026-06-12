@@ -179,7 +179,7 @@ export async function listAllTrainers(): Promise<PublicTrainer[]> {
   const { data } = await supabase
     .from("trainers")
     .select("id, slug, name, bio, credentials, instagram_url, photo_path")
-    .order("created_at");
+    .order("name", { ascending: true });
 
   return (data ?? []).map((t) => ({
     id: t.id,

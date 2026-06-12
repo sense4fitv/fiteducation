@@ -119,7 +119,7 @@ export default async function CoursePage({
             <div className="space-y-5">
               <div>
                 <p className="text-xs uppercase tracking-wider text-[#888]">
-                  Investiție
+                  Preț
                 </p>
                 <p className="mt-1 text-3xl font-bold text-[#0A0A0A] tabular-nums">
                   {formatPrice(course.price_amount, course.currency)}

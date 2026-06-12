@@ -9,7 +9,7 @@ export default function Navbar() {
 
   const menuItems = [
     { label: "Acasă", href: "/" },
-    { label: "Specializări", href: "/#specializari" },
+    { label: "Cursuri", href: "/#specializari" },
     { label: "Traineri", href: "/#traineri" },
     { label: "Contact", href: "/#contact" },
   ];
