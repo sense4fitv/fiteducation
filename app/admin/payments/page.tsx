@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Eye } from "lucide-react";
 
+import { InvoiceStatusBadge } from "@/components/admin/payments/InvoiceStatusBadge";
 import { PaymentsFilters } from "@/components/admin/payments/PaymentsFilters";
 import { PaymentStatusBadge } from "@/components/admin/payments/PaymentStatusBadge";
 import { Button } from "@/components/ui/button";
@@ -43,7 +44,7 @@ export default async function AdminPaymentsPage({
   let query = supabase
     .from("payments")
     .select(
-      "id, status, amount, currency, customer_email, customer_name, stripe_payment_method_type, created_at, completed_at, course_id, enrollment_id, courses!inner(id, title)",
+      "id, status, amount, currency, customer_email, customer_name, stripe_payment_method_type, created_at, completed_at, course_id, enrollment_id, invoice_status, invoice_series, invoice_number, courses!inner(id, title)",
     )
     .order("created_at", { ascending: false });
 
@@ -88,6 +89,7 @@ export default async function AdminPaymentsPage({
                 <TableHead className="w-24">Status</TableHead>
                 <TableHead>Sumă</TableHead>
                 <TableHead className="w-24">Metodă</TableHead>
+                <TableHead className="w-32">Factură</TableHead>
                 <TableHead className="w-28">Creat</TableHead>
                 <TableHead className="w-12" />
               </TableRow>
@@ -122,6 +124,15 @@ export default async function AdminPaymentsPage({
                   </TableCell>
                   <TableCell className="text-xs text-muted-foreground capitalize">
                     {p.stripe_payment_method_type ?? "—"}
+                  </TableCell>
+                  <TableCell>
+                    {p.invoice_number ? (
+                      <span className="text-xs tabular-nums">
+                        {p.invoice_series} {p.invoice_number}
+                      </span>
+                    ) : (
+                      <InvoiceStatusBadge status={p.invoice_status} />
+                    )}
                   </TableCell>
                   <TableCell className="text-muted-foreground">
                     {formatDate(p.created_at)}

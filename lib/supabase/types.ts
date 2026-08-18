@@ -490,6 +490,12 @@ export type Database = {
           enrollment_id: string | null
           error_message: string | null
           id: string
+          invoice_error: string | null
+          invoice_issued_at: string | null
+          invoice_number: string | null
+          invoice_series: string | null
+          invoice_status: Database["public"]["Enums"]["invoice_status"]
+          invoice_url: string | null
           metadata: Json
           payment_plan: Database["public"]["Enums"]["payment_plan"] | null
           session_id: string | null
@@ -511,6 +517,12 @@ export type Database = {
           enrollment_id?: string | null
           error_message?: string | null
           id?: string
+          invoice_error?: string | null
+          invoice_issued_at?: string | null
+          invoice_number?: string | null
+          invoice_series?: string | null
+          invoice_status?: Database["public"]["Enums"]["invoice_status"]
+          invoice_url?: string | null
           metadata?: Json
           payment_plan?: Database["public"]["Enums"]["payment_plan"] | null
           session_id?: string | null
@@ -532,6 +544,12 @@ export type Database = {
           enrollment_id?: string | null
           error_message?: string | null
           id?: string
+          invoice_error?: string | null
+          invoice_issued_at?: string | null
+          invoice_number?: string | null
+          invoice_series?: string | null
+          invoice_status?: Database["public"]["Enums"]["invoice_status"]
+          invoice_url?: string | null
           metadata?: Json
           payment_plan?: Database["public"]["Enums"]["payment_plan"] | null
           session_id?: string | null
@@ -656,6 +674,7 @@ export type Database = {
       course_type: "curs_acreditat" | "workshop"
       currency_code: "RON" | "EUR"
       enrollment_status: "nou" | "contactat" | "confirmat" | "platit" | "anulat"
+      invoice_status: "pending" | "issued" | "failed" | "skipped"
       payment_method: "stripe" | "transfer" | "cash" | "other"
       payment_plan: "integral" | "rate_klarna"
       payment_status:
@@ -798,6 +817,7 @@ export const Constants = {
       course_type: ["curs_acreditat", "workshop"],
       currency_code: ["RON", "EUR"],
       enrollment_status: ["nou", "contactat", "confirmat", "platit", "anulat"],
+      invoice_status: ["pending", "issued", "failed", "skipped"],
       payment_method: ["stripe", "transfer", "cash", "other"],
       payment_plan: ["integral", "rate_klarna"],
       payment_status: ["pending", "completed", "failed", "refunded", "expired"],

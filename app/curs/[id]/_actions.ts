@@ -129,6 +129,11 @@ export async function startStripeCheckout(fd: FormData): Promise<void> {
       },
     ],
     phone_number_collection: { enabled: true },
+    // Both are needed to issue a legally complete SmartBill invoice: the address
+    // fills the client record, the tax ID turns the buyer into a company invoice.
+    billing_address_collection: "required",
+    tax_id_collection: { enabled: true },
+    customer_creation: "always",
     consent_collection: { terms_of_service: "required" },
     custom_text: {
       terms_of_service_acceptance: {

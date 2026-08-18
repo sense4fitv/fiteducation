@@ -2,10 +2,14 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ExternalLink } from "lucide-react";
 
+import { InvoiceRetryButton } from "@/components/admin/payments/InvoiceRetryButton";
+import { InvoiceStatusBadge } from "@/components/admin/payments/InvoiceStatusBadge";
 import { PaymentStatusBadge } from "@/components/admin/payments/PaymentStatusBadge";
 import { Button } from "@/components/ui/button";
 import { formatDate, formatPrice } from "@/lib/format";
 import { assertAdmin } from "@/lib/supabase/guards";
+
+import { retryInvoice } from "../_actions";
 
 export const metadata = { title: "Detalii plată · Admin FitEducation" };
 export const dynamic = "force-dynamic";
@@ -117,6 +121,55 @@ export default async function AdminPaymentDetailPage({
               <ExternalLink />
             </Button>
           ) : null}
+        </Card>
+
+        <Card title="Factură SmartBill">
+          <div className="flex items-center gap-2">
+            <InvoiceStatusBadge status={p.invoice_status} />
+            {p.invoice_series && p.invoice_number ? (
+              <span className="text-sm font-medium tabular-nums">
+                {p.invoice_series} {p.invoice_number}
+              </span>
+            ) : null}
+          </div>
+
+          {p.invoice_issued_at ? (
+            <Field label="Emisă" value={formatDate(p.invoice_issued_at)} />
+          ) : null}
+
+          {p.invoice_error ? (
+            <p className="mt-2 rounded-md bg-destructive/10 p-2 text-xs text-destructive">
+              {p.invoice_error}
+            </p>
+          ) : null}
+
+          <div className="mt-3 flex flex-wrap gap-2">
+            {p.invoice_url ? (
+              <Button
+                variant="outline"
+                size="sm"
+                render={
+                  <a
+                    href={p.invoice_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  />
+                }
+              >
+                Deschide factura
+                <ExternalLink />
+              </Button>
+            ) : null}
+
+            {p.status === "completed" && !p.invoice_number ? (
+              <InvoiceRetryButton
+                onRetry={async () => {
+                  "use server";
+                  await retryInvoice(id);
+                }}
+              />
+            ) : null}
+          </div>
         </Card>
 
         <Card title="Timeline">
