@@ -135,6 +135,15 @@ writing, the handler loads the `payments` row by `stripe_session_id`:
 
 Without this, a retry would burn another permanent number in series FIT.
 
+## Paid-only guard (added during implementation)
+
+`checkout.session.completed` can fire while a delayed payment method is still
+processing, with `payment_status` `unpaid` or `processing`. Invoicing such a
+session would issue a real fiscal document for money not yet received. The
+handler therefore acts only on `payment_status === "paid"`, and
+`checkout.session.async_payment_succeeded` is handled by the same code path so
+delayed payments still produce an enrollment and an invoice when they settle.
+
 ## Testing
 
 Unit tests for the mapper via `node --test` (Node 24 strips types natively — no
