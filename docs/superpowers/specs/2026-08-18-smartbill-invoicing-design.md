@@ -153,6 +153,17 @@ card vs Klarna, and the assertion that tax fields are never emitted.
 Live verification is a real invoice against series FIT, since `isDraft: false`
 was chosen. Test invoices can be storno'd from SmartBill afterwards.
 
+## Invoice PDF (added after the live test)
+
+The live test showed SmartBill returns an empty `url` on invoice creation — that
+field is a payment link, not the document, and it stays empty for invoices
+already collected. The PDF lives behind `GET /invoice/pdf` and needs Basic auth,
+so it cannot be linked directly from the browser.
+
+`app/admin/payments/[id]/invoice/route.ts` proxies it behind the admin session
+and streams it as `application/pdf`. `invoice_url` is still stored when present,
+but the admin link uses the proxy.
+
 ## Environment
 
 ```

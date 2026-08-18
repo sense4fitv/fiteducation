@@ -144,13 +144,13 @@ export default async function AdminPaymentDetailPage({
           ) : null}
 
           <div className="mt-3 flex flex-wrap gap-2">
-            {p.invoice_url ? (
+            {p.invoice_number ? (
               <Button
                 variant="outline"
                 size="sm"
                 render={
                   <a
-                    href={p.invoice_url}
+                    href={`/admin/payments/${id}/invoice`}
                     target="_blank"
                     rel="noopener noreferrer"
                   />

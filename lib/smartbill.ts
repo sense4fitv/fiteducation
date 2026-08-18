@@ -143,6 +143,45 @@ export async function createInvoice(
   return {
     series: data.series || payload.seriesName,
     number: data.number,
+    // `url` is a payment link, not the document — SmartBill leaves it empty for
+    // invoices already collected. The PDF is fetched separately, with auth.
     url: data.url || null,
   };
+}
+
+/**
+ * Download the invoice PDF. The endpoint requires Basic auth, so it cannot be
+ * linked directly from the browser — see app/admin/payments/[id]/invoice/route.ts,
+ * which proxies it behind the admin session.
+ */
+export async function fetchInvoicePdf(
+  series: string,
+  number: string,
+  config: SmartBillConfig = smartbillConfig(),
+): Promise<ArrayBuffer> {
+  const auth = Buffer.from(`${config.username}:${config.token}`).toString(
+    "base64",
+  );
+  const query = new URLSearchParams({
+    cif: config.cif,
+    seriesname: series,
+    number,
+  });
+
+  const res = await fetch(`${BASE_URL}/invoice/pdf?${query}`, {
+    headers: {
+      Authorization: `Basic ${auth}`,
+      Accept: "application/octet-stream",
+    },
+    cache: "no-store",
+  });
+
+  if (!res.ok) {
+    throw new SmartBillError(
+      `Descărcarea facturii a eșuat (HTTP ${res.status}).`,
+      res.status,
+    );
+  }
+
+  return res.arrayBuffer();
 }
