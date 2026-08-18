@@ -17,8 +17,5 @@ alter table public.payments
 create index if not exists payments_invoice_status_idx
   on public.payments (invoice_status);
 
--- The webhook upserts on stripe_session_id for idempotency, which requires a
--- unique constraint on that column. Harmless if an equivalent one already exists.
-create unique index if not exists payments_stripe_session_id_uidx
-  on public.payments (stripe_session_id)
-  where stripe_session_id is not null;
+-- The webhook upserts on stripe_session_id for idempotency; the required UNIQUE
+-- constraint (payments_stripe_session_id_key) already exists on the table.
