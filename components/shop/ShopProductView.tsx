@@ -96,8 +96,9 @@ export default function ShopProductView({
       <div className="space-y-4">
         <div className="relative aspect-square overflow-hidden rounded-3xl border border-[#EAEAEA] bg-white">
           {shownImage ? (
+            /* contain + padding: show the whole product, never a crop */
             <div
-              className="absolute inset-0 bg-cover bg-center transition-[background-image] duration-300"
+              className="absolute inset-6 bg-contain bg-center bg-no-repeat transition-[background-image] duration-300"
               style={{ backgroundImage: `url(${shownImage})` }}
             />
           ) : (
@@ -131,7 +132,7 @@ export default function ShopProductView({
                 >
                   {image.url ? (
                     <div
-                      className="absolute inset-0 bg-cover bg-center"
+                      className="absolute inset-1.5 bg-contain bg-center bg-no-repeat"
                       style={{ backgroundImage: `url(${image.url})` }}
                     />
                   ) : null}

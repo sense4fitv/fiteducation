@@ -258,7 +258,7 @@ export function ColorCard({
                     fill
                     unoptimized
                     sizes="40px"
-                    className="object-cover"
+                    className="object-contain p-1"
                   />
                 </div>
               ) : null}

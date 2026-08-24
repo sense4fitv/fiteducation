@@ -12,12 +12,13 @@ export default function ShopCard({ product }: { product: ShopProductSummary }) {
     <article className="group flex flex-col overflow-hidden rounded-2xl border border-[#EAEAEA] bg-white transition-all duration-300 hover:-translate-y-1 hover:border-[#D0D0D0] hover:shadow-[0_18px_40px_-20px_rgba(10,10,10,0.25)]">
       <Link
         href={`/magazin/${product.slug}`}
-        className="relative block aspect-square overflow-hidden bg-[#F2F2F2]"
+        className="relative block aspect-square overflow-hidden bg-white"
         aria-label={product.name}
       >
         {product.cover?.url ? (
+          /* contain, not cover: product shots must never be cropped */
           <div
-            className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-[1.04]"
+            className="absolute inset-0 bg-contain bg-center bg-no-repeat transition-transform duration-500 group-hover:scale-[1.04]"
             style={{ backgroundImage: `url(${product.cover.url})` }}
           />
         ) : (

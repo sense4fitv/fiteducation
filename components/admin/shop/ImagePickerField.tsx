@@ -64,7 +64,7 @@ export function ImagePickerField({
                 fill
                 unoptimized
                 sizes="48px"
-                className="object-cover"
+                className="object-contain p-1"
               />
             ) : null}
           </button>

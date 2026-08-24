@@ -125,7 +125,7 @@ export function ShopGalleryManager({
                     fill
                     unoptimized
                     sizes="320px"
-                    className="object-cover"
+                    className="object-contain p-1"
                   />
                 ) : null}
                 {index === 0 ? (

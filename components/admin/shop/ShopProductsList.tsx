@@ -80,7 +80,7 @@ export function ShopProductsList({ items }: { items: ShopRow[] }) {
                       fill
                       unoptimized
                       sizes="40px"
-                      className="object-cover"
+                      className="object-contain p-1"
                     />
                   ) : (
                     <ImageOff className="absolute inset-0 m-auto size-4 text-muted-foreground" />
