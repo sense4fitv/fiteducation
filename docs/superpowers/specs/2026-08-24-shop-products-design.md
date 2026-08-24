@@ -63,21 +63,40 @@ One migration, `supabase/migrations/<ts>_add_shop_products.sql`.
 | `sort_order` | integer not null default 0 | lowest `sort_order` is the cover image |
 | `created_at` | timestamptz not null default now() | |
 
+### table `shop_product_colors`
+
+Colour is its own level: one colour carries the swatch and the photo, and its
+weights hang underneath it. Without this, a colour with six weights would have
+to repeat its hex and photo on all six rows.
+
+| column       | type | notes |
+|--------------|------|-------|
+| `id`         | uuid pk | |
+| `product_id` | uuid not null references `shop_products` on delete cascade | |
+| `name`       | text not null | what the customer reads: "Negru" |
+| `hex`        | text | nullable; `^#[0-9a-f]{6}$` — the swatch |
+| `image_id`   | uuid references `shop_product_images` on delete set null | photo picked from the product gallery |
+| `sort_order` | integer not null default 0 | |
+| `created_at` | timestamptz not null default now() | |
+
+`unique (product_id, name)` — the name, not the hex, is the colour's identity.
+
 ### table `shop_product_variants`
 
 | column       | type | notes |
 |--------------|------|-------|
 | `id`         | uuid pk | |
 | `product_id` | uuid not null references `shop_products` on delete cascade | |
-| `color`      | text | nullable |
+| `color_id`   | uuid references `shop_product_colors` on delete cascade | nullable |
 | `weight_kg`  | numeric(6,2) | nullable |
 | `price`      | numeric(10,2) | nullable; null means "inherit the product price" |
 | `stock`      | integer not null default 0 | |
 | `sort_order` | integer not null default 0 | |
 | `created_at` | timestamptz not null default now() | |
 
-`unique (product_id, color, weight_kg)`. Both attributes are nullable so a
-product can vary by color only, by weight only, or by both.
+`unique (product_id, color_id, weight_kg)`. Both attributes are nullable so a
+product can vary by colour only, by weight only, or by both; weight-only
+variants sit in a "Fără culoare" group.
 
 **Stock rule:** if a product has at least one variant, stock is tracked per
 variant and `shop_products.stock` is ignored (the admin form hides it). With no
@@ -122,7 +141,7 @@ All under `app/admin/shop/`, following the existing products/trainers layout.
 | `/admin/shop/new` | name, slug (auto-derived from name, editable), description, price, currency, status, delivery-option checkboxes → `createShopProduct` then redirect to the detail page |
 | `/admin/shop/[id]` | master form: the same fields, plus `stock` when the product has no variants |
 | `/admin/shop/[id]/images` | `ImageUploader` gallery — upload, reorder, delete; first image labelled as cover |
-| `/admin/shop/[id]/variants` | inline editable rows: color, weight (kg), price override, stock; add and delete rows |
+| `/admin/shop/[id]/variants` | one card per colour — name, swatch picker, photo picked from the gallery — with its weights listed underneath (greutate, preț, stoc). Weights are added in batches: `10, 12, 15` creates three variants at once |
 
 Detail sub-routes share a tab bar the same way `/admin/products/[id]` does.
 
@@ -136,8 +155,10 @@ Per-route `_actions.ts`, every action opening with `assertAdmin()` from
 - `createShopProduct` — redirects to `/admin/shop/[id]` (creation flow, so a
   redirect is correct)
 - `updateShopProduct`, `deleteShopProduct`
-- `uploadShopImage`, `deleteShopImage`, `reorderShopImages`
-- `upsertShopVariant`, `deleteShopVariant`
+- `uploadShopImage`, `deleteShopImage`, `moveShopImage`
+- `upsertShopColor`, `deleteShopColor`
+- `addShopWeights` (batch insert under one colour), `updateShopVariant`,
+  `deleteShopVariant`
 
 Per the established convention, delete actions never `redirect()` — they only
 `revalidatePath()`, because `RowDeleteButton`'s try/catch would surface
@@ -153,8 +174,14 @@ Client components use `useTransition` plus a form action callback, never
   a field error rather than a thrown 500
 - at least one delivery option must be selected before a product can be set to
   `published`; drafts may have none
-- deleting a product cascades its images and variants in the DB; the action
-  also removes the product's storage objects
+- deleting a product cascades its images, colours and variants in the DB; the
+  action also removes the product's storage objects
+- a colour needs a name; `hex` must be `#rrggbb` or empty, and a blank field
+  clears it rather than erroring
+- a weight batch reports which entries it could not read and skips weights that
+  already exist under that colour instead of failing the whole batch
+- deleting a colour cascades its weights; deleting a gallery image clears it
+  from any colour that referenced it
 
 ## Out of scope
 

@@ -29,6 +29,7 @@ export type ShopRow = {
   status: Enums<"course_status">;
   delivery_options: DeliveryOption[];
   variants_count: number;
+  colors: { name: string; hex: string | null }[];
   stock: number | null;
   cover_url: string | null;
 };
@@ -93,7 +94,23 @@ export function ShopProductsList({ items }: { items: ShopRow[] }) {
                 >
                   {p.name}
                 </Link>
-                <p className="text-xs text-muted-foreground">{p.slug}</p>
+                <div className="flex items-center gap-2">
+                  <p className="text-xs text-muted-foreground">{p.slug}</p>
+                  {p.colors.length > 0 ? (
+                    <span className="flex items-center gap-1">
+                      {p.colors.map((color) => (
+                        <span
+                          key={color.name}
+                          title={color.name}
+                          className="size-3 rounded-full border border-border"
+                          style={{
+                            backgroundColor: color.hex ?? "transparent",
+                          }}
+                        />
+                      ))}
+                    </span>
+                  ) : null}
+                </div>
               </TableCell>
               <TableCell>
                 <Badge

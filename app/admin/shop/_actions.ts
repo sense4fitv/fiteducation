@@ -3,7 +3,12 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
-import { isDeliveryOption, type DeliveryOption } from "@/lib/shop";
+import {
+  isDeliveryOption,
+  normalizeHex,
+  parseWeights,
+  type DeliveryOption,
+} from "@/lib/shop";
 import { slugify } from "@/lib/slug";
 import { assertAdmin } from "@/lib/supabase/guards";
 import {
@@ -299,9 +304,9 @@ export async function moveShopImage(
   bumpShopPaths(current.product_id);
 }
 
-// -------- Variants --------
+// -------- Colours --------
 
-export async function upsertShopVariant(
+export async function upsertShopColor(
   _prev: ShopActionState,
   fd: FormData,
 ): Promise<ShopActionState> {
@@ -310,35 +315,157 @@ export async function upsertShopVariant(
   const productId = String(fd.get("product_id") ?? "");
   if (!productId) return { ok: false, error: "ID produs lipsă." };
 
+  const colorId = String(fd.get("color_id") ?? "");
+  const name = String(fd.get("name") ?? "").trim();
+  if (!name) return { ok: false, error: "Numele culorii este obligatoriu." };
+
+  const hex = normalizeHex(String(fd.get("hex") ?? ""));
+  if (hex === "invalid")
+    return { ok: false, error: "Codul de culoare trebuie să fie de forma #1a2b3c." };
+
+  const imageId = cleanString(fd.get("image_id"));
+  const sortOrder = numberOr(fd.get("sort_order"), 0) ?? 0;
+
+  const values = {
+    product_id: productId,
+    name,
+    hex,
+    image_id: imageId,
+    sort_order: sortOrder,
+  };
+
+  const { error } = colorId
+    ? await supabase
+        .from("shop_product_colors")
+        .update(values)
+        .eq("id", colorId)
+    : await supabase.from("shop_product_colors").insert(values);
+
+  if (error) {
+    return {
+      ok: false,
+      error: isUniqueViolation(error)
+        ? "Există deja o culoare cu acest nume."
+        : error.message,
+    };
+  }
+
+  bumpShopPaths(productId);
+  return { ok: true };
+}
+
+export async function deleteShopColor(colorId: string): Promise<void> {
+  const { supabase } = await assertAdmin();
+
+  const { data: color } = await supabase
+    .from("shop_product_colors")
+    .select("product_id")
+    .eq("id", colorId)
+    .maybeSingle();
+
+  // Variants under this colour cascade in the DB.
+  const { error } = await supabase
+    .from("shop_product_colors")
+    .delete()
+    .eq("id", colorId);
+  if (error) throw new Error(error.message);
+
+  bumpShopPaths(color?.product_id);
+}
+
+// -------- Variants --------
+
+/** Adds every weight in a batch ("10, 12, 15") under one colour. */
+export async function addShopWeights(
+  _prev: ShopActionState,
+  fd: FormData,
+): Promise<ShopActionState> {
+  const { supabase } = await assertAdmin();
+
+  const productId = String(fd.get("product_id") ?? "");
+  if (!productId) return { ok: false, error: "ID produs lipsă." };
+
+  const colorId = cleanString(fd.get("color_id"));
+  const stock = numberOr(fd.get("stock"), 0) ?? 0;
+  if (stock < 0) return { ok: false, error: "Stoc invalid." };
+
+  const price = numberOr(fd.get("price"), null);
+  if (price != null && price < 0) return { ok: false, error: "Preț invalid." };
+
+  const { weights, invalid } = parseWeights(String(fd.get("weights") ?? ""));
+  if (weights.length === 0) {
+    return {
+      ok: false,
+      error: invalid.length
+        ? `Nu am putut citi: ${invalid.join(", ")}.`
+        : "Scrie cel puțin o greutate, ex. 10, 12, 15.",
+    };
+  }
+
+  const base = supabase
+    .from("shop_product_variants")
+    .select("weight_kg, sort_order")
+    .eq("product_id", productId);
+
+  const { data } = await (colorId
+    ? base.eq("color_id", colorId)
+    : base.is("color_id", null)
+  ).order("sort_order", { ascending: false });
+
+  const siblings = data ?? [];
+  const taken = new Set(siblings.map((s) => s.weight_kg));
+  const fresh = weights.filter((w) => !taken.has(w));
+
+  if (fresh.length === 0)
+    return { ok: false, error: "Toate greutățile există deja." };
+
+  let nextOrder = (siblings[0]?.sort_order ?? -1) + 1;
+  const rows = fresh.map((weight) => ({
+    product_id: productId,
+    color_id: colorId,
+    weight_kg: weight,
+    price,
+    stock,
+    sort_order: nextOrder++,
+  }));
+
+  const { error } = await supabase.from("shop_product_variants").insert(rows);
+  if (error) {
+    return {
+      ok: false,
+      error: isUniqueViolation(error)
+        ? "Există deja o variantă cu aceeași culoare și greutate."
+        : error.message,
+    };
+  }
+
+  bumpShopPaths(productId);
+  return { ok: true };
+}
+
+export async function updateShopVariant(
+  _prev: ShopActionState,
+  fd: FormData,
+): Promise<ShopActionState> {
+  const { supabase } = await assertAdmin();
+
+  const productId = String(fd.get("product_id") ?? "");
   const variantId = String(fd.get("variant_id") ?? "");
-  const color = cleanString(fd.get("color"));
+  if (!productId || !variantId) return { ok: false, error: "ID lipsă." };
+
   const weight = numberOr(fd.get("weight_kg"), null);
   const price = numberOr(fd.get("price"), null);
   const stock = numberOr(fd.get("stock"), 0) ?? 0;
-  const sortOrder = numberOr(fd.get("sort_order"), 0) ?? 0;
 
-  if (!color && weight == null)
-    return { ok: false, error: "Completează culoarea sau greutatea." };
   if (weight != null && weight < 0)
     return { ok: false, error: "Greutate invalidă." };
   if (price != null && price < 0) return { ok: false, error: "Preț invalid." };
   if (stock < 0) return { ok: false, error: "Stoc invalid." };
 
-  const values = {
-    product_id: productId,
-    color,
-    weight_kg: weight,
-    price,
-    stock,
-    sort_order: sortOrder,
-  };
-
-  const { error } = variantId
-    ? await supabase
-        .from("shop_product_variants")
-        .update(values)
-        .eq("id", variantId)
-    : await supabase.from("shop_product_variants").insert(values);
+  const { error } = await supabase
+    .from("shop_product_variants")
+    .update({ weight_kg: weight, price, stock })
+    .eq("id", variantId);
 
   if (error) {
     return {

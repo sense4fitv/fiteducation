@@ -26,7 +26,7 @@ export default async function ShopProductPage({
     .maybeSingle();
   if (!product) notFound();
 
-  const [images, variants] = await Promise.all([
+  const [images, variants, colors] = await Promise.all([
     supabase
       .from("shop_product_images")
       .select("id", { count: "exact", head: true })
@@ -35,7 +35,13 @@ export default async function ShopProductPage({
       .from("shop_product_variants")
       .select("id", { count: "exact", head: true })
       .eq("product_id", id),
+    supabase
+      .from("shop_product_colors")
+      .select("id", { count: "exact", head: true })
+      .eq("product_id", id),
   ]);
+
+  const colorsCount = colors.count ?? 0;
 
   const variantsCount = variants.count ?? 0;
 
@@ -52,7 +58,7 @@ export default async function ShopProductPage({
       label: "Variante",
       count: variantsCount,
       icon: Layers,
-      hint: "culoare & greutate",
+      hint: `${colorsCount} ${colorsCount === 1 ? "culoare" : "culori"}`,
     },
   ];
 

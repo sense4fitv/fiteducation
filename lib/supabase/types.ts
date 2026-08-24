@@ -604,6 +604,51 @@ export type Database = {
         }
         Relationships: []
       }
+      shop_product_colors: {
+        Row: {
+          created_at: string
+          hex: string | null
+          id: string
+          image_id: string | null
+          name: string
+          product_id: string
+          sort_order: number
+        }
+        Insert: {
+          created_at?: string
+          hex?: string | null
+          id?: string
+          image_id?: string | null
+          name: string
+          product_id: string
+          sort_order?: number
+        }
+        Update: {
+          created_at?: string
+          hex?: string | null
+          id?: string
+          image_id?: string | null
+          name?: string
+          product_id?: string
+          sort_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shop_product_colors_image_id_fkey"
+            columns: ["image_id"]
+            isOneToOne: false
+            referencedRelation: "shop_product_images"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shop_product_colors_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "shop_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       shop_product_images: {
         Row: {
           alt: string | null
@@ -641,7 +686,7 @@ export type Database = {
       }
       shop_product_variants: {
         Row: {
-          color: string | null
+          color_id: string | null
           created_at: string
           id: string
           price: number | null
@@ -651,7 +696,7 @@ export type Database = {
           weight_kg: number | null
         }
         Insert: {
-          color?: string | null
+          color_id?: string | null
           created_at?: string
           id?: string
           price?: number | null
@@ -661,7 +706,7 @@ export type Database = {
           weight_kg?: number | null
         }
         Update: {
-          color?: string | null
+          color_id?: string | null
           created_at?: string
           id?: string
           price?: number | null
@@ -671,6 +716,13 @@ export type Database = {
           weight_kg?: number | null
         }
         Relationships: [
+          {
+            foreignKeyName: "shop_product_variants_color_id_fkey"
+            columns: ["color_id"]
+            isOneToOne: false
+            referencedRelation: "shop_product_colors"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "shop_product_variants_product_id_fkey"
             columns: ["product_id"]

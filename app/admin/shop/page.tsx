@@ -35,13 +35,17 @@ export default async function AdminShopPage({
   const statusFilter = STATUSES.find((s) => s === sp.status);
   if (statusFilter) query = query.eq("status", statusFilter);
 
-  const [{ data: products }, { data: variants }, { data: images }] =
+  const [{ data: products }, { data: variants }, { data: images }, { data: colors }] =
     await Promise.all([
       query,
       supabase.from("shop_product_variants").select("product_id"),
       supabase
         .from("shop_product_images")
         .select("product_id, path, sort_order")
+        .order("sort_order", { ascending: true }),
+      supabase
+        .from("shop_product_colors")
+        .select("product_id, name, hex, sort_order")
         .order("sort_order", { ascending: true }),
     ]);
 
@@ -55,6 +59,13 @@ export default async function AdminShopPage({
     if (!covers.has(img.product_id)) covers.set(img.product_id, img.path);
   }
 
+  const swatches = new Map<string, { name: string; hex: string | null }[]>();
+  for (const color of colors ?? []) {
+    const list = swatches.get(color.product_id) ?? [];
+    list.push({ name: color.name, hex: color.hex });
+    swatches.set(color.product_id, list);
+  }
+
   const items: ShopRow[] = (products ?? []).map((p) => ({
     id: p.id,
     name: p.name,
@@ -65,6 +76,7 @@ export default async function AdminShopPage({
     delivery_options: p.delivery_options,
     stock: p.stock,
     variants_count: variantCounts.get(p.id) ?? 0,
+    colors: swatches.get(p.id) ?? [],
     cover_url: publicUrl(SHOP_BUCKET, covers.get(p.id) ?? null),
   }));
 
