@@ -11,6 +11,7 @@ export default function Navbar() {
     { label: "Acasă", href: "/" },
     { label: "Cursuri", href: "/#specializari" },
     { label: "Traineri", href: "/#traineri" },
+    { label: "Magazin", href: "/magazin" },
     { label: "Contact", href: "/#contact" },
   ];
 

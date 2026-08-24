@@ -604,6 +604,111 @@ export type Database = {
         }
         Relationships: []
       }
+      shop_orders: {
+        Row: {
+          amount: number
+          completed_at: string | null
+          created_at: string
+          currency: Database["public"]["Enums"]["currency_code"]
+          customer_email: string | null
+          customer_name: string | null
+          customer_phone: string | null
+          delivery_option: Database["public"]["Enums"]["shop_delivery_option"]
+          id: string
+          invoice_error: string | null
+          invoice_issued_at: string | null
+          invoice_number: string | null
+          invoice_series: string | null
+          invoice_status: Database["public"]["Enums"]["invoice_status"]
+          invoice_url: string | null
+          metadata: Json
+          product_id: string | null
+          product_name: string
+          quantity: number
+          status: Database["public"]["Enums"]["payment_status"]
+          stripe_payment_intent_id: string | null
+          stripe_payment_method_type: string | null
+          stripe_session_id: string | null
+          unit_price: number
+          updated_at: string
+          variant_id: string | null
+          variant_label: string | null
+        }
+        Insert: {
+          amount: number
+          completed_at?: string | null
+          created_at?: string
+          currency?: Database["public"]["Enums"]["currency_code"]
+          customer_email?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          delivery_option: Database["public"]["Enums"]["shop_delivery_option"]
+          id?: string
+          invoice_error?: string | null
+          invoice_issued_at?: string | null
+          invoice_number?: string | null
+          invoice_series?: string | null
+          invoice_status?: Database["public"]["Enums"]["invoice_status"]
+          invoice_url?: string | null
+          metadata?: Json
+          product_id?: string | null
+          product_name: string
+          quantity?: number
+          status?: Database["public"]["Enums"]["payment_status"]
+          stripe_payment_intent_id?: string | null
+          stripe_payment_method_type?: string | null
+          stripe_session_id?: string | null
+          unit_price: number
+          updated_at?: string
+          variant_id?: string | null
+          variant_label?: string | null
+        }
+        Update: {
+          amount?: number
+          completed_at?: string | null
+          created_at?: string
+          currency?: Database["public"]["Enums"]["currency_code"]
+          customer_email?: string | null
+          customer_name?: string | null
+          customer_phone?: string | null
+          delivery_option?: Database["public"]["Enums"]["shop_delivery_option"]
+          id?: string
+          invoice_error?: string | null
+          invoice_issued_at?: string | null
+          invoice_number?: string | null
+          invoice_series?: string | null
+          invoice_status?: Database["public"]["Enums"]["invoice_status"]
+          invoice_url?: string | null
+          metadata?: Json
+          product_id?: string | null
+          product_name?: string
+          quantity?: number
+          status?: Database["public"]["Enums"]["payment_status"]
+          stripe_payment_intent_id?: string | null
+          stripe_payment_method_type?: string | null
+          stripe_session_id?: string | null
+          unit_price?: number
+          updated_at?: string
+          variant_id?: string | null
+          variant_label?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shop_orders_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "shop_products"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shop_orders_variant_id_fkey"
+            columns: ["variant_id"]
+            isOneToOne: false
+            referencedRelation: "shop_product_variants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       shop_product_colors: {
         Row: {
           created_at: string

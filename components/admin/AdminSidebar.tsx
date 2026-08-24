@@ -10,6 +10,7 @@ import {
   LogOut,
   MapPin,
   Package,
+  Receipt,
   ShoppingBag,
   Users,
 } from "lucide-react";
@@ -55,6 +56,7 @@ const NAV_GROUPS = [
     items: [
       { href: "/admin/enrollments", label: "Înscrieri", icon: ClipboardList },
       { href: "/admin/payments", label: "Plăți", icon: CreditCard },
+      { href: "/admin/shop/orders", label: "Comenzi magazin", icon: Receipt },
     ],
   },
 ] as const;
