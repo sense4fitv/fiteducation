@@ -604,6 +604,127 @@ export type Database = {
         }
         Relationships: []
       }
+      shop_product_images: {
+        Row: {
+          alt: string | null
+          created_at: string
+          id: string
+          path: string
+          product_id: string
+          sort_order: number
+        }
+        Insert: {
+          alt?: string | null
+          created_at?: string
+          id?: string
+          path: string
+          product_id: string
+          sort_order?: number
+        }
+        Update: {
+          alt?: string | null
+          created_at?: string
+          id?: string
+          path?: string
+          product_id?: string
+          sort_order?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shop_product_images_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "shop_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      shop_product_variants: {
+        Row: {
+          color: string | null
+          created_at: string
+          id: string
+          price: number | null
+          product_id: string
+          sort_order: number
+          stock: number
+          weight_kg: number | null
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          id?: string
+          price?: number | null
+          product_id: string
+          sort_order?: number
+          stock?: number
+          weight_kg?: number | null
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          id?: string
+          price?: number | null
+          product_id?: string
+          sort_order?: number
+          stock?: number
+          weight_kg?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shop_product_variants_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "shop_products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      shop_products: {
+        Row: {
+          created_at: string
+          currency: Database["public"]["Enums"]["currency_code"]
+          delivery_options: Database["public"]["Enums"]["shop_delivery_option"][]
+          description: string | null
+          id: string
+          name: string
+          price: number
+          slug: string
+          sort_order: number
+          status: Database["public"]["Enums"]["course_status"]
+          stock: number | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          currency?: Database["public"]["Enums"]["currency_code"]
+          delivery_options?: Database["public"]["Enums"]["shop_delivery_option"][]
+          description?: string | null
+          id?: string
+          name: string
+          price: number
+          slug: string
+          sort_order?: number
+          status?: Database["public"]["Enums"]["course_status"]
+          stock?: number | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          currency?: Database["public"]["Enums"]["currency_code"]
+          delivery_options?: Database["public"]["Enums"]["shop_delivery_option"][]
+          description?: string | null
+          id?: string
+          name?: string
+          price?: number
+          slug?: string
+          sort_order?: number
+          status?: Database["public"]["Enums"]["course_status"]
+          stock?: number | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       trainers: {
         Row: {
           bio: string | null
@@ -684,6 +805,7 @@ export type Database = {
         | "refunded"
         | "expired"
       requirement_category: "inscriere" | "acte" | "participare" | "examen"
+      shop_delivery_option: "summit_pickup" | "courier"
       trainer_role: "principal" | "secundar"
     }
     CompositeTypes: {
@@ -822,6 +944,7 @@ export const Constants = {
       payment_plan: ["integral", "rate_klarna"],
       payment_status: ["pending", "completed", "failed", "refunded", "expired"],
       requirement_category: ["inscriere", "acte", "participare", "examen"],
+      shop_delivery_option: ["summit_pickup", "courier"],
       trainer_role: ["principal", "secundar"],
     },
   },
