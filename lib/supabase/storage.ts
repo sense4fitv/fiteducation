@@ -4,11 +4,17 @@ import { createAdminClient } from "./admin";
 
 export const COURSE_BUCKET = "course-images" as const;
 export const TRAINER_BUCKET = "trainer-images" as const;
+export const SHOP_BUCKET = "shop-product-images" as const;
+
+export type StorageBucket =
+  | typeof COURSE_BUCKET
+  | typeof TRAINER_BUCKET
+  | typeof SHOP_BUCKET;
 
 const SITE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 
 export function publicUrl(
-  bucket: typeof COURSE_BUCKET | typeof TRAINER_BUCKET,
+  bucket: StorageBucket,
   path: string | null | undefined,
 ): string | null {
   if (!path) return null;
@@ -53,8 +59,22 @@ export async function uploadTrainerImage(
   return { path };
 }
 
+export async function uploadShopProductImage(
+  file: File,
+  productId: string,
+): Promise<{ path: string }> {
+  const admin = createAdminClient();
+  const path = `${productId}/${randomHash()}.${extOf(file.name)}`;
+  const { error } = await admin.storage.from(SHOP_BUCKET).upload(path, file, {
+    contentType: file.type || undefined,
+    upsert: false,
+  });
+  if (error) throw error;
+  return { path };
+}
+
 export async function deleteStorageObject(
-  bucket: typeof COURSE_BUCKET | typeof TRAINER_BUCKET,
+  bucket: StorageBucket,
   path: string,
 ) {
   const admin = createAdminClient();

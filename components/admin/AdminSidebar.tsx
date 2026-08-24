@@ -10,6 +10,8 @@ import {
   LogOut,
   MapPin,
   Package,
+  Receipt,
+  ShoppingBag,
   Users,
 } from "lucide-react";
 
@@ -44,6 +46,7 @@ const NAV_GROUPS = [
     items: [
       { href: "/admin/products", label: "Cursuri & Workshops", icon: Package },
       { href: "/admin/trainers", label: "Traineri", icon: Users },
+      { href: "/admin/shop", label: "Magazin", icon: ShoppingBag },
       { href: "/admin/library", label: "Bibliotecă", icon: Library },
       { href: "/admin/locations", label: "Locații", icon: MapPin },
     ],
@@ -53,6 +56,7 @@ const NAV_GROUPS = [
     items: [
       { href: "/admin/enrollments", label: "Înscrieri", icon: ClipboardList },
       { href: "/admin/payments", label: "Plăți", icon: CreditCard },
+      { href: "/admin/shop/orders", label: "Comenzi magazin", icon: Receipt },
     ],
   },
 ] as const;

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import type Stripe from "stripe";
 
 import { issueInvoiceForPayment } from "@/lib/invoicing/issue";
+import { issueInvoiceForShopOrder } from "@/lib/invoicing/shop-order";
 import { stripe } from "@/lib/stripe";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { Enums } from "@/lib/supabase/types";
@@ -44,19 +45,25 @@ export async function POST(req: Request) {
       // and an invoice; the rest arrives later as async_payment_succeeded.
       if (session.payment_status !== "paid") break;
 
-      await handlePaidSession(session, admin);
+      if (session.metadata?.shop_order_id) {
+        await handlePaidShopOrder(session, admin);
+      } else {
+        await handlePaidSession(session, admin);
+      }
       break;
     }
 
     case "checkout.session.expired":
     case "checkout.session.async_payment_failed": {
       const session = event.data.object as Stripe.Checkout.Session;
+      const status =
+        event.type === "checkout.session.expired" ? "expired" : "failed";
+      const table = session.metadata?.shop_order_id
+        ? "shop_orders"
+        : "payments";
       await admin
-        .from("payments")
-        .update({
-          status:
-            event.type === "checkout.session.expired" ? "expired" : "failed",
-        })
+        .from(table)
+        .update({ status })
         .eq("stripe_session_id", session.id);
       break;
     }
@@ -72,12 +79,118 @@ export async function POST(req: Request) {
           .from("payments")
           .update({ status: "refunded" })
           .eq("stripe_payment_intent_id", intentId);
+        await admin
+          .from("shop_orders")
+          .update({ status: "refunded" })
+          .eq("stripe_payment_intent_id", intentId);
       }
       break;
     }
   }
 
   return NextResponse.json({ received: true });
+}
+
+async function handlePaidShopOrder(
+  session: Stripe.Checkout.Session,
+  admin: AdminClient,
+) {
+  const orderId = session.metadata?.shop_order_id;
+  if (!orderId) return;
+
+  const { data: order } = await admin
+    .from("shop_orders")
+    .select(
+      "id, status, product_id, variant_id, product_name, variant_label, invoice_number",
+    )
+    .eq("id", orderId)
+    .maybeSingle();
+
+  if (!order) {
+    console.error("[stripe webhook] shop order not found", { orderId });
+    return;
+  }
+
+  // Stripe redelivers webhooks routinely. Completing twice would decrement the
+  // stock again and burn a second permanent invoice number.
+  if (order.status === "completed") return;
+
+  const customerEmail =
+    session.customer_details?.email ?? session.customer_email ?? null;
+  const paymentIntentId =
+    typeof session.payment_intent === "string"
+      ? session.payment_intent
+      : (session.payment_intent?.id ?? null);
+
+  const { error: updateErr } = await admin
+    .from("shop_orders")
+    .update({
+      status: "completed",
+      amount: (session.amount_total ?? 0) / 100,
+      customer_email: customerEmail,
+      customer_name: session.customer_details?.name ?? null,
+      customer_phone: session.customer_details?.phone ?? null,
+      stripe_payment_intent_id: paymentIntentId,
+      stripe_payment_method_type: session.payment_method_types?.[0] ?? null,
+      metadata: (session.metadata ?? {}) as Record<string, string>,
+      completed_at: new Date().toISOString(),
+    })
+    .eq("id", order.id);
+
+  if (updateErr) {
+    console.error("[stripe webhook] shop order update failed", updateErr);
+    return;
+  }
+
+  await decrementStock(order.variant_id, order.product_id, admin);
+
+  if (order.invoice_number) return;
+
+  const description = order.variant_label
+    ? `${order.product_name} · ${order.variant_label}`
+    : order.product_name;
+
+  // Invoicing must never fail the webhook — the money is already captured, and a
+  // non-200 would make Stripe replay everything, including the stock decrement.
+  await issueInvoiceForShopOrder({
+    orderId: order.id,
+    session,
+    description,
+  });
+}
+
+/** Takes one unit off the variant, or off the product when it has no variants. */
+async function decrementStock(
+  variantId: string | null,
+  productId: string | null,
+  admin: AdminClient,
+) {
+  if (variantId) {
+    const { data: variant } = await admin
+      .from("shop_product_variants")
+      .select("stock")
+      .eq("id", variantId)
+      .maybeSingle();
+    if (!variant) return;
+    await admin
+      .from("shop_product_variants")
+      .update({ stock: Math.max(0, variant.stock - 1) })
+      .eq("id", variantId);
+    return;
+  }
+
+  if (!productId) return;
+  const { data: product } = await admin
+    .from("shop_products")
+    .select("stock")
+    .eq("id", productId)
+    .maybeSingle();
+  // A null stock means the product is not being tracked; leave it alone.
+  if (!product || product.stock == null) return;
+  await admin
+    .from("shop_products")
+    .update({ stock: Math.max(0, product.stock - 1) })
+    .eq("id", productId);
 }
 
 async function handlePaidSession(

@@ -8,19 +8,22 @@ import FAQSection from "@/components/FAQSection";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
 
+import ShopSection from "@/components/shop/ShopSection";
 import {
   listAllTrainers,
   listHeroCourses,
   listPublishedCourses,
 } from "@/lib/supabase/queries/public";
+import { listShopProducts } from "@/lib/supabase/queries/shop";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
-  const [heroCourses, allCourses, trainers] = await Promise.all([
+  const [heroCourses, allCourses, trainers, shopProducts] = await Promise.all([
     listHeroCourses(),
     listPublishedCourses(),
     listAllTrainers(),
+    listShopProducts(),
   ]);
 
   const accredited = allCourses.filter((c) => c.type === "curs_acreditat");
@@ -47,6 +50,8 @@ export default async function Home() {
           courses={accredited}
           variant="large"
         />
+
+        <ShopSection products={shopProducts} />
 
         <CoursesSection
           id="workshopuri"
