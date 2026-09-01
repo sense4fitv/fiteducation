@@ -82,7 +82,7 @@ export async function startStripeCheckout(fd: FormData): Promise<void> {
   const { data: course, error } = await admin
     .from("courses")
     .select(
-      "id, slug, title, price_amount, full_payment_price, currency, klarna_enabled, status",
+      "id, slug, title, type, price_amount, full_payment_price, currency, klarna_enabled, status",
     )
     .eq("id", courseId)
     .maybeSingle();
@@ -97,8 +97,12 @@ export async function startStripeCheckout(fd: FormData): Promise<void> {
     throw new Error("Prețul cursului nu este valid.");
 
   const currency = course.currency.toLowerCase();
+  // Plata în rate este deocamdată doar pentru cursurile acreditate; la
+  // workshop-uri acceptăm exclusiv plata integrală.
   const klarnaAvailable =
-    course.klarna_enabled && klarnaSupportedFor(currency);
+    course.klarna_enabled &&
+    course.type === "curs_acreditat" &&
+    klarnaSupportedFor(currency);
 
   if (klarnaOnly && !klarnaAvailable) {
     throw new Error("Klarna nu este disponibilă pentru acest curs.");
