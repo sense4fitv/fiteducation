@@ -36,7 +36,7 @@ export default function CourseCard({
         <span className="absolute left-4 top-4 inline-flex items-center rounded-full bg-white/95 px-3 py-1 text-[10px] font-semibold uppercase tracking-[1.4px] text-[#0A0A0A] shadow-sm">
           {typeLabel}
         </span>
-        {course.klarna_enabled ? (
+        {course.klarna_enabled && course.type === "curs_acreditat" ? (
           <span className="absolute right-4 top-4 inline-flex items-center rounded-full bg-[#0A0A0A]/85 px-2.5 py-1 text-[10px] font-medium uppercase tracking-[1.4px] text-white">
             Plată în rate
           </span>

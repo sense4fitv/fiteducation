@@ -38,6 +38,14 @@ export default async function CoursePage({
   const typeLabel =
     course.type === "curs_acreditat" ? "Curs acreditat" : "Workshop";
 
+  // Plata în rate rămâne deocamdată doar pentru cursurile acreditate, iar
+  // discuția se poartă pe WhatsApp până clarificăm fluxul (fără Klarna).
+  const installmentsEnabled =
+    course.type === "curs_acreditat" && course.klarna_enabled;
+  const installmentsWhatsAppUrl = `https://wa.me/40740988678?text=${encodeURIComponent(
+    `Buna ziua! Ma intereseaza sa achizitionez ${course.title} cu plata in rate.`,
+  )}`;
+
   const descriptionParagraphs = (course.description ?? "")
     .split(/\n{2,}/)
     .map((p) => p.trim())
@@ -133,9 +141,9 @@ export default async function CoursePage({
                     )}
                   </p>
                 ) : null}
-                {course.klarna_enabled ? (
+                {installmentsEnabled ? (
                   <p className="mt-1 text-xs text-[#666]">
-                    Posibilitatea de plată în rate prin Klarna
+                    Posibilitatea de plată în rate
                   </p>
                 ) : null}
               </div>
@@ -175,19 +183,16 @@ export default async function CoursePage({
                   </button>
                 </form>
               </div>
-              {course.klarna_enabled && course.currency === "EUR" ? (
-                <form action={startStripeCheckout}>
-                  <input type="hidden" name="course_id" value={course.id} />
-                  <input type="hidden" name="slug" value={course.slug} />
-                  <input type="hidden" name="klarna_only" value="1" />
-                  <button
-                    type="submit"
-                    className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#0A0A0A] via-[#490207] to-[#B8001F] px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:shadow-md hover:brightness-110"
-                  >
-                    <CreditCard size={16} className="opacity-90" />
-                    Plătește în rate
-                  </button>
-                </form>
+              {installmentsEnabled ? (
+                <a
+                  href={installmentsWhatsAppUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#0A0A0A] via-[#490207] to-[#B8001F] px-6 py-3 text-sm font-semibold text-white shadow-sm transition-all hover:shadow-md hover:brightness-110"
+                >
+                  <CreditCard size={16} className="opacity-90" />
+                  Plătește în rate
+                </a>
               ) : null}
               <p className="text-xs italic leading-relaxed text-[#777]">
                 * Apăsând „Înscrie-te acum" un membru al echipei te va contacta
@@ -436,7 +441,7 @@ export default async function CoursePage({
                 start_date: s.start_date,
                 end_date: s.end_date,
               }))}
-              klarnaEnabled={course.klarna_enabled}
+              installmentsEnabled={installmentsEnabled}
             />
             <aside className="space-y-3 text-sm text-[#555]">
               <p className="text-xs font-semibold uppercase tracking-wider text-[#888]">
@@ -446,9 +451,10 @@ export default async function CoursePage({
                 Trimiți formularul → te contactăm în maxim 24 ore → confirmăm
                 locul și detaliile de plată.
               </p>
-              {course.klarna_enabled ? (
+              {installmentsEnabled ? (
                 <p className="text-xs text-[#888]">
-                  Posibilitatea de a achita în rate prin Klarna.
+                  Posibilitatea de a achita în rate — scrie-ne pe WhatsApp
+                  pentru detalii.
                 </p>
               ) : null}
             </aside>

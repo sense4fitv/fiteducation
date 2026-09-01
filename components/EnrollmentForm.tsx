@@ -15,11 +15,11 @@ type SessionOption = {
 export default function EnrollmentForm({
   courseId,
   sessions,
-  klarnaEnabled,
+  installmentsEnabled,
 }: {
   courseId: string;
   sessions: SessionOption[];
-  klarnaEnabled: boolean;
+  installmentsEnabled: boolean;
 }) {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -127,8 +127,8 @@ export default function EnrollmentForm({
         >
           <option value="">Voi decide ulterior</option>
           <option value="integral">Plată integrală</option>
-          {klarnaEnabled ? (
-            <option value="rate_klarna">Rate prin Klarna</option>
+          {installmentsEnabled ? (
+            <option value="rate_klarna">Plată în rate</option>
           ) : null}
         </select>
       </div>
