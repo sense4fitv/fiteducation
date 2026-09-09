@@ -1,11 +1,25 @@
 "use client";
 
 import { useMemo, useState, useTransition } from "react";
-import { Check, Loader2, PackageCheck, ShieldCheck, Truck } from "lucide-react";
+import {
+  Check,
+  Loader2,
+  MessageCircle,
+  PackageCheck,
+  ShieldCheck,
+  Truck,
+} from "lucide-react";
 
 import { startShopCheckout } from "@/app/magazin/[slug]/_actions";
 import { formatPrice } from "@/lib/format";
-import { DELIVERY_LABEL, variantLabel, type DeliveryOption } from "@/lib/shop";
+import {
+  DELIVERY_LABEL,
+  SHOP_CHECKOUT_ENABLED,
+  shopEnquiryMessage,
+  shopWhatsappUrl,
+  variantLabel,
+  type DeliveryOption,
+} from "@/lib/shop";
 import type {
   ShopColor,
   ShopProductDetail,
@@ -75,6 +89,25 @@ export default function ShopProductView({
 
   const blocked =
     soldOut || !canPickup || (hasVariants && selectedVariant == null);
+
+  const selectionLabel = selectedVariant
+    ? variantLabel({
+        colorName: activeColor?.name ?? null,
+        weight_kg: selectedVariant.weight_kg,
+      })
+    : null;
+
+  // Card payment is paused, so the CTA opens WhatsApp with the exact selection
+  // already written out and we close the sale by phone.
+  const enquiryHref = shopWhatsappUrl(
+    shopEnquiryMessage({
+      productName: product.name,
+      variantLabel: selectionLabel,
+      url: process.env.NEXT_PUBLIC_SITE_URL
+        ? `${process.env.NEXT_PUBLIC_SITE_URL}/magazin/${product.slug}`
+        : null,
+    }),
+  );
 
   function handleBuy() {
     setError(null);
@@ -153,13 +186,8 @@ export default function ShopProductView({
           <p className="text-3xl font-bold tabular-nums text-[#0A0A0A]">
             {formatPrice(price, product.currency)}
           </p>
-          {selectedVariant ? (
-            <p className="pb-1 text-sm text-[#888]">
-              {variantLabel({
-                colorName: activeColor?.name ?? null,
-                weight_kg: selectedVariant.weight_kg,
-              })}
-            </p>
+          {selectionLabel ? (
+            <p className="pb-1 text-sm text-[#888]">{selectionLabel}</p>
           ) : null}
         </div>
 
@@ -295,6 +323,7 @@ export default function ShopProductView({
         </div>
 
         {/* Buy */}
+        {SHOP_CHECKOUT_ENABLED ? (
         <button
           type="button"
           onClick={handleBuy}
@@ -314,13 +343,30 @@ export default function ShopProductView({
             `Cumpără · ${formatPrice(price, product.currency)}`
           )}
         </button>
+        ) : soldOut ? (
+          <p className="mt-6 rounded-full bg-[#F2F2F2] px-6 py-4 text-center text-sm font-semibold text-[#7A7A7A]">
+            Stoc epuizat
+          </p>
+        ) : (
+          <a
+            href={enquiryHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#0A0A0A] px-6 py-4 text-sm font-semibold text-white transition-all hover:bg-[#B8001F]"
+          >
+            <MessageCircle size={16} />
+            Comandă pe WhatsApp
+          </a>
+        )}
 
         {error ? (
           <p className="mt-3 text-sm text-[#B8001F]">{error}</p>
         ) : null}
 
         <p className="mt-3 text-center text-xs text-[#999]">
-          Plată securizată prin Stripe. Ridicare la Sense4FIT Summit.
+          {SHOP_CHECKOUT_ENABLED
+            ? "Plată securizată prin Stripe. Ridicare la Sense4FIT Summit."
+            : "Îți confirmăm disponibilitatea și plata pe WhatsApp. Ridicare la Sense4FIT Summit."}
         </p>
       </div>
     </div>

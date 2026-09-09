@@ -16,6 +16,33 @@ export function isDeliveryOption(value: string): value is DeliveryOption {
   return (DELIVERY_OPTIONS as readonly string[]).includes(value);
 }
 
+/**
+ * Online card payment is paused. While this is false the storefront collects a
+ * call-back request instead of opening Stripe; flip it back to true (and the
+ * Stripe path in `app/magazin/[slug]/_actions.ts` wakes up untouched).
+ */
+export const SHOP_CHECKOUT_ENABLED = false;
+
+/** Sales line, also used for the WhatsApp shortcut on the product page. */
+export const SHOP_CONTACT_PHONE = "+40740988678";
+const SHOP_WHATSAPP_NUMBER = "40740988678";
+
+export function shopWhatsappUrl(message: string): string {
+  return `https://wa.me/${SHOP_WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+}
+
+/** The prefilled WhatsApp text: product, chosen variant and the page it came from. */
+export function shopEnquiryMessage(input: {
+  productName: string;
+  variantLabel?: string | null;
+  url?: string | null;
+}): string {
+  const parts = [`Bună! Sunt interesat de „${input.productName}”`];
+  if (input.variantLabel) parts.push(`(${input.variantLabel})`);
+  const line = `${parts.join(" ")} din magazinul Fiteducation.`;
+  return input.url ? `${line}\n${input.url}` : line;
+}
+
 /** Human label for a variant: "Negru · 10 kg", "Negru", "10 kg" or "Standard". */
 export function variantLabel(variant: {
   colorName: string | null;

@@ -9,7 +9,6 @@ import {
 
 import CourseSectionNav from "@/components/CourseSectionNav";
 import EnrollmentForm from "@/components/EnrollmentForm";
-import { startStripeCheckout } from "./_actions";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import WhatsAppButton from "@/components/WhatsAppButton";
@@ -165,24 +164,14 @@ export default async function CoursePage({
             </div>
 
             <div className="flex flex-col gap-3">
-              <div className="flex flex-col gap-3 sm:flex-row">
-                <a
-                  href="#inscriere"
-                  className="inline-flex flex-1 items-center justify-center rounded-full border border-[#0A0A0A]/15 bg-white px-6 py-3 text-sm font-semibold text-[#0A0A0A] transition-colors hover:border-[#0A0A0A]/40 hover:bg-[#F4F4F4]"
-                >
-                  Înscrie-te acum
-                </a>
-                <form action={startStripeCheckout} className="flex-1">
-                  <input type="hidden" name="course_id" value={course.id} />
-                  <input type="hidden" name="slug" value={course.slug} />
-                  <button
-                    type="submit"
-                    className="inline-flex w-full items-center justify-center rounded-full bg-[#B8001F] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#490207]"
-                  >
-                    Cumpără acum
-                  </button>
-                </form>
-              </div>
+              {/* Plata cu cardul e pusă pe pauză: singurul CTA duce în
+                  formularul de înscriere, de unde îi sunăm noi. */}
+              <a
+                href="#inscriere"
+                className="inline-flex w-full items-center justify-center rounded-full bg-[#B8001F] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#490207]"
+              >
+                Înscrie-te acum
+              </a>
               {installmentsEnabled ? (
                 <a
                   href={installmentsWhatsAppUrl}
@@ -195,7 +184,7 @@ export default async function CoursePage({
                 </a>
               ) : null}
               <p className="text-xs italic leading-relaxed text-[#777]">
-                * Apăsând „Înscrie-te acum" un membru al echipei te va contacta
+                * Apăsând „Înscrie-te acum” un membru al echipei te va contacta
                 pentru mai multe detalii. Nu implică nicio plată.
               </p>
             </div>
